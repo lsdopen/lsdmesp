@@ -1,0 +1,128 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnect
+metadata:
+  name: {{ .Values.lsdmesp.strimzi.clusterName }}-connect
+spec:
+  version: {{ .Values.lsdmesp.kafka.version }}
+  replicas: {{ .Values.lsdmesp.strimzi.kafkaConnect.replicas }}
+  resources:
+    requests:
+      cpu: 250m
+      memory: 1Gi
+  tls:
+    trustedCertificates:
+    - certificate: ca.crt
+      secretName: {{ .Values.lsdmesp.strimzi.clusterName }}-cluster-ca-cert
+  bootstrapServers: {{ .Values.lsdmesp.strimzi.clusterName }}-kafka-bootstrap:9092
+  image: {{ .Values.lsdmesp.strimzi.kafkaConnect.image }}
+  jvmOptions:
+    -Xms: 256m
+    -Xmx: 768m
+  config:
+    config.storage.topic: connect-cluster-configs
+    group.id: connect-cluster
+    heartbeat.interval.ms: 60000
+    key.converter: io.confluent.connect.avro.AvroConverter
+    key.converter.enhanced.avro.schema.support: true
+    key.converter.schema.registry.url: {{ .Values.lsdmesp.kafka.schemaRegistryUrl }}
+    offset.flush.interval.ms: 120000
+    offset.flush.timeout.ms: 60000
+    offset.storage.topic: connect-cluster-offsets
+    rebalance.timeout.ms: 120000
+    request.timeout.ms: 60000
+    session.timeout.ms: 180000
+    status.storage.topic: connect-cluster-status
+    value.converter: io.confluent.connect.avro.AvroConverter
+    value.converter.enhanced.avro.schema.support: true
+    value.converter.schema.registry.url: {{ .Values.lsdmesp.kafka.schemaRegistryUrl }}
+    worker.sync.timeout.ms: 60000
+  metrics:
+    lowercaseOutputLabelNames: true
+    lowercaseOutputName: true
+    rules:
+    - help: Kafka $1 JMX metric start time seconds
+      labels:
+        clientId: $2
+      name: kafka_$1_start_time_seconds
+      pattern: kafka.(.+)<type=app-info, client-id=(.+)><>start-time-ms
+      type: GAUGE
+      valueFactor: 0.001
+    - help: Kafka $1 JMX metric info version and commit-id
+      labels:
+        $3: $4
+        clientId: $2
+      name: kafka_$1_$3_info
+      pattern: 'kafka.(.+)<type=app-info, client-id=(.+)><>(commit-id|version): (.+)'
+      type: GAUGE
+      value: 1
+    - help: Kafka $1 JMX metric type $2
+      labels:
+        clientId: $3
+        partition: $5
+        topic: $4
+      name: kafka_$2_$6
+      pattern: kafka.(.+)<type=(.+)-metrics, client-id=(.+), topic=(.+), partition=(.+)><>(.+-total|compression-rate|.+-avg|.+-replica|.+-lag|.+-lead)
+      type: GAUGE
+    - help: Kafka $1 JMX metric type $2
+      labels:
+        clientId: $3
+        topic: $4
+      name: kafka_$2_$5
+      pattern: kafka.(.+)<type=(.+)-metrics, client-id=(.+), topic=(.+)><>(.+-total|compression-rate|.+-avg)
+      type: GAUGE
+    - help: Kafka $1 JMX metric type $2
+      labels:
+        clientId: $3
+        nodeId: $4
+      name: kafka_$2_$5
+      pattern: kafka.(.+)<type=(.+)-metrics, client-id=(.+), node-id=(.+)><>(.+-total|.+-avg)
+      type: UNTYPED
+    - help: Kafka $1 JMX metric type $2
+      labels:
+        clientId: $3
+      name: kafka_$2_$4
+      pattern: kafka.(.+)<type=(.+)-metrics, client-id=(.*)><>(.+-total|.+-avg|.+-bytes|.+-count|.+-ratio|.+-age|.+-flight|.+-threads|.+-connectors|.+-tasks|.+-ago)
+      type: GAUGE
+    - help: Kafka Connect JMX Connector status
+      labels:
+        connector: $1
+        status: $3
+        task: $2
+      name: kafka_connect_connector_status
+      pattern: 'kafka.connect<type=connector-task-metrics, connector=(.+), task=(.+)><>status:
+        ([a-z-]+)'
+      type: GAUGE
+      value: 1
+    - help: Kafka Connect JMX metric type $1
+      labels:
+        connector: $2
+        task: $3
+      name: kafka_connect_$1_$4
+      pattern: kafka.connect<type=(.+)-metrics, connector=(.+), task=(.+)><>(.+-total|.+-count|.+-ms|.+-ratio|.+-avg|.+-failures|.+-requests|.+-timestamp|.+-logged|.+-errors|.+-retries|.+-skipped)
+      type: GAUGE
+    - help: Kafka Connect JMX metric $1
+      labels:
+        connector: $1
+      name: kafka_connect_worker_$2
+      pattern: kafka.connect<type=connect-worker-metrics, connector=(.+)><>([a-z-]+)
+      type: GAUGE
+    - help: Kafka Connect JMX metric worker
+      name: kafka_connect_worker_$1
+      pattern: kafka.connect<type=connect-worker-metrics><>([a-z-]+)
+      type: GAUGE
+    - help: Kafka Connect JMX metric rebalance information
+      name: kafka_connect_worker_rebalance_$1
+      pattern: kafka.connect<type=connect-worker-rebalance-metrics><>([a-z-]+)
+      type: GAUGE
+  template:
+    pod:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: application
+                operator: In
+                values:
+                - kafkaconnect
+            topologyKey: kubernetes.io/hostname

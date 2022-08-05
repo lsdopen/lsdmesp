@@ -1,0 +1,108 @@
+# Default values for lsdmesp.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+lsdmesp:
+  kafka:
+    version: 2.7.0
+    logVersion: 2.7
+    protocolVersion: 2.7
+    schemaRegistryUrl: "http://lsdmesp-cp-schema-registry:8081"
+  strimzi:
+    operatorVersion: 0.19.0
+    clusterName: newclicks-dr
+    kafkaConnect:
+      image: docker.io/neilmad/lsddata-kafka-connect:latest   #TODO
+      replicas: 1
+
+cp-helm-charts:
+  # We are using Strimzi for these Kafka components, do not enable
+  cp-zookeeper:
+    enabled: false
+  cp-kafka:
+    enabled: false
+  cp-kafka-connect:
+    enabled: true
+    kafka:
+      bootstrapServers: "PLAINTEXT://newclicks-preprod-kafka-bootstrap:9092"  #TODO
+    cp-schema-registry:
+      url: "http://lsdmesp-cp-schema-registry:8081"
+  cp-control-center:
+    enabled: false
+  ## ------------------------------------------------------
+  ## Schema Registry
+  ## ------------------------------------------------------
+  cp-schema-registry:
+    enabled: true
+    image: confluentinc/cp-schema-registry
+    imageTag: 5.5.1
+    heapOptions: "-Xms512M -Xmx512M"
+    kafka:
+      bootstrapServers: "PLAINTEXT://newclicks-preprod-kafka-bootstrap:9092"   #TODO
+    resources:
+      requests:
+        memory: 256Mi   #TODO
+  
+  ## ------------------------------------------------------
+  ## REST Proxy
+  ## ------------------------------------------------------
+  cp-kafka-rest:
+    enabled: true
+    image: confluentinc/cp-kafka-rest
+    imageTag: 5.5.1
+    heapOptions: "-Xms512M -Xmx512M"
+    cp-zookeeper:
+      url: "zoo-entrance:2181"
+    cp-kafka:
+      bootstrapServers: "PLAINTEXT://newclicks-preprod-kafka-bootstrap:9092"   #TODO
+    cp-schema-registry:
+      url: "http://lsdmesp-cp-schema-registry:8081"
+    resources:
+      requests:
+        memory: 128Mi   #TODO
+  
+  ## ------------------------------------------------------
+  ## KSQL Server
+  ## ------------------------------------------------------
+  cp-ksql-server:
+    enabled: true
+    image: confluentinc/cp-ksqldb-server
+    imageTag: 5.5.1
+    heapOptions: "-Xms2g -Xmx6g"
+    kafka:
+      bootstrapServers: "PLAINTEXT://newclicks-preprod-kafka-bootstrap:9092"   #TODO
+    cp-schema-registry:
+      url: "http://lsdmesp-cp-schema-registry:8081"
+    ksql:
+      headless: false
+    configurationOverrides:
+      ksql.extension.dir: /opt/ksqldb-udfs
+      ksql.internal.topic.replicas: 3
+      ksql.connect.url: "http://newclicks-preprod-connect-connect-api:8083"  #TODO
+      listeners: "http://0.0.0.0:8088"
+      ksql.service.id: lsdmesp-ksql-server
+    resources:
+      requests:
+        memory: 6Gi   #TODO
+
+kafka-manager:
+  zkHosts: zoo-entrance:2181
+
+kafka-connect-ui:
+  connectCluster.url: "http://newclicks-preprod-connect-connect-api:8083"   #TODO
+  service.port: 8000
+  
+schema-registry-ui:
+  schemaRegistry.url: "http://lsdmesp-cp-schema-registry"
+  schemaRegistry.port: 8081
+  schemaRegistry.proxy: true
+  service.port: 8001
+  service.type=: ClusterIP
+
+helm-kafka-topics-ui:
+  kafkaRest.url: http://lsdmesp-cp-kafka-rest
+  kafkaRest.port: 8082
+  kafkaRest.proxy: true
+  service.type: ClusterIP
+  service.port: 8002
+

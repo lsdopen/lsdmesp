@@ -1,0 +1,232 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: {{ .Values.lsdmesp.strimzi.clusterName }}
+spec:
+  cruiseControl: {}
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}
+  kafka:
+    version: {{ .Values.lsdmesp.kafka.version }}
+    replicas: 3
+    resources:
+      limits:
+        cpu: 3
+        memory: 6Gi
+      requests:
+        cpu: 1
+        memory: 6Gi
+    storage:
+      type: jbod
+      volumes:
+      - deleteClaim: false
+        id: 0
+        size: 10Gi
+        type: persistent-claim
+    config:
+      auto.create.topics.enable: "true"
+      controller.socket.timeout.ms: 60000
+      default.replication.factor: 2
+      log.cleanup.policy: delete
+      log.message.format.version: "{{ .Values.lsdmesp.kafka.logVersion }}"
+      inter.broker.protocol.version: "{{ .Values.lsdmesp.kafka.protocolVersion }}"
+      log.retention.ms: 172800000
+      min.insync.replicas: 1
+      num.partitions: 6
+      offsets.commit.timeout.ms: 30000
+      offsets.topic.replication.factor: 3
+      replica.socket.timeout.ms: 60000
+      request.timeout.ms: 60000
+      transaction.state.log.min.isr: 2
+      transaction.state.log.replication.factor: 3
+      zookeeper.connection.timeout.ms: 60000
+      zookeeper.session.timeout.ms: 60000
+    jvmOptions:
+      -Xms: 1536m
+      -Xmx: 2048m
+    listeners:
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+      - name: tls
+        port: 9093
+        type: internal
+        tls: true
+        authentication:
+          type: tls
+      - name: external
+        port: 9094
+        type: nodeport
+        tls: false
+        configuration:
+          bootstrap:
+            nodePort: 32100
+          brokers:
+          - broker: 0
+            nodePort: 32000
+          - broker: 1
+            nodePort: 32001
+          - broker: 2
+            nodePort: 32002
+    metrics:
+      lowercaseOutputName: true
+      rules:
+      - labels:
+          clientId: $3
+          partition: $5
+          topic: $4
+        name: kafka_server_$1_$2
+        pattern: kafka.server<type=(.+), name=(.+), clientId=(.+), topic=(.+), partition=(.*)><>Value
+        type: GAUGE
+      - labels:
+          broker: $4:$5
+          clientId: $3
+        name: kafka_server_$1_$2
+        pattern: kafka.server<type=(.+), name=(.+), clientId=(.+), brokerHost=(.+),
+          brokerPort=(.+)><>Value
+        type: GAUGE
+      - name: kafka_$1_$2_$3_percent
+        pattern: kafka.(\w+)<type=(.+), name=(.+)Percent\w*><>MeanRate
+        type: GAUGE
+      - name: kafka_$1_$2_$3_percent
+        pattern: kafka.(\w+)<type=(.+), name=(.+)Percent\w*><>Value
+        type: GAUGE
+      - labels:
+          $4: $5
+        name: kafka_$1_$2_$3_percent
+        pattern: kafka.(\w+)<type=(.+), name=(.+)Percent\w*, (.+)=(.+)><>Value
+        type: GAUGE
+      - labels:
+          $4: $5
+          $6: $7
+        name: kafka_$1_$2_$3_total
+        pattern: kafka.(\w+)<type=(.+), name=(.+)PerSec\w*, (.+)=(.+), (.+)=(.+)><>Count
+        type: COUNTER
+      - labels:
+          $4: $5
+        name: kafka_$1_$2_$3_total
+        pattern: kafka.(\w+)<type=(.+), name=(.+)PerSec\w*, (.+)=(.+)><>Count
+        type: COUNTER
+      - name: kafka_$1_$2_$3_total
+        pattern: kafka.(\w+)<type=(.+), name=(.+)PerSec\w*><>Count
+        type: COUNTER
+      - labels:
+          $4: $5
+          $6: $7
+        name: kafka_$1_$2_$3
+        pattern: kafka.(\w+)<type=(.+), name=(.+), (.+)=(.+), (.+)=(.+)><>Value
+        type: GAUGE
+      - labels:
+          $4: $5
+        name: kafka_$1_$2_$3
+        pattern: kafka.(\w+)<type=(.+), name=(.+), (.+)=(.+)><>Value
+        type: GAUGE
+      - name: kafka_$1_$2_$3
+        pattern: kafka.(\w+)<type=(.+), name=(.+)><>Value
+        type: GAUGE
+      - labels:
+          $4: $5
+          $6: $7
+        name: kafka_$1_$2_$3_count
+        pattern: kafka.(\w+)<type=(.+), name=(.+), (.+)=(.+), (.+)=(.+)><>Count
+        type: COUNTER
+      - labels:
+          $4: $5
+          $6: $7
+          quantile: 0.$8
+        name: kafka_$1_$2_$3
+        pattern: kafka.(\w+)<type=(.+), name=(.+), (.+)=(.*), (.+)=(.+)><>(\d+)thPercentile
+        type: GAUGE
+      - labels:
+          $4: $5
+        name: kafka_$1_$2_$3_count
+        pattern: kafka.(\w+)<type=(.+), name=(.+), (.+)=(.+)><>Count
+        type: COUNTER
+      - labels:
+          $4: $5
+          quantile: 0.$6
+        name: kafka_$1_$2_$3
+        pattern: kafka.(\w+)<type=(.+), name=(.+), (.+)=(.*)><>(\d+)thPercentile
+        type: GAUGE
+      - name: kafka_$1_$2_$3_count
+        pattern: kafka.(\w+)<type=(.+), name=(.+)><>Count
+        type: COUNTER
+      - labels:
+          quantile: 0.$4
+        name: kafka_$1_$2_$3
+        pattern: kafka.(\w+)<type=(.+), name=(.+)><>(\d+)thPercentile
+        type: GAUGE
+    template:
+      pod:
+        affinity:
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                - key: application
+                  operator: In
+                  values:
+                  - kafka
+              topologyKey: kubernetes.io/hostname
+  zookeeper:
+    replicas: 3
+    resources:
+      limits:
+        cpu: 1
+        memory: 2Gi
+      requests:
+        cpu: 200m
+        memory: 2Gi
+    jvmOptions:
+      -Xms: 512m
+      -Xmx: 512m
+    storage:
+      deleteClaim: false
+      size: 10Gi
+      type: persistent-claim
+    template:
+      pod:
+        affinity:
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                - key: application
+                  operator: In
+                  values:
+                  - zookeeper
+              topologyKey: kubernetes.io/hostname
+    metrics:
+      lowercaseOutputName: true
+      rules:
+      - name: zookeeper_$2
+        pattern: org.apache.ZooKeeperService<name0=ReplicatedServer_id(\d+)><>(\w+)
+        type: GAUGE
+      - labels:
+          replicaId: $2
+        name: zookeeper_$3
+        pattern: org.apache.ZooKeeperService<name0=ReplicatedServer_id(\d+), name1=replica.(\d+)><>(\w+)
+        type: GAUGE
+      - labels:
+          memberType: $3
+          replicaId: $2
+        name: zookeeper_$4
+        pattern: org.apache.ZooKeeperService<name0=ReplicatedServer_id(\d+), name1=replica.(\d+),
+          name2=(\w+)><>(Packets\w+)
+        type: COUNTER
+      - labels:
+          memberType: $3
+          replicaId: $2
+        name: zookeeper_$4
+        pattern: org.apache.ZooKeeperService<name0=ReplicatedServer_id(\d+), name1=replica.(\d+),
+          name2=(\w+)><>(\w+)
+        type: GAUGE
+      - labels:
+          memberType: $3
+          replicaId: $2
+        name: zookeeper_$4_$5
+        pattern: org.apache.ZooKeeperService<name0=ReplicatedServer_id(\d+), name1=replica.(\d+),
+          name2=(\w+), name3=(\w+)><>(\w+)
+        type: GAUGE
