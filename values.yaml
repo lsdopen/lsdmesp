@@ -1,47 +1,251 @@
 # Default values for lsdmesp.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-
 lsdmesp:
+  clusterType: "rancher"
+  cpVersion: &anchorcpVersion "5.5.4"
+  akhqURL: &anchorakhqURL "akhq.apps.cluster-01.rancher-01d.newclicks.com"
+  kafkaManagerURL: &anchorkafkaManagerURL "kafka-manager.apps.cluster-01.rancher-01d.newclicks.com"
+  kafkaConnectUIURL: &anchorkafkaConnectUIURL "connect-ui.apps.cluster-01.rancher-01d.newclicks.com"
+  kafkaSchemaRegistryUIURL: &anchorkafkaSchemaRegistryUIURL "schema-registry-ui.apps.cluster-01.rancher-01d.newclicks.com"
+  kafkaTopicsUIURL: &anchorkafkaTopicsUIURL "topics-ui.apps.cluster-01.rancher-01d.newclicks.com"
+  confluentKsqldbURL: &anchorconfluentKsqldbURL "ksqldb.apps.cluster-01.rancher-01d.newclicks.com"
+  confluentSchemaRegistryURL: &anchorconfluentSchemaRegistryURL "schema-registry.apps.cluster-01.rancher-01d.newclicks.com"
+  confluentConnectURL: &anchorconfluentConnectURL "connect.apps.cluster-01.rancher-01d.newclicks.com"
   kafka:
-    version: 2.7.0
-    logVersion: 2.7
-    protocolVersion: 2.7
-    schemaRegistryUrl: "http://lsdmesp-cp-schema-registry:8081"
-  strimzi:
-    operatorVersion: 0.19.0
-    clusterName: newclicks-dr
-    kafkaConnect:
-      image: docker.io/neilmad/lsddata-kafka-connect:latest   #TODO
-      replicas: 1
+    manager:
+      enabled: true
+      ingress:
+        url: *anchorkafkaManagerURL
+    connectui:
+      enabled: true
+      ingress:
+        url: *anchorkafkaConnectUIURL
+    schemaregistryui:
+      enabled: true
+      ingress:
+        url: *anchorkafkaSchemaRegistryUIURL
+    topicsui:
+      enabled: true
+      ingress:
+        url: *anchorkafkaTopicsUIURL
+  confluent:
+    ksqldb:
+      ingress:
+        url: *anchorconfluentKsqldbURL
+    schemaRegistry:
+      ingress:
+        url: *anchorconfluentSchemaRegistryURL
+    connect:
+      ingress:
+        url: *anchorconfluentConnectURL
 
 cp-helm-charts:
-  # We are using Strimzi for these Kafka components, do not enable
+  ## ------------------------------------------------------
+  ## Zookeeper
+  ## ------------------------------------------------------
   cp-zookeeper:
     enabled: false
+    servers: 3
+    image: confluentinc/cp-zookeeper
+    imageTag: *anchorcpVersion
+    heapOptions: "-Xms768m -Xmx768m"
+    persistence:
+      enabled: true
+      dataDirSize: 5Gi
+      dataLogDirSize: 5Gi
+    resources:
+      limits:
+        cpu: 1
+        memory: 2Gi
+      requests:
+        cpu: 200m
+        memory: 1Gi
+    jmx:
+      port: 5555
+    prometheus:
+      jmx:
+        enabled: true
+        image: solsson/kafka-prometheus-jmx-exporter@sha256
+        imageTag: 6f82e2b0464f50da8104acd7363fb9b995001ddff77d248379f8788e78946143
+        imagePullPolicy: IfNotPresent
+        port: 5556
+        resources: {}
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - cp-zookeeper
+              - key: release
+                operator: In
+                values:
+                - lsdmesp
+            topologyKey: kubernetes.io/hostname
+          weight: 100
+
+  ## ------------------------------------------------------
+  ## Kafka Brokers
+  ## ------------------------------------------------------
   cp-kafka:
     enabled: false
+    brokers: 3
+    image: confluentinc/cp-kafka
+    imageTag: *anchorcpVersion
+    heapOptions: "-Xms4096m -Xmx5120m"
+    persistence:
+      enabled: true
+      size: 1300Gi
+      disksPerBroker: 1
+    resources:
+      limits:
+        cpu: 6
+        memory: 32Gi
+      requests:
+        cpu: 2
+        memory: 32Gi
+    updateStrategy: OnDelete
+    configurationOverrides:
+      auto.create.topics.enable: "true"
+      controller.socket.timeout.ms: 60000
+      default.replication.factor: 2
+      log.cleanup.policy: delete
+      log.retention.hours: 72
+      min.insync.replicas: 1
+      num.partitions: 6
+      offsets.commit.timeout.ms: 30000
+      offsets.topic.replication.factor: 3
+      replica.socket.timeout.ms: 60000
+      request.timeout.ms: 60000
+      transaction.state.log.min.isr: 2
+      transaction.state.log.replication.factor: 3
+      zookeeper.connection.timeout.ms: 60000
+      zookeeper.session.timeout.ms: 60000
+      advertised.listeners: |-
+       EXTERNAL://${HOST_IP}:$((31090 + ${KAFKA_BROKER_ID}))
+      listener.security.protocol.map: |-
+       PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+    customEnv:
+      KAFKA_METRIC_REPORTERS:
+    nodeport:
+      enabled: true
+      servicePort: 19092
+      firstListenerPort: 31090
+    jmx:
+      port: 5555
+    prometheus:
+      jmx:
+        enabled: true
+        image: solsson/kafka-prometheus-jmx-exporter@sha256
+        imageTag: 6f82e2b0464f50da8104acd7363fb9b995001ddff77d248379f8788e78946143
+        imagePullPolicy: IfNotPresent
+        port: 5556
+        resources: {}
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - cp-kafka
+              - key: release
+                operator: In
+                values:
+                - lsdmesp
+            topologyKey: kubernetes.io/hostname
+          weight: 100
+
+  ## ------------------------------------------------------
+  ## Connect
+  ## ------------------------------------------------------
   cp-kafka-connect:
-    enabled: true
-    kafka:
-      bootstrapServers: "PLAINTEXT://newclicks-preprod-kafka-bootstrap:9092"  #TODO
-    cp-schema-registry:
-      url: "http://lsdmesp-cp-schema-registry:8081"
+    enabled: false
+    replicaCount: 16
+    image: confluentinc/cp-kafka-connect
+    imageTag: *anchorcpVersion
+    heapOptions: "-Xms2g -Xmx5g"
+    servicePort: 8083
+    configurationOverrides:
+      plugin.path: "/usr/share/java,/usr/share/confluent-hub-components"
+      key.converter: io.confluent.connect.avro.AvroConverter
+      value.converter: io.confluent.connect.avro.AvroConverter
+      key.converter.enhanced.avro.schema.support: true
+      value.converter.enhanced.avro.schema.support: true
+      internal.key.converter: org.apache.kafka.connect.json.JsonConverter
+      internal.value.converter: org.apache.kafka.connect.json.JsonConverter
+      config.storage.replication.factor: 3
+      offset.storage.replication.factor: 3
+      status.storage.replication.factor: 3
+      heartbeat.interval.ms: 10000
+      max.poll.interval.ms: "86400000"
+      offset.flush.interval.ms: 120000
+      offset.flush.timeout.ms: 60000
+      rebalance.timeout.ms: 120000
+      request.timeout.ms: 60000
+      session.timeout.ms: 180000
+      worker.sync.timeout.ms: 60000
+    resources:
+      requests:
+        cpu: 250m
+        memory: 6Gi
+    volumeMounts:
+    - mountPath: /usr/share/confluent-hub-components
+      name: confluent-hub-components
+    volumes:
+    - name: confluent-hub-components
+      persistentVolumeClaim:
+        claimName: connectors-lsdmesp-cp-kafka-connect
+    jmx:
+      port: 5555
+    prometheus:
+      jmx:
+        enabled: true
+        image: solsson/kafka-prometheus-jmx-exporter@sha256
+        imageTag: 6f82e2b0464f50da8104acd7363fb9b995001ddff77d248379f8788e78946143
+        imagePullPolicy: IfNotPresent
+        port: 5556
+        resources: {}
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - cp-kafka-connect
+              - key: release
+                operator: In
+                values:
+                - lsdmesp
+            topologyKey: kubernetes.io/hostname
+          weight: 100
+
+  ## ------------------------------------------------------
+  ## Control Center (Commercial Feature)
+  ## ------------------------------------------------------
   cp-control-center:
     enabled: false
+
   ## ------------------------------------------------------
   ## Schema Registry
   ## ------------------------------------------------------
   cp-schema-registry:
     enabled: true
     image: confluentinc/cp-schema-registry
-    imageTag: 5.5.1
-    heapOptions: "-Xms512M -Xmx512M"
-    kafka:
-      bootstrapServers: "PLAINTEXT://newclicks-preprod-kafka-bootstrap:9092"   #TODO
+    imageTag: *anchorcpVersion
+    heapOptions: "-Xms372m -Xmx372m"
     resources:
       requests:
-        memory: 256Mi   #TODO
+        memory: 512Mi
   
   ## ------------------------------------------------------
   ## REST Proxy
@@ -49,60 +253,112 @@ cp-helm-charts:
   cp-kafka-rest:
     enabled: true
     image: confluentinc/cp-kafka-rest
-    imageTag: 5.5.1
-    heapOptions: "-Xms512M -Xmx512M"
-    cp-zookeeper:
-      url: "zoo-entrance:2181"
-    cp-kafka:
-      bootstrapServers: "PLAINTEXT://newclicks-preprod-kafka-bootstrap:9092"   #TODO
-    cp-schema-registry:
-      url: "http://lsdmesp-cp-schema-registry:8081"
+    imageTag: *anchorcpVersion
+    heapOptions: "-Xms256m -Xmx256m"
     resources:
       requests:
-        memory: 128Mi   #TODO
+        memory: 256Mi
   
   ## ------------------------------------------------------
   ## KSQL Server
   ## ------------------------------------------------------
   cp-ksql-server:
     enabled: true
+    replicaCount: 3
     image: confluentinc/cp-ksqldb-server
-    imageTag: 5.5.1
-    heapOptions: "-Xms2g -Xmx6g"
-    kafka:
-      bootstrapServers: "PLAINTEXT://newclicks-preprod-kafka-bootstrap:9092"   #TODO
-    cp-schema-registry:
-      url: "http://lsdmesp-cp-schema-registry:8081"
+    imageTag: *anchorcpVersion
+    heapOptions: "-Xms512M -Xmx3g"
+    serviceId: lsdmesp-ksql-server
     ksql:
       headless: false
     configurationOverrides:
+      ksql.connect.url: "http://lsdmesp-cp-kafka-connect:8083"
       ksql.extension.dir: /opt/ksqldb-udfs
       ksql.internal.topic.replicas: 3
-      ksql.connect.url: "http://newclicks-preprod-connect-connect-api:8083"  #TODO
       listeners: "http://0.0.0.0:8088"
       ksql.service.id: lsdmesp-ksql-server
+      log4j.root.loglevel: WARN
+      confluent.support.metrics.enable: false
+      ksql.streams.num.stream.threads: 6
+      ksql.streams.consumer.heartbeat.interval.ms: 10000
+      ksql.streams.consumer.session.timeout.ms: 180000
+      ksql.streams.consumer.max.poll.interval.ms: "86400000"
+      ksql.streams.consumer.request.timeout.ms: 60000
     resources:
       requests:
-        memory: 6Gi   #TODO
+        cpu: 1
+        memory: 4Gi
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - cp-ksql-server
+              - key: release
+                operator: In
+                values:
+                - lsdmesp
+            topologyKey: kubernetes.io/hostname
+          weight: 100
+
+akhq:
+  enabled: true
+  tag: 0.17.0
+  configuration: |
+    akhq:
+      connections:
+        lsdmesp-plain-text:
+          properties:
+            bootstrap.servers: "lsdmesp-cp-kafka:9092"
+          schema-registry:
+            url: "http://lsdmesp-cp-schema-registry:8081"
+            type: "confluent"
+          connect:
+          - name: connect-1
+            url: "http://lsdmesp-cp-kafka-connect:8083"
+  service:
+    enabled: true
+    type: ClusterIP
+    port: 8080
+  ingress:
+    enabled: true
+    paths:
+    - /
+    hosts: 
+    - *anchorakhqURL
 
 kafka-manager:
-  zkHosts: zoo-entrance:2181
+  enabled: true
+  zkHosts: "lsdmesp-cp-zookeeper:2181"
 
 kafka-connect-ui:
-  connectCluster.url: "http://newclicks-preprod-connect-connect-api:8083"   #TODO
-  service.port: 8000
+  enabled: true
+  connectCluster:
+    url: "http://lsdmesp-cp-kafka-connect:8083"
+  service:
+    type: ClusterIP
+    port: 8000
   
 schema-registry-ui:
-  schemaRegistry.url: "http://lsdmesp-cp-schema-registry"
-  schemaRegistry.port: 8081
-  schemaRegistry.proxy: true
-  service.port: 8001
-  service.type=: ClusterIP
+  enabled: true
+  schemaRegistry:
+    url: "http://lsdmesp-cp-schema-registry"
+    port: 8081
+    proxy: true
+  service:
+    type: ClusterIP
+    port: 8001
 
-helm-kafka-topics-ui:
-  kafkaRest.url: http://lsdmesp-cp-kafka-rest
-  kafkaRest.port: 8082
-  kafkaRest.proxy: true
-  service.type: ClusterIP
-  service.port: 8002
-
+kafka-topics-ui:
+  enabled: true
+  kafkaRest:
+    url: "http://lsdmesp-cp-kafka-rest"
+    port: 8082
+    proxy: true
+  service:
+    type: ClusterIP
+    port: 8002
