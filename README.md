@@ -21,4 +21,8 @@ helm uninstall lsdmesp -n lsdmesp
 helm uninstall lsdmesp-strimzi-operator --namespace lsdmesp 
 kubectl delete crd -l app=strimzi
 kubectl delete ns lsdmesp
+<<<<<<< HEAD
 ```
+=======
+```
+>>>>>>> 3d623194e412097bfb6ceb5dedeca623d0e5c91a
