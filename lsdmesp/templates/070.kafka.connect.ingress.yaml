@@ -1,0 +1,25 @@
+# Kafka Connect Ingress and NodePort
+{{- if or (eq .Values.lsdmesp.clusterType "gke") (eq .Values.lsdmesp.clusterType "rancher") -}}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    meta.helm.sh/release-name: {{ .Release.Name }}
+    meta.helm.sh/release-namespace: {{ .Release.Namespace }}
+  labels:
+    app: kafka-connect
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+  name: lsdmesp-kafka-connect-external
+spec:
+  rules:
+  - host: {{ .Values.lsdmesp.confluent.connect.ingress.url }}
+    http:
+      paths:
+      - backend:
+          serviceName: lsdmesp-connect-api
+          servicePort: 8083
+        path: /
+        pathType: ImplementationSpecific
+---
+{{- end }}

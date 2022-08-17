@@ -1,26 +1,18 @@
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaConnect
 metadata:
-  name: {{ .Values.lsdmesp.strimzi.clusterName }}-connect
+  name: lsdmesp
+  namespace: lsdmesp
 spec:
-  version: {{ .Values.lsdmesp.kafka.version }}
-  replicas: {{ .Values.lsdmesp.strimzi.kafkaConnect.replicas }}
-  resources:
-    requests:
-      cpu: 250m
-      memory: 1Gi
-  bootstrapServers: {{ .Values.lsdmesp.strimzi.clusterName }}-kafka-bootstrap:9092
-  image: {{ .Values.lsdmesp.strimzi.kafkaConnect.image }}
-  jvmOptions:
-    -Xms: 256m
-    -Xmx: 768m
+  bootstrapServers: lsdmesp-kafka-bootstrap:9093
   config:
     config.storage.topic: connect-cluster-configs
     group.id: connect-cluster
-    heartbeat.interval.ms: 60000
+    heartbeat.interval.ms: 10000
     key.converter: io.confluent.connect.avro.AvroConverter
     key.converter.enhanced.avro.schema.support: true
-    key.converter.schema.registry.url: {{ .Values.lsdmesp.kafka.schemaRegistryUrl }}
+    key.converter.schema.registry.url: http://lsdmesp-cp-schema-registry:8081
+    max.poll.interval.ms: 86400000
     offset.flush.interval.ms: 120000
     offset.flush.timeout.ms: 60000
     offset.storage.topic: connect-cluster-offsets
@@ -30,8 +22,16 @@ spec:
     status.storage.topic: connect-cluster-status
     value.converter: io.confluent.connect.avro.AvroConverter
     value.converter.enhanced.avro.schema.support: true
-    value.converter.schema.registry.url: {{ .Values.lsdmesp.kafka.schemaRegistryUrl }}
+    value.converter.schema.registry.url: http://lsdmesp-cp-schema-registry:8081
     worker.sync.timeout.ms: 60000
+  image: docker.io/neilmad/clicks-kafka-connect-avro:latest
+  jvmOptions:
+    -Xms: 1g
+    -Xmx: 2g
+  logging:
+    loggers:
+      connect.root.logger.level: WARN
+    type: inline
   metrics:
     lowercaseOutputLabelNames: true
     lowercaseOutputName: true
@@ -110,6 +110,11 @@ spec:
       name: kafka_connect_worker_rebalance_$1
       pattern: kafka.connect<type=connect-worker-rebalance-metrics><>([a-z-]+)
       type: GAUGE
+  replicas: 0
+  resources:
+    requests:
+      cpu: 250m
+      memory: 2Gi
   template:
     pod:
       affinity:
@@ -122,3 +127,8 @@ spec:
                 values:
                 - kafkaconnect
             topologyKey: kubernetes.io/hostname
+  tls:
+    trustedCertificates:
+    - certificate: ca.crt
+      secretName: lsdmesp-cluster-ca-cert
+  version: 2.5.0

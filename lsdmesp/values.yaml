@@ -1,0 +1,203 @@
+# Default values for lsdmesp.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+lsdmesp:
+  clusterType: "rancher"
+  cpVersion: &anchorcpVersion "5.5.4"
+  akhqURL: &anchorakhqURL "akhq.apps.cluster-01.rancher-01dr.newclicks.com"
+  kafkaManagerURL: &anchorkafkaManagerURL "kafka-manager.apps.cluster-01.rancher-01dr.newclicks.com"
+  kafkaConnectUIURL: &anchorkafkaConnectUIURL "connect-ui.apps.cluster-01.rancher-01dr.newclicks.com"
+  kafkaSchemaRegistryUIURL: &anchorkafkaSchemaRegistryUIURL "schema-registry-ui.apps.cluster-01.rancher-01dr.newclicks.com"
+  kafkaTopicsUIURL: &anchorkafkaTopicsUIURL "topics-ui.apps.cluster-01.rancher-01dr.newclicks.com"
+  confluentKsqldbURL: &anchorconfluentKsqldbURL "ksqldb.apps.cluster-01.rancher-01dr.newclicks.com"
+  confluentSchemaRegistryURL: &anchorconfluentSchemaRegistryURL "schema-registry.apps.cluster-01.rancher-01dr.newclicks.com"
+  confluentConnectURL: &anchorconfluentConnectURL "connect.apps.cluster-01.rancher-01dr.newclicks.com"
+  strimzi:
+    clusterName: lsdmesp
+  kafka:
+    manager:
+      enabled: true
+      ingress:
+        url: *anchorkafkaManagerURL
+    connectui:
+      enabled: true
+      ingress:
+        url: *anchorkafkaConnectUIURL
+    schemaregistryui:
+      enabled: true
+      ingress:
+        url: *anchorkafkaSchemaRegistryUIURL
+    topicsui:
+      enabled: true
+      ingress:
+        url: *anchorkafkaTopicsUIURL
+  confluent:
+    ksqldb:
+      ingress:
+        url: *anchorconfluentKsqldbURL
+    schemaRegistry:
+      ingress:
+        url: *anchorconfluentSchemaRegistryURL
+    connect:
+      ingress:
+        url: *anchorconfluentConnectURL
+
+cp-helm-charts:
+  ## ------------------------------------------------------
+  ## Zookeeper
+  ## ------------------------------------------------------
+  cp-zookeeper:
+    enabled: false
+  ## ------------------------------------------------------
+  ## Kafka Brokers
+  ## ------------------------------------------------------
+  cp-kafka:
+    enabled: false
+  ## ------------------------------------------------------
+  ## Connect
+  ## ------------------------------------------------------
+  cp-kafka-connect:
+    enabled: false
+  ## ------------------------------------------------------
+  ## Control Center (Commercial Feature)
+  ## ------------------------------------------------------
+  cp-control-center:
+    enabled: false
+  ## ------------------------------------------------------
+  ## Schema Registry
+  ## ------------------------------------------------------
+  cp-schema-registry:
+    enabled: true
+    image: confluentinc/cp-schema-registry
+    imageTag: *anchorcpVersion
+    heapOptions: "-Xms372m -Xmx372m"
+    kafka:
+      bootstrapServers: "PLAINTEXT://lsdmesp-kafka-bootstrap:9092"
+    resources:
+      requests:
+        memory: 512Mi
+  
+  ## ------------------------------------------------------
+  ## REST Proxy
+  ## ------------------------------------------------------
+  cp-kafka-rest:
+    enabled: true
+    image: confluentinc/cp-kafka-rest
+    imageTag: *anchorcpVersion
+    heapOptions: "-Xms256m -Xmx256m"
+    cp-zookeeper:
+      url: "zoo-entrance:2181"
+    cp-kafka:
+      bootstrapServers: "PLAINTEXT://lsdmesp-kafka-bootstrap:9092"
+    cp-schema-registry:
+      url: "http://lsdmesp-cp-schema-registry:8081"
+    resources:
+      requests:
+        memory: 256Mi
+  
+  ## ------------------------------------------------------
+  ## KSQL Server
+  ## ------------------------------------------------------
+  cp-ksql-server:
+    enabled: true
+    replicaCount: 3
+    image: confluentinc/cp-ksqldb-server
+    imageTag: *anchorcpVersion
+    heapOptions: "-Xms512M -Xmx3g"
+    serviceId: lsdmesp-ksql-server
+    ksql:
+      headless: false
+    configurationOverrides:
+      ksql.connect.url: "http://lsdmesp-connect-api:8083"
+      ksql.extension.dir: /opt/ksqldb-udfs
+      ksql.internal.topic.replicas: 3
+      listeners: "http://0.0.0.0:8088"
+      ksql.service.id: lsdmesp-ksql-server
+      log4j.root.loglevel: WARN
+      confluent.support.metrics.enable: false
+      ksql.streams.num.stream.threads: 6
+      ksql.streams.consumer.heartbeat.interval.ms: 10000
+      ksql.streams.consumer.session.timeout.ms: 180000
+      ksql.streams.consumer.max.poll.interval.ms: "86400000"
+      ksql.streams.consumer.request.timeout.ms: 60000
+    kafka:
+      bootstrapServers: "PLAINTEXT://lsdmesp-kafka-bootstrap:9092"
+    cp-schema-registry:
+      url: "http://lsdmesp-cp-schema-registry:8081"
+    resources:
+      requests:
+        cpu: 1
+        memory: 4Gi
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - cp-ksql-server
+              - key: release
+                operator: In
+                values:
+                - lsdmesp
+            topologyKey: kubernetes.io/hostname
+          weight: 100
+
+akhq:
+  enabled: true
+  secrets:
+    akhq:
+      connections:
+        lsdmesp-plain-text:
+          properties:
+            bootstrap.servers: "lsdmesp-kafka-bootstrap:9092"
+          schema-registry:
+            url: "http://lsdmesp-cp-schema-registry:8081"
+            type: "confluent"
+          connect:
+          - name: "connect-1"
+            url: "http://lsdmesp-connect-api:8083"
+  service:
+    enabled: true
+    type: ClusterIP
+    port: 8080
+  ingress:
+    enabled: true
+    paths:
+    - /
+    hosts: 
+    - *anchorakhqURL
+
+kafka-manager:
+  enabled: true
+  zkHosts: "zoo-entrance:2181"
+
+kafka-connect-ui:
+  enabled: true
+  connectCluster:
+    url: "http://lsdmesp-connect-api:8083"
+  service:
+    type: ClusterIP
+    port: 8000
+  
+schema-registry-ui:
+  enabled: true
+  schemaRegistry:
+    url: "http://lsdmesp-cp-schema-registry"
+    port: 8081
+    proxy: true
+  service:
+    type: ClusterIP
+    port: 8001
+
+kafka-topics-ui:
+  enabled: true
+  kafkaRest:
+    url: "http://lsdmesp-cp-kafka-rest"
+    port: 8082
+    proxy: true
+  service:
+    type: ClusterIP
+    port: 8002

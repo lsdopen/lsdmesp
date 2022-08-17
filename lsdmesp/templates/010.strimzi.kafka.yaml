@@ -1,36 +1,34 @@
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1beta1
 kind: Kafka
 metadata:
-  name: {{ .Values.lsdmesp.strimzi.clusterName }}
+  name: lsdmesp
+  namespace: lsdmesp
 spec:
   cruiseControl: {}
   entityOperator:
-    topicOperator: {}
-    userOperator: {}
+    topicOperator:
+      resources:
+        limits:
+          cpu: "1"
+          memory: 512Mi
+        requests:
+          cpu: 500m
+          memory: 256Mi
+    userOperator:
+      resources:
+        limits:
+          cpu: "1"
+          memory: 512Mi
+        requests:
+          cpu: 500m
+          memory: 256Mi
   kafka:
-    version: {{ .Values.lsdmesp.kafka.version }}
-    replicas: 3
-    resources:
-      limits:
-        cpu: 3
-        memory: 6Gi
-      requests:
-        cpu: 1
-        memory: 6Gi
-    storage:
-      type: jbod
-      volumes:
-      - deleteClaim: false
-        id: 0
-        size: 10Gi
-        type: persistent-claim
     config:
       auto.create.topics.enable: "true"
       controller.socket.timeout.ms: 60000
       default.replication.factor: 2
       log.cleanup.policy: delete
-      log.message.format.version: "{{ .Values.lsdmesp.kafka.logVersion }}"
-      inter.broker.protocol.version: "{{ .Values.lsdmesp.kafka.protocolVersion }}"
+      log.message.format.version: "2.5"
       log.retention.ms: 172800000
       min.insync.replicas: 1
       num.partitions: 6
@@ -43,24 +41,11 @@ spec:
       zookeeper.connection.timeout.ms: 60000
       zookeeper.session.timeout.ms: 60000
     jvmOptions:
-      -Xms: 1536m
-      -Xmx: 2048m
+      -Xms: 3g
+      -Xmx: 4g
     listeners:
-      - name: plain
-        port: 9092
-        type: internal
-        tls: false
-      - name: tls
-        port: 9093
-        type: internal
-        tls: true
-        authentication:
-          type: tls
-      - name: external
-        port: 9094
-        type: nodeport
-        tls: false
-        configuration:
+      external:
+        overrides:
           bootstrap:
             nodePort: 32100
           brokers:
@@ -70,6 +55,10 @@ spec:
             nodePort: 32001
           - broker: 2
             nodePort: 32002
+        tls: false
+        type: nodeport
+      plain: {}
+      tls: {}
     metrics:
       lowercaseOutputName: true
       rules:
@@ -158,6 +147,21 @@ spec:
         name: kafka_$1_$2_$3
         pattern: kafka.(\w+)<type=(.+), name=(.+)><>(\d+)thPercentile
         type: GAUGE
+    replicas: 3
+    resources:
+      limits:
+        cpu: 6
+        memory: 24Gi
+      requests:
+        cpu: 4
+        memory: 24Gi
+    storage:
+      type: jbod
+      volumes:
+      - deleteClaim: false
+        id: 0
+        size: 1Ti
+        type: persistent-claim
     template:
       pod:
         affinity:
@@ -170,34 +174,12 @@ spec:
                   values:
                   - kafka
               topologyKey: kubernetes.io/hostname
+    version: 2.5.0
+  kafkaExporter: {}
   zookeeper:
-    replicas: 3
-    resources:
-      limits:
-        cpu: 1
-        memory: 2Gi
-      requests:
-        cpu: 200m
-        memory: 2Gi
     jvmOptions:
-      -Xms: 512m
-      -Xmx: 512m
-    storage:
-      deleteClaim: false
-      size: 10Gi
-      type: persistent-claim
-    template:
-      pod:
-        affinity:
-          podAntiAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                - key: application
-                  operator: In
-                  values:
-                  - zookeeper
-              topologyKey: kubernetes.io/hostname
+      -Xms: 1g
+      -Xmx: 1g
     metrics:
       lowercaseOutputName: true
       rules:
@@ -230,3 +212,27 @@ spec:
         pattern: org.apache.ZooKeeperService<name0=ReplicatedServer_id(\d+), name1=replica.(\d+),
           name2=(\w+), name3=(\w+)><>(\w+)
         type: GAUGE
+    replicas: 3
+    resources:
+      limits:
+        cpu: 2
+        memory: 4Gi
+      requests:
+        cpu: 2
+        memory: 4Gi
+    storage:
+      deleteClaim: false
+      size: 100Gi
+      type: persistent-claim
+    template:
+      pod:
+        affinity:
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                - key: application
+                  operator: In
+                  values:
+                  - zookeeper
+              topologyKey: kubernetes.io/hostname

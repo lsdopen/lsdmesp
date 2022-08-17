@@ -106,3 +106,4 @@ spec:
       strimzi.io/name: {{ .Values.lsdmesp.strimzi.clusterName }}-zookeeper
   policyTypes:
   - Ingress
+

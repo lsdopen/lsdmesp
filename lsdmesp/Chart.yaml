@@ -1,5 +1,5 @@
 apiVersion: v2
-name: ladmesp
+name: lsdmesp
 version: "1.0.1"
 appVersion: "1.0.0"
 # Disabling kubeVersion because GKE is dumb
@@ -7,6 +7,8 @@ appVersion: "1.0.0"
 description: A Helm chart for LSDMESP
 keywords:
   - lsdmesp
+  - event
+  - streaming
   - kubernetes
   - kafka
 home: https://github.com/lsdopen/charts
@@ -36,5 +38,5 @@ dependencies:
   version: "0.3.0"
   repository: https://dhiatn.github.io/helm-kafka-topics-ui/
 - name: akhq
-  version: "0.2.1"
+  version: "0.2.8"
   repository: https://akhq.io/
