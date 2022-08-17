@@ -27,7 +27,7 @@ spec:
   image: docker.io/neilmad/clicks-kafka-connect-avro:latest
   jvmOptions:
     -Xms: 1g
-    -Xmx: 2g
+    -Xmx: 3g
   logging:
     loggers:
       connect.root.logger.level: WARN
@@ -114,7 +114,7 @@ spec:
   resources:
     requests:
       cpu: 250m
-      memory: 2Gi
+      memory: 4Gi
   template:
     pod:
       affinity:
