@@ -100,7 +100,7 @@ cp-helm-charts:
   ## ------------------------------------------------------
   cp-ksql-server:
     enabled: true
-    replicaCount: 3
+    replicaCount: 6
     image: confluentinc/cp-ksqldb-server
     imageTag: *anchorcpVersion
     heapOptions: "-Xms512M -Xmx3g"
@@ -115,7 +115,7 @@ cp-helm-charts:
       ksql.service.id: lsdmesp-ksql-server
       log4j.root.loglevel: WARN
       confluent.support.metrics.enable: false
-      ksql.streams.num.stream.threads: 6
+      ksql.streams.num.stream.threads: 2
       ksql.streams.consumer.heartbeat.interval.ms: 10000
       ksql.streams.consumer.session.timeout.ms: 180000
       ksql.streams.consumer.max.poll.interval.ms: "86400000"
