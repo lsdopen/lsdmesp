@@ -1,4 +1,4 @@
-#Deploy
+# Deploy
 
 Create the namespaces
 ```
@@ -23,7 +23,7 @@ Wait for all pods to deploy.
 KafkaConnect is scaled down to 0 replicas.
 
 
-#Post-deployment
+# Post-deployment
 Scale up the Connect pods
 
 ```
