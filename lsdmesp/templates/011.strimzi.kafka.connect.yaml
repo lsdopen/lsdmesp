@@ -26,8 +26,8 @@ spec:
     worker.sync.timeout.ms: 60000
   image: docker.io/neilmad/clicks-kafka-connect-avro:latest
   jvmOptions:
-    -Xms: 1g
-    -Xmx: 2g
+    -Xms: 2g
+    -Xmx: 5g
   logging:
     loggers:
       connect.root.logger.level: WARN
@@ -114,19 +114,25 @@ spec:
   resources:
     requests:
       cpu: 250m
-      memory: 2Gi
+      memory: 7Gi
   template:
     pod:
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: application
-                operator: In
-                values:
-                - kafkaconnect
-            topologyKey: kubernetes.io/hostname
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - kafka-connect
+                - key: strimzi.io/cluster
+                  operator: In
+                  values:
+                  - lsdmesp
+              topologyKey: kubernetes.io/hostname
+            weight: 100
   tls:
     trustedCertificates:
     - certificate: ca.crt

@@ -41,8 +41,8 @@ spec:
       zookeeper.connection.timeout.ms: 60000
       zookeeper.session.timeout.ms: 60000
     jvmOptions:
-      -Xms: 3g
-      -Xmx: 4g
+      -Xms: 4g
+      -Xmx: 5g
     listeners:
       external:
         overrides:
@@ -151,10 +151,10 @@ spec:
     resources:
       limits:
         cpu: 6
-        memory: 24Gi
+        memory: 28Gi
       requests:
-        cpu: 4
-        memory: 24Gi
+        cpu: 3
+        memory: 28Gi
     storage:
       type: jbod
       volumes:
@@ -165,15 +165,38 @@ spec:
     template:
       pod:
         affinity:
-          podAntiAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
+          nodeAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - preference:
                 matchExpressions:
-                - key: application
+                - key: accept-pod
                   operator: In
                   values:
-                  - kafka
-              topologyKey: kubernetes.io/hostname
+                  - lsdmesp-kafka-0
+              weight: 80
+            - preference:
+                matchExpressions:
+                - key: accept-pod
+                  operator: In
+                  values:
+                  - lsdmesp-kafka-1
+              weight: 40
+            - preference:
+                matchExpressions:
+                - key: accept-pod
+                  operator: In
+                  values:
+                  - lsdmesp-kafka-2
+              weight: 20          
+          podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchExpressions:
+                  - key: application
+                    operator: In
+                    values:
+                    - kafka
+                topologyKey: kubernetes.io/hostname
     version: 2.5.0
   kafkaExporter: {}
   zookeeper:
