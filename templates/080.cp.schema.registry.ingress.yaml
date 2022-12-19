@@ -1,0 +1,31 @@
+# Kafka Schema Registry Ingress and NodePort
+{{- if or (eq .Values.lsdmesp.clusterType "gke") (eq .Values.lsdmesp.clusterType "rancher") -}}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    meta.helm.sh/release-name: {{ .Release.Name }}
+    meta.helm.sh/release-namespace: {{ .Release.Namespace }}
+  labels:
+    app: cp-ksql-server
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+  name: lsdmesp-cp-schema-registry-external
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.lsdmesp.confluent.schemaRegistry.ingress.url }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: lsdmesp-cp-schema-registry
+            port:
+              number: 8081
+        path: /
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - {{ .Values.lsdmesp.confluent.schemaRegistry.ingress.url }}
+---
+{{- end }}

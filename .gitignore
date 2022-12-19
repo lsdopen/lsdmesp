@@ -3,6 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# values.*.yml files for local dev and customers
+values.*.yaml
+
 # User-specific files
 *.rsuser
 *.suo

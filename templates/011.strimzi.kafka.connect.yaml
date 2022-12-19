@@ -1,0 +1,66 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnect
+metadata:
+  name: lsdmesp
+  namespace: lsdmesp
+spec:
+  version: 3.2.3
+  replicas: 2
+  bootstrapServers: lsdmesp-kafka-bootstrap:9093
+  config:
+    config.storage.topic: connect-cluster-configs
+    group.id: connect-cluster
+    heartbeat.interval.ms: 3000
+    key.converter.schema.registry.url: http://lsdmesp-cp-schema-registry:8081
+    offset.flush.interval.ms: 60000
+    offset.flush.timeout.ms: 5000
+    offset.storage.topic: connect-cluster-offsets
+    rebalance.timeout.ms: 60000
+    request.timeout.ms: 40000
+    session.timeout.ms: 10000
+    status.storage.topic: connect-cluster-status
+    value.converter.schema.registry.url: http://lsdmesp-cp-schema-registry:8081
+    worker.sync.timeout.ms: 3000
+    config.storage.replication.factor: -1
+    offset.storage.replication.factor: -1
+    status.storage.replication.factor: -1    
+  jvmOptions:
+    -Xms: 1536m
+    -Xmx: 1536m
+  logging:
+    loggers:
+      connect.root.logger.level: WARN
+    type: inline
+  metricsConfig:
+    type: jmxPrometheusExporter
+    valueFrom:
+      configMapKeyRef:
+        name: connect-metrics
+        key: metrics-config.yml
+  resources:
+    limits:
+      cpu: 1
+      memory: 2Gi
+    requests:
+      cpu: 1
+      memory: 2Gi
+  template:
+    pod:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - kafka-connect
+                - key: strimzi.io/cluster
+                  operator: In
+                  values:
+                  - lsdmesp
+              topologyKey: kubernetes.io/hostname
+  tls:
+    trustedCertificates:
+      - secretName: lsdmesp-cluster-ca-cert
+        certificate: ca.crt
