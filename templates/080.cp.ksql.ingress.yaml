@@ -1,0 +1,31 @@
+# Kafka KSQL Ingress and NodePort
+{{- if or (eq .Values.lsdmesp.clusterType "gke") (eq .Values.lsdmesp.clusterType "rancher") -}}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    meta.helm.sh/release-name: {{ .Release.Name }}
+    meta.helm.sh/release-namespace: {{ .Release.Namespace }}
+  labels:
+    app: cp-ksql-server
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+  name: lsdmesp-cp-ksql-server-external
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.lsdmesp.confluent.ksqldb.ingress.url }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: lsdmesp-cp-ksql-server
+            port:
+              number: 8088
+        path: /
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - {{ .Values.lsdmesp.confluent.ksqldb.ingress.url }}
+---
+{{- end }}
