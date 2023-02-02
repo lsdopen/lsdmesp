@@ -1,4 +1,4 @@
-## FNB POP : LSD Managed Event Streaming Platform : Post-installation testing
+## LSDOPEN : LSD Managed Event Streaming Platform : Post-installation testing
 ----
 ```
 The following tests have been conducted on all 3 environments (Development, Production and Disaster Recovery). These tests confirm that all components are running according to specification.
@@ -8,14 +8,14 @@ The following tests have been conducted on all 3 environments (Development, Prod
 ## Post-installation testing procedure
 ----
 - **Test internal listener from Kafka Army Knife**
-  - These tests require network access to the RKE worker nodes and are solely to allow for convenient access for administrators
+  - These tests require network access to the k8s worker nodes and are solely to allow for convenient access for administrators
   - > Setup
-    - SSH to Kafka Army Knife. This should be done from Bastion from F-number account. 
+    - SSH to Kafka Army Knife. This should be done from the bastion.
     - Public keys can be added by LSD if necessary.
     - Examples:
-      - Dev: `[f5484960@cts-rbkfkbstd01:/home/f5484960]$ ssh -p 32731 root@cts-rbkfkpopd01`
-      - Prd: `[f5484960@cts-rbkfkbstp01:/home/f5484960]$ ssh -p 32731 root@cts-rbkfkpopp01`
-      - DR: `[f5484960@cts-r4kfkbstp01:/home/f5484960]$ ssh -p 32731 root@cts-r4kfkpopp01` 
+      - Dev: `[lsd@devbastion:/home/lsd]$ ssh -p 32731 root@dev-worker1`
+      - Prd: `[lsd@dprdbastion:/home/lsd]$ ssh -p 32731 root@ord-worker1`
+      - DR: `[lsd@drbastion:/home/lsd]$ ssh -p 32731 root@dr-worker1` 
   - > create topic
     - `root@kafka-army-knife-688868cd6c-bfqfd:~# kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --topic army-knife.test --create`
   - > describe topic
@@ -26,10 +26,10 @@ The following tests have been conducted on all 3 environments (Development, Prod
 ----
 - **Tests with EXTERNAL listener**
   - These tests can be run from any machine with access to the external listener
-    - Dev: `bootstrap.kafka-dev-rb.rke.fnb.co.za:32100`
-    - Prod:`bootstrap.kafka-prod-rb.rke.fnb.co.za:32100`
-    - DR: `bootstrap.kafka-prod-r4.rke.fnb.co.za:32100`
-  - **Setup (scripts can be found in lsdmesp Bitbucket repository under `./scripts`)**
+    - Dev: `bootstrap.kafka-dev.lsdopen.io:32100`
+    - Prod:`bootstrap.kafka-prd.lsdopen.io:32100`
+    - DR: `bootstrap.kafka-dr.lsdopen.io:32100`
+  - **Setup (scripts can be found in lsdmesp repository under `./post-deploy/scripts`)**
     - > Extract certificates and create client properties file for Kafka clients
       - `cd ./scripts/bin`
       - For lsdadmin user:
@@ -49,20 +49,20 @@ The following tests have been conducted on all 3 environments (Development, Prod
     - > Setup environment
       - These are needed for all tests
       - Dev
-        - `export BOOTSTRAP_SERVERS=bootstrap.kafka-dev-rb.rke.fnb.co.za:32100`
-        - `export SCHEMA_REGISTRY=https://schema-registry.apps.kafka-dev-rb.rke.fnb.co.za`
+        - `export BOOTSTRAP_SERVERS=bootstrap.kafka-dev.lsdopen.io:32100`
+        - `export SCHEMA_REGISTRY=https://schema-registry.apps.kafka-dev.lsdopen.io`
       - Prod
-        - `export BOOTSTRAP_SERVERS=bootstrap.kafka-prod-rb.rke.fnb.co.za:32100`
-        - `export SCHEMA_REGISTRY=https://schema-registry.apps.kafka-prod-rb.rke.fnb.co.za`
+        - `export BOOTSTRAP_SERVERS=bootstrap.kafka-prd.lsdopen.io:32100`
+        - `export SCHEMA_REGISTRY=https://schema-registry.apps.kafka-prd.lsdopen.io`
       - DR
-        - `export BOOTSTRAP_SERVERS=bootstrap.kafka-prod-r4.rke.fnb.co.za:32100`
-        - `export SCHEMA_REGISTRY=https://schema-registry.apps.kafka-prod-r4.rke.fnb.co.za`
+        - `export BOOTSTRAP_SERVERS=bootstrap.kafka-dr.lsdopen.io:32100`
+        - `export SCHEMA_REGISTRY=https://schema-registry.apps.kafka-dr.lsdopen.io`
 ----
   - **Test superuser**
     - ### Setup
       - > Setup environment for client properties. 
-        - `export CLIENT_PROPERTIES=~/lsdmesp/scripts/config/lsdadmin.properties`
-        - `~/lsdmesp/scripts/` should be replaced with the path to the `scripts` folder from the lsdmesp Bitbucket repository.
+        - `export CLIENT_PROPERTIES=~/lsdmesp/post-deploy/scripts/config/lsdadmin.properties`
+        - `~/lsdmesp/post-deploy/scripts/` should be replaced with the path to the `scripts` folder from the lsdmesp repository.
     - ### Tests
       - > create topic
         - `kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config $CLIENT_PROPERTIES --topic external.test --create`
@@ -81,8 +81,8 @@ The following tests have been conducted on all 3 environments (Development, Prod
   - **Test generic-producer**
     - ### Setup
       - > Setup environment for client properties. 
-        - `export CLIENT_PROPERTIES=~/lsdmesp/scripts/config/generic-producer.properties`
-        - `~/lsdmesp/scripts/` should be replaced with the path to the `scripts` folder from the lsdmesp Bitbucket repository.
+        - `export CLIENT_PROPERTIES=~/lsdmesp/post-deploy/scripts/config/generic-producer.properties`
+        - `~/lsdmesp/post-deploy/scripts/` should be replaced with the path to the `scripts` folder from the lsdmesp repository.
     - ### Tests
       - > create topic
         - `kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config $CLIENT_PROPERTIES --topic external.test --create`
@@ -101,8 +101,8 @@ The following tests have been conducted on all 3 environments (Development, Prod
   - **Test generic-consumer**
     - ### Setup
       - > Setup environment for client properties. 
-        - `export CLIENT_PROPERTIES=~/lsdmesp/scripts/config/generic-consumer.properties`
-        - `~/lsdmesp/scripts/` should be replaced with the path to the `scripts` folder from the lsdmesp Bitbucket repository.
+        - `export CLIENT_PROPERTIES=~/lsdmesp/post-deploy/scripts/config/generic-consumer.properties`
+        - `~/lsdmesp/post-deploy/scripts/` should be replaced with the path to the `scripts` folder from the lsdmesp repository.
     - ### Tests
       - > create topic
         - `kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config $CLIENT_PROPERTIES --topic external.test --create`
@@ -124,9 +124,9 @@ The following tests have been conducted on all 3 environments (Development, Prod
     - **Test producing to Avro topic**
       - ### Setup
         - > Setup environment for producing
-          - `export CLIENT_PROPERTIES=~/lsdmesp/scripts/config/generic-producer.properties`
-          - `export AVRO_SCHEMA=~/lsdmesp/tests/orders-avro-schema.json`
-          - `~/lsdmesp/scripts/` and `~/lsdmesp/tests/` should be replaced with the path to the `scripts` and `tests` folders from the lsdmesp Bitbucket repository.
+          - `export CLIENT_PROPERTIES=~/lsdmesp/post-deploy/scripts/config/generic-producer.properties`
+          - `export AVRO_SCHEMA=~/lsdmesp/post-deploy/tests/orders-avro-schema.json`
+          - `~/lsdmesp/post-deploy/scripts/` and `~/lsdmesp/post-deploy/tests/` should be replaced with the path to the `scripts` and `tests` folders from the lsdmesp repository.
       - ### Tests
         - > create topic
           - `kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config $CLIENT_PROPERTIES --topic orders-avro --create`
@@ -142,8 +142,8 @@ The following tests have been conducted on all 3 environments (Development, Prod
     - **Test consuming from Avro topic**
       - ### Setup
         - > Setup environment for consuming
-          - `export CLIENT_PROPERTIES=~/lsdmesp/scripts/config/generic-consumer.properties`
-          - `~/lsdmesp/scripts/` should be replaced with the path to the `scripts` folder from the lsdmesp Bitbucket repository.
+          - `export CLIENT_PROPERTIES=~/lsdmesp/post-deploy/scripts/config/generic-consumer.properties`
+          - `~/lsdmesp/post-deploy/scripts/` should be replaced with the path to the `scripts` folder from the lsdmesp repository.
       - ### Tests
         - > consume avro with generic-consumer
           - `kafka-avro-console-consumer --bootstrap-server $BOOTSTRAP_SERVERS --consumer.config $CLIENT_PROPERTIES --topic orders-avro --property schema.registry.url=$SCHEMA_REGISTRY --from-beginning`
@@ -157,25 +157,25 @@ The following tests have been conducted on all 3 environments (Development, Prod
   - **Access Kafka UIs**
     - ### Dev
       - > Kafka UI
-        - https://kafka-ui.apps.kafka-dev-rb.rke.fnb.co.za
+        - https://kafka-ui.apps.kafka-dev.lsdopen.io
       - > Kafka Connect UI
-        - https://connect-ui.apps.kafka-dev-rb.rke.fnb.co.za
+        - https://connect-ui.apps.kafka-dev.lsdopen.io
       - > Kafka Schema Registry UI
-        - https://schema-registry-ui.apps.kafka-dev-rb.rke.fnb.co.za
+        - https://schema-registry-ui.apps.kafka-dev.lsdopen.io
     - ### Prod
       - > Kafka UI
-        - https://kafka-ui.apps.kafka-prod-rb.rke.fnb.co.za
+        - https://kafka-ui.apps.kafka-prd.lsdopen.io
       - > Kafka Connect UI
-        - https://connect-ui.apps.kafka-prod-rb.rke.fnb.co.za
+        - https://connect-ui.apps.kafka-prd.lsdopen.io
       - > Kafka Schema Registry UI
-        - https://schema-registry-ui.apps.kafka-prod-rb.rke.fnb.co.za
+        - https://schema-registry-ui.apps.kafka-prd.lsdopen.io
     - ### DR
       - > Kafka UI
-        - https://kafka-ui.apps.kafka-prod-r4.rke.fnb.co.za
+        - https://kafka-ui.apps.kafka-dr.lsdopen.io
       - > Kafka Connect UI
-        - https://connect-ui.apps.kafka-prod-r4.rke.fnb.co.za
+        - https://connect-ui.apps.kafka-dr.lsdopen.io
       - > Kafka Schema Registry UI
-        - https://schema-registry-ui.apps.kafka-prod-r4.rke.fnb.co.za
+        - https://schema-registry-ui.apps.kafka-dr.lsdopen.io
 
 ----
 - **Test LSDobserve UIs**
@@ -189,28 +189,28 @@ The following tests have been conducted on all 3 environments (Development, Prod
   - **Access Obsevability UIs**
     - ### Dev
       - > Prometheus
-        - https://prometheus.apps.kafka-dev-rb.rke.fnb.co.za
+        - https://prometheus.apps.kafka-dev.lsdopen.io
       - > Grafana
-        - https://grafana.apps.kafka-dev-rb.rke.fnb.co.za
-        - [Kafka Grafana dashboards](https://grafana.apps.kafka-dev-rb.rke.fnb.co.za/dashboards/f/35-GEmd4k/strimzi)
+        - https://grafana.apps.kafka-dev.lsdopen.io
+        - [Kafka Grafana dashboards](https://grafana.apps.kafka-dev.lsdopen.io/dashboards/f/35-GEmd4k/strimzi)
       - > Kibana
-        - https://kibana.apps.kafka-dev-rb.rke.fnb.co.za
-        - [Kafka Kibana logs](https://kibana.apps.kafka-dev-rb.rke.fnb.co.za/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(kubernetes.namespace,kubernetes.container.name,kubernetes.pod.name,log.level,message),filters:!(),index:filebeat-7.17.7-project,interval:auto,query:(language:kuery,query:''),sort:!(!('@timestamp',desc))))
+        - https://kibana.apps.kafka-dev.lsdopen.io
+        - [Kafka Kibana logs](https://kibana.apps.kafka-dev.lsdopen.io/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(kubernetes.namespace,kubernetes.container.name,kubernetes.pod.name,log.level,message),filters:!(),index:filebeat-7.17.7-project,interval:auto,query:(language:kuery,query:''),sort:!(!('@timestamp',desc))))
     - ### Prod
       - > Prometheus
-        - https://prometheus-lsdo.apps.kafka-prod-rb.rke.fnb.co.za
+        - https://prometheus-lsdo.apps.kafka-prd.lsdopen.io
       - > Grafana
-        - https://grafana-lsdo.apps.kafka-prod-rb.rke.fnb.co.za
-        - [Kafka Grafana dashboards](https://grafana-lsdo.apps.kafka-prod-rb.rke.fnb.co.za/dashboards/f/kLFDG8c4z/kafka)
+        - https://grafana-lsdo.apps.kafka-prd.lsdopen.io
+        - [Kafka Grafana dashboards](https://grafana-lsdo.apps.kafka-prd.lsdopen.io/dashboards/f/kLFDG8c4z/kafka)
       - > Kibana
-        - https://kibana.apps.kafka-prod-rb.rke.fnb.co.za
-        - [Kafka Kibana logs](https://kibana.apps.kafka-prod-rb.rke.fnb.co.za/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(kubernetes.namespace,kubernetes.container.name,kubernetes.pod.name,log.level,message),filters:!(),index:filebeat-7.17.7-project,interval:auto,query:(language:kuery,query:''),sort:!(!('@timestamp',desc))))
+        - https://kibana.apps.kafka-prd.lsdopen.io
+        - [Kafka Kibana logs](https://kibana.apps.kafka-prd.lsdopen.io/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(kubernetes.namespace,kubernetes.container.name,kubernetes.pod.name,log.level,message),filters:!(),index:filebeat-7.17.7-project,interval:auto,query:(language:kuery,query:''),sort:!(!('@timestamp',desc))))
     - ### DR
       - > Prometheus
-        - https://prometheus.apps.kafka-prod-r4.rke.fnb.co.za
+        - https://prometheus.apps.kafka-dr.lsdopen.io
       - > Grafana
-        - https://grafana.apps.kafka-prod-r4.rke.fnb.co.za
-        - [Kafka Grafana dashboards](https://grafana.apps.kafka-prod-r4.rke.fnb.co.za/dashboards/f/gc-aGRoVz/kafka)
+        - https://grafana.apps.kafka-dr.lsdopen.io
+        - [Kafka Grafana dashboards](https://grafana.apps.kafka-dr.lsdopen.io/dashboards/f/gc-aGRoVz/kafka)
       - > Kibana
-        - https://kibana.apps.kafka-prod-r4.rke.fnb.co.za
-        - [Kafka Kibana logs](https://kibana.apps.kafka-prod-r4.rke.fnb.co.za/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(kubernetes.namespace,kubernetes.container.name,kubernetes.pod.name,log.level,message),filters:!(),index:filebeat-7.17.7-project,interval:auto,query:(language:kuery,query:''),sort:!(!('@timestamp',desc))))
+        - https://kibana.apps.kafka-dr.lsdopen.io
+        - [Kafka Kibana logs](https://kibana.apps.kafka-dr.lsdopen.io/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(kubernetes.namespace,kubernetes.container.name,kubernetes.pod.name,log.level,message),filters:!(),index:filebeat-7.17.7-project,interval:auto,query:(language:kuery,query:''),sort:!(!('@timestamp',desc))))
