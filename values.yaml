@@ -13,7 +13,7 @@ lsdmesp:
   kafkaConnectUIURL: &anchorkafkaConnectUIURL "connect-ui.apps.mesp.lsdopen.io"
   kafkaSchemaRegistryUIURL: &anchorkafkaSchemaRegistryUIURL "schema-registry-ui.apps.mesp.lsdopen.io"
   kafkaAllUIUsername: &anchorkafkaAllUIUsername "kafka"
-  kafkaAllUIPassword: &anchorkafkaAllUIPassword "sda7i57SEF9G3jw"
+  kafkaAllUIPassword: &anchorkafkaAllUIPassword "secretpassword"
   prometheus:
     # Requires podmonitors.monitoring.coreos.com CRD
     enableMetrics: true

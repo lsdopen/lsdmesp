@@ -1,10 +1,11 @@
 #Deploy
 
-Label the nodes for node affinity. Prod example below:
+Label the nodes for node affinity. This will force the Kafka brokers to be scheduled on to specific nodes.
+Example below:
 ```
-kubectl label node cts-rbkfkpopp01 accept-pod=lsdmesp-kafka-0
-kubectl label node cts-rbkfkpopp02 accept-pod=lsdmesp-kafka-1
-kubectl label node cts-rbkfkpopp03 accept-pod=lsdmesp-kafka-2
+kubectl label node prdworker01 accept-pod=lsdmesp-kafka-0
+kubectl label node prdworker02 accept-pod=lsdmesp-kafka-1
+kubectl label node prdworker03 accept-pod=lsdmesp-kafka-2
 ```
 
 Create the namespaces
@@ -22,8 +23,7 @@ Deploy:
 helm install lsdmesp . -f values.yaml -n lsdmesp; helm upgrade lsdmesp . -f values.yaml -n lsdmesp
 ```
 
-
-Patch KSQL deployment to include UDFs NFS share
+If using KSQL, patch KSQL deployment to include UDFs NFS share. This allows for adding custom UDFs to be used in KSQL.
 ```
 cat <<EOF | kubectl patch deployment lsdmesp-cp-ksql-server --patch "
 spec:
@@ -42,13 +42,19 @@ spec:
 EOF
 ```
 
+Any UDFs should be added to a directory called ./extra.files/ksql.udf/
 Copy UDFs to NFS share
 ```
-kubectl get pods -n lsdmesp | grep cp-ksql-server | head -n 1 | awk '{print $1}' | xargs -I{} kubectl cp ./extra.files/ksql.udf/clicks-udf-1.0.4.jar {}:/opt/ksqldb-udfs/clicks-udf-1.0.4.jar -c cp-ksql-server -n lsdmesp
+kubectl get pods -n lsdmesp | grep cp-ksql-server | head -n 1 | awk '{print $1}' | xargs -I{} kubectl cp ./extra.files/ksql.udf/*.jar {}:/opt/ksqldb-udfs/ -c cp-ksql-server -n lsdmesp
 ```
 You might see the following when trying to copy the jar.   Just ignore this as the jar would have copied.
 ```
-tar: clicks-udf-1.0.4.jar: Cannot change ownership to uid 1001, gid 1001: Operation not permitted
+tar: lsdmesp-udf-1.0.4.jar: Cannot change ownership to uid 1001, gid 1001: Operation not permitted
 tar: Exiting with failure status due to previous errors
 command terminated with exit code 2
 ```
+
+## Post installation checks:
+
+See ./post-deploy/doc/tests.md for post-installation checks and testing.
+Please see ./tests

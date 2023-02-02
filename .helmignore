@@ -21,3 +21,5 @@
 *.tmproj
 # Additional LSDMESP files if needed
 extra.files/
+# LSDMESP scripts, docs and test files
+post-deploy/

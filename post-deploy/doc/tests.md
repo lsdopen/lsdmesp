@@ -1,0 +1,216 @@
+## FNB POP : LSD Managed Event Streaming Platform : Post-installation testing
+----
+```
+The following tests have been conducted on all 3 environments (Development, Production and Disaster Recovery). These tests confirm that all components are running according to specification.
+```
+
+----
+## Post-installation testing procedure
+----
+- **Test internal listener from Kafka Army Knife**
+  - These tests require network access to the RKE worker nodes and are solely to allow for convenient access for administrators
+  - > Setup
+    - SSH to Kafka Army Knife. This should be done from Bastion from F-number account. 
+    - Public keys can be added by LSD if necessary.
+    - Examples:
+      - Dev: `[f5484960@cts-rbkfkbstd01:/home/f5484960]$ ssh -p 32731 root@cts-rbkfkpopd01`
+      - Prd: `[f5484960@cts-rbkfkbstp01:/home/f5484960]$ ssh -p 32731 root@cts-rbkfkpopp01`
+      - DR: `[f5484960@cts-r4kfkbstp01:/home/f5484960]$ ssh -p 32731 root@cts-r4kfkpopp01` 
+  - > create topic
+    - `root@kafka-army-knife-688868cd6c-bfqfd:~# kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --topic army-knife.test --create`
+  - > describe topic
+    - `root@kafka-army-knife-688868cd6c-bfqfd:~# kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --topic army-knife.test --describe`
+  - > delete topic
+    - `root@kafka-army-knife-688868cd6c-bfqfd:~# kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --topic army-knife.test --delete`
+
+----
+- **Tests with EXTERNAL listener**
+  - These tests can be run from any machine with access to the external listener
+    - Dev: `bootstrap.kafka-dev-rb.rke.fnb.co.za:32100`
+    - Prod:`bootstrap.kafka-prod-rb.rke.fnb.co.za:32100`
+    - DR: `bootstrap.kafka-prod-r4.rke.fnb.co.za:32100`
+  - **Setup (scripts can be found in lsdmesp Bitbucket repository under `./scripts`)**
+    - > Extract certificates and create client properties file for Kafka clients
+      - `cd ./scripts/bin`
+      - For lsdadmin user:
+        - `./get_user_certs.sh lsdadmin`
+        - `./create_client_properties.sh lsdadmin`
+      - For generic-producer user:
+        - `./get_user_certs.sh generic-producer`
+        - `./create_client_properties.sh generic-producer`
+      - For generic-consumer user:
+        - `./get_user_certs.sh generic-consumer`
+        - `./create_client_properties.sh generic-consumer`
+    - > Install either Apache Kafka CLI or Confluent Platform CLI
+      - Apache Kafka: https://downloads.apache.org/kafka/3.3.1/kafka_2.13-3.3.1.tgz
+      - Confluent Platform: https://packages.confluent.io/archive/7.3/confluent-community-7.3.1.tar.gz
+      - NOTE: Confluent Platform binaries do not have a file extension, e.g. kafka-topics vs kafka-topics.sh
+      - NOTE: Apache Kafka CLI does not have support for Avro, KafkaCat can be installed instead
+    - > Setup environment
+      - These are needed for all tests
+      - Dev
+        - `export BOOTSTRAP_SERVERS=bootstrap.kafka-dev-rb.rke.fnb.co.za:32100`
+        - `export SCHEMA_REGISTRY=https://schema-registry.apps.kafka-dev-rb.rke.fnb.co.za`
+      - Prod
+        - `export BOOTSTRAP_SERVERS=bootstrap.kafka-prod-rb.rke.fnb.co.za:32100`
+        - `export SCHEMA_REGISTRY=https://schema-registry.apps.kafka-prod-rb.rke.fnb.co.za`
+      - DR
+        - `export BOOTSTRAP_SERVERS=bootstrap.kafka-prod-r4.rke.fnb.co.za:32100`
+        - `export SCHEMA_REGISTRY=https://schema-registry.apps.kafka-prod-r4.rke.fnb.co.za`
+----
+  - **Test superuser**
+    - ### Setup
+      - > Setup environment for client properties. 
+        - `export CLIENT_PROPERTIES=~/lsdmesp/scripts/config/lsdadmin.properties`
+        - `~/lsdmesp/scripts/` should be replaced with the path to the `scripts` folder from the lsdmesp Bitbucket repository.
+    - ### Tests
+      - > create topic
+        - `kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config $CLIENT_PROPERTIES --topic external.test --create`
+      - > describe topic
+        - `kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config $CLIENT_PROPERTIES --topic external.test --describe`
+      - > produce to topic
+        - `kafka-console-producer --bootstrap-server $BOOTSTRAP_SERVERS --producer.config $CLIENT_PROPERTIES --topic external.test`
+        - input a few messages and press ctrl-d to quit
+      - > consume from topic
+        - `kafka-console-consumer --bootstrap-server $BOOTSTRAP_SERVERS --consumer.config $CLIENT_PROPERTIES --topic external.test --from-beginning`
+      - > delete topic
+        - `kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config $CLIENT_PROPERTIES --topic external.test --delete`
+    - ### Expected outcome
+      - All tests are expected to succeed.
+----
+  - **Test generic-producer**
+    - ### Setup
+      - > Setup environment for client properties. 
+        - `export CLIENT_PROPERTIES=~/lsdmesp/scripts/config/generic-producer.properties`
+        - `~/lsdmesp/scripts/` should be replaced with the path to the `scripts` folder from the lsdmesp Bitbucket repository.
+    - ### Tests
+      - > create topic
+        - `kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config $CLIENT_PROPERTIES --topic external.test --create`
+      - > describe topic
+        - `kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config $CLIENT_PROPERTIES --topic external.test --describe`
+      - > produce to topic
+        - `kafka-console-producer --bootstrap-server $BOOTSTRAP_SERVERS --producer.config $CLIENT_PROPERTIES --topic external.test`
+        - input a few messages and press ctrl-d to quit
+      - > consume from topic
+        - `kafka-console-consumer --bootstrap-server $BOOTSTRAP_SERVERS --consumer.config $CLIENT_PROPERTIES --topic external.test --from-beginning`
+      - > delete topic
+        - `kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config $CLIENT_PROPERTIES --topic external.test --delete`
+    - ### Expected outcome
+      - `create topic` and `produce to topic` are expected to succeed. `describe topic`, `consume from topic` and `delete topic` are expected to fail.
+----
+  - **Test generic-consumer**
+    - ### Setup
+      - > Setup environment for client properties. 
+        - `export CLIENT_PROPERTIES=~/lsdmesp/scripts/config/generic-consumer.properties`
+        - `~/lsdmesp/scripts/` should be replaced with the path to the `scripts` folder from the lsdmesp Bitbucket repository.
+    - ### Tests
+      - > create topic
+        - `kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config $CLIENT_PROPERTIES --topic external.test --create`
+      - > describe topic
+        - `kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config $CLIENT_PROPERTIES --topic external.test --describe`
+      - > produce to topic
+        - `kafka-console-producer --bootstrap-server $BOOTSTRAP_SERVERS --producer.config $CLIENT_PROPERTIES --topic external.test`
+        - input a few messages and press ctrl-d to quit
+      - > consume from topic
+        - `kafka-console-consumer --bootstrap-server $BOOTSTRAP_SERVERS --consumer.config $CLIENT_PROPERTIES --topic external.test --from-beginning`
+      - > delete topic
+        - `kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config $CLIENT_PROPERTIES --topic external.test --delete`
+    - ### Expected outcome
+      - `consume from topic` is expected to succeed. `create topic`, `describe topic`, `produce to topic` and `delete topic` are expected to fail.
+----
+  - **Test Schema Registry**
+    - > Description
+      - Test Schema Registry and Avro schemas by producing and consuming Avro data
+    - **Test producing to Avro topic**
+      - ### Setup
+        - > Setup environment for producing
+          - `export CLIENT_PROPERTIES=~/lsdmesp/scripts/config/generic-producer.properties`
+          - `export AVRO_SCHEMA=~/lsdmesp/tests/orders-avro-schema.json`
+          - `~/lsdmesp/scripts/` and `~/lsdmesp/tests/` should be replaced with the path to the `scripts` and `tests` folders from the lsdmesp Bitbucket repository.
+      - ### Tests
+        - > create topic
+          - `kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config $CLIENT_PROPERTIES --topic orders-avro --create`
+        - > produce avro with generic-producer
+          - `kafka-avro-console-producer --bootstrap-server $BOOTSTRAP_SERVERS --producer.config $CLIENT_PROPERTIES --topic orders-avro --property schema.registry.url=$SCHEMA_REGISTRY --property value.schema="$(< $AVRO_SCHEMA)"`
+          - Enter the following one line at a time (NOTE: there will be no prompt, just enter the lines one at a time. Pressing return on an empty line with result in an exception):
+            - `{"number":1,"shipping_address":"ABC Sesame Street,Wichita, KS. 12345","subtotal":110.00,"tax":10.00,"grand_total":120.00,"shipping_cost":0.00}`
+            - `{"number":2,"shipping_address":"123 Cross Street,Irving, CA. 12345","subtotal":5.00,"tax":0.53,"grand_total":6.53,"shipping_cost":1.00}`
+            - `{"number":3,"shipping_address":"5014  Pinnickinick Street, Portland, WA. 97205","subtotal":93.45,"tax":9.34,"grand_total":102.79,"shipping_cost":0.00}`
+            - `{"number":4,"shipping_address":"4082 Elmwood Avenue, Tempe, AX. 85281","subtotal":50.00,"tax":1.00,"grand_total":51.00,"shipping_cost":0.00}`
+            - `{"number":5,"shipping_address":"123 Cross Street,Irving, CA. 12345","subtotal":33.00,"tax":3.33,"grand_total":38.33,"shipping_cost":2.00}`
+          - Ctrl-C when done
+    - **Test consuming from Avro topic**
+      - ### Setup
+        - > Setup environment for consuming
+          - `export CLIENT_PROPERTIES=~/lsdmesp/scripts/config/generic-consumer.properties`
+          - `~/lsdmesp/scripts/` should be replaced with the path to the `scripts` folder from the lsdmesp Bitbucket repository.
+      - ### Tests
+        - > consume avro with generic-consumer
+          - `kafka-avro-console-consumer --bootstrap-server $BOOTSTRAP_SERVERS --consumer.config $CLIENT_PROPERTIES --topic orders-avro --property schema.registry.url=$SCHEMA_REGISTRY --from-beginning`
+
+----
+- **Test Kafka UIs**
+  - > Description
+    - A number of UIs are available for administering and monitoring Kafka.
+  - > Security
+    - Basic security is enabled for all Kafka UIs. The username is `kafka`. The password can be found in the relevant `values.*.yaml` file (e.g. DR: `values.dr.yaml`). The password is in the key `lsdmesp.kafkaAllUIPassword`.
+  - **Access Kafka UIs**
+    - ### Dev
+      - > Kafka UI
+        - https://kafka-ui.apps.kafka-dev-rb.rke.fnb.co.za
+      - > Kafka Connect UI
+        - https://connect-ui.apps.kafka-dev-rb.rke.fnb.co.za
+      - > Kafka Schema Registry UI
+        - https://schema-registry-ui.apps.kafka-dev-rb.rke.fnb.co.za
+    - ### Prod
+      - > Kafka UI
+        - https://kafka-ui.apps.kafka-prod-rb.rke.fnb.co.za
+      - > Kafka Connect UI
+        - https://connect-ui.apps.kafka-prod-rb.rke.fnb.co.za
+      - > Kafka Schema Registry UI
+        - https://schema-registry-ui.apps.kafka-prod-rb.rke.fnb.co.za
+    - ### DR
+      - > Kafka UI
+        - https://kafka-ui.apps.kafka-prod-r4.rke.fnb.co.za
+      - > Kafka Connect UI
+        - https://connect-ui.apps.kafka-prod-r4.rke.fnb.co.za
+      - > Kafka Schema Registry UI
+        - https://schema-registry-ui.apps.kafka-prod-r4.rke.fnb.co.za
+
+----
+- **Test LSDobserve UIs**
+  - > Description
+    - Grafana, Prometheus and Kibana are available for monitoring metrics and logs for LSD Managed Event Streaming Platform.
+  - > Security
+    - Grafana `admin` user password
+      - `kubectl -n lsdobserve get secret lsdobserve-grafana -o=jsonpath='{.data.admin-password}' | base64 -d ; echo`
+    - Kibana `elastic` user password
+      - `kubectl -n lsdobserve get secret lsdobserve-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 -d; echo`
+  - **Access Obsevability UIs**
+    - ### Dev
+      - > Prometheus
+        - https://prometheus.apps.kafka-dev-rb.rke.fnb.co.za
+      - > Grafana
+        - https://grafana.apps.kafka-dev-rb.rke.fnb.co.za
+        - [Kafka Grafana dashboards](https://grafana.apps.kafka-dev-rb.rke.fnb.co.za/dashboards/f/35-GEmd4k/strimzi)
+      - > Kibana
+        - https://kibana.apps.kafka-dev-rb.rke.fnb.co.za
+        - [Kafka Kibana logs](https://kibana.apps.kafka-dev-rb.rke.fnb.co.za/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(kubernetes.namespace,kubernetes.container.name,kubernetes.pod.name,log.level,message),filters:!(),index:filebeat-7.17.7-project,interval:auto,query:(language:kuery,query:''),sort:!(!('@timestamp',desc))))
+    - ### Prod
+      - > Prometheus
+        - https://prometheus-lsdo.apps.kafka-prod-rb.rke.fnb.co.za
+      - > Grafana
+        - https://grafana-lsdo.apps.kafka-prod-rb.rke.fnb.co.za
+        - [Kafka Grafana dashboards](https://grafana-lsdo.apps.kafka-prod-rb.rke.fnb.co.za/dashboards/f/kLFDG8c4z/kafka)
+      - > Kibana
+        - https://kibana.apps.kafka-prod-rb.rke.fnb.co.za
+        - [Kafka Kibana logs](https://kibana.apps.kafka-prod-rb.rke.fnb.co.za/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(kubernetes.namespace,kubernetes.container.name,kubernetes.pod.name,log.level,message),filters:!(),index:filebeat-7.17.7-project,interval:auto,query:(language:kuery,query:''),sort:!(!('@timestamp',desc))))
+    - ### DR
+      - > Prometheus
+        - https://prometheus.apps.kafka-prod-r4.rke.fnb.co.za
+      - > Grafana
+        - https://grafana.apps.kafka-prod-r4.rke.fnb.co.za
+        - [Kafka Grafana dashboards](https://grafana.apps.kafka-prod-r4.rke.fnb.co.za/dashboards/f/gc-aGRoVz/kafka)
+      - > Kibana
+        - https://kibana.apps.kafka-prod-r4.rke.fnb.co.za
+        - [Kafka Kibana logs](https://kibana.apps.kafka-prod-r4.rke.fnb.co.za/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(kubernetes.namespace,kubernetes.container.name,kubernetes.pod.name,log.level,message),filters:!(),index:filebeat-7.17.7-project,interval:auto,query:(language:kuery,query:''),sort:!(!('@timestamp',desc))))
