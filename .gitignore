@@ -1,0 +1,13 @@
+**.tgz
+
+# IDE files
+.vscode/
+.idea/
+
+# Helm dependencies lock file
+Chart.lock
+
+# Customer configs
+values.*.yaml
+README.*.md
+tests.*.md

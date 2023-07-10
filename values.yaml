@@ -1,0 +1,84 @@
+lsdmesp:
+  clusterType: "rancher"
+  cpVersion: "7.4.0"
+  confluent:
+    zookeeper:
+      enabled: true
+    kafka:
+      enabled: true
+    connect:
+      enabled: true
+    
+confluent-for-kubernetes:
+  name: confluent-operator
+  licenseKey: ""
+  license:
+    secretRef: ""
+    directoryPathInContainer: ""
+  managedCerts:
+    enabled: false
+    caCertificate:
+      secretRef: ""
+      directoryPathInContainer: ""
+    certDurationInDays: 60
+    renewBeforeInDays: 30
+    sans: ""
+  imagePullSecretRef:  confluent-registry
+  image:
+    registry: docker.io
+    repository: confluentinc/confluent-operator
+    pullPolicy: IfNotPresent
+    tag: "0.771.13"
+  priorityClassName: ""
+  replicas: 1
+  namespaced: true
+  namespaceList: []
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+  terminationGracePeriodSeconds: 30
+  debug: false
+  affinity: {}
+  tolerations: []
+  podSecurity:
+    enabled: true
+    securityContext:
+      fsGroup: 1001
+      runAsUser: 1001
+      runAsNonRoot: true
+  containerSecurity:
+    enabled: false
+    securityContext: {}
+  serviceAccount:
+    create: true
+    name: ""
+  rbac: true
+  clusterRole:
+    openshift: false
+  telemetry:
+    enabled: false
+    proxy:
+      enabled: false
+      credentialRequired: false
+    secretRef: ""
+    directoryPathInContainer: ""
+  webhooks:
+    enabled: false
+    port: 8443
+    tls:
+      secretRef: ""
+      directoryPathInContainer: ""
+  pod:
+    annotations:
+      prometheus.io/path: "/metrics"
+      prometheus.io/port: "7778"
+      prometheus.io/scrape: "true"
+    labels: {}
+  licenseSecretRef: ""
+  mountedVolumes:
+    volumes: []
+    volumeMounts: []

@@ -1,0 +1,30 @@
+apiVersion: v2
+name: lsdmesp.cfk
+version: "1.0.0"
+appVersion: "1.0.0"
+description: 'LSDMESP CFK: LSD Event Streaming Platform with Confluent Operator'
+keywords:
+  - lsdmesp
+  - confluent
+  - confluent operator
+  - confluent platform
+  - cfk
+  - operator
+  - event
+  - stream
+  - kubernetes
+  - kafka
+  - messaging
+  - topic
+home: https://github.com/lsdopen/lsdmesp.cfk
+sources:
+  - https://github.com/lsdopen/lsdmesp.cfk
+maintainers:
+  - name: LSD
+    email: support@lsdopen.io
+    url: https://lsdopen.io
+deprecated: false
+dependencies:
+  - name: confluent-for-kubernetes
+    version: "0.771.13"
+    repository: https://packages.confluent.io/helm
