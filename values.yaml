@@ -3,10 +3,20 @@ lsdmesp:
   cpVersion: "7.4.0"
   confluent:
     zookeeper:
+      enabled: false
+    kraftcontroller:
       enabled: true
     kafka:
       enabled: true
+    schemaregistry:
+      enabled: true
     connect:
+      enabled: true
+    ksqldb:
+      enabled: true
+    kafkarestproxy:
+      enabled: false
+    controlcenter:
       enabled: true
     
 confluent-for-kubernetes:
