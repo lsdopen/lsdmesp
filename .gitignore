@@ -11,3 +11,7 @@ Chart.lock
 values.*.yaml
 README.*.md
 tests.*.md
+
+# Additional ignores
+certs/
+tmp/
