@@ -7,7 +7,7 @@ metadata:
 spec:
   dataVolumeCapacity: 5Gi
   image:
-    application: confluentinc/cp-zookeeper:7.4.0
+    application: confluentinc/cp-zookeeper:7.5.3
     init: confluentinc/confluent-init-container:2.6.0
   logVolumeCapacity: 5Gi
   oneReplicaPerNode: true

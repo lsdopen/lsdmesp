@@ -26,5 +26,5 @@ maintainers:
 deprecated: false
 dependencies:
   - name: confluent-for-kubernetes
-    version: "0.771.13"
+    version: "0.824.40"
     repository: https://packages.confluent.io/helm

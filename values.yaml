@@ -1,6 +1,6 @@
 lsdmesp:
   clusterType: "rancher"
-  cpVersion: "7.4.0"
+  cpVersion: "7.5.3"
   confluent:
     zookeeper:
       enabled: false
@@ -18,7 +18,7 @@ lsdmesp:
       enabled: false
     controlcenter:
       enabled: true
-    
+
 confluent-for-kubernetes:
   name: confluent-operator
   licenseKey: ""
@@ -38,7 +38,7 @@ confluent-for-kubernetes:
     registry: docker.io
     repository: confluentinc/confluent-operator
     pullPolicy: IfNotPresent
-    tag: "0.771.13"
+    tag: "0.824.40"
   priorityClassName: ""
   replicas: 1
   namespaced: true
@@ -76,6 +76,7 @@ confluent-for-kubernetes:
       credentialRequired: false
     secretRef: ""
     directoryPathInContainer: ""
+  kRaftEnabled: true
   webhooks:
     enabled: false
     port: 8443
