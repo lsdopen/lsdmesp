@@ -34,8 +34,11 @@ Deploy:
 helm install lsdmesp-confluent . -f values.yaml -n lsdmesp-confluent
 ```
 
-
+Tear down:
 ```
-[2024-01-10 15:34:38,866] INFO [control-center-heartbeat-1] misconfigured topic=_confluent-metrics config=min.insync.replicas value=1 expected=2 (io.confluent.controlcenter.healthcheck.AllHealthCheck)
-[2024-01-10 15:34:38,866] INFO [control-center-heartbeat-1] misconfigured topic=_confluent-metrics config=retention.ms value=259200000 expected=21600000 (io.confluent.controlcenter.healthcheck.AllHealthCheck)
+helm uninstall lsdmesp-confluent -n lsdmesp-confluent
+kubectl patch controlcenter controlcenter -p '{"metadata":{"finalizers":[]}}' --type merge; kubectl patch kafkarestproxy kafkarestproxy -p '{"metadata":{"finalizers":[]}}' --type merge; kubectl patch connect connect -p '{"metadata":{"finalizers":[]}}' --type merge; kubectl patch ksqldb ksqldb -p '{"metadata":{"finalizers":[]}}' --type merge; kubectl patch schemaregistry schemaregistry -p '{"metadata":{"finalizers":[]}}' --type merge; kubectl patch kafka kafka -p '{"metadata":{"finalizers":[]}}' --type merge; kubectl patch kraftcontroller kraftcontroller -p '{"metadata":{"finalizers":[]}}' --type merge
+kubectl -n lsdmesp-confluent delete secret ca-pair-sslcerts
+for crd in $(kubectl get crd --no-headers -ojsonpath='{.items[*].metadata.name}' | grep confluent); do kubectl delete crd $crd; done
+kubectl delete ns lsdmesp-confluent
 ```

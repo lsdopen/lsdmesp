@@ -9,13 +9,28 @@ spec:
         confluentHub:
         - name: kafka-connect-datagen
           owner: confluentinc
-          version: latest
+          version: 0.6.3
         - name: kafka-connect-jdbc
           owner: confluentinc
-          version: latest
+          version: 10.7.4
         - name: kafka-connect-http
           owner: confluentinc
-          version: latest
+          version: 1.7.5
+        - name: kafka-connect-elasticsearch
+          owner: confluentinc
+          version: 14.0.12
+        - name: kafka-connect-s3-source
+          owner: confluentinc
+          version: 2.5.10
+        - name: kafka-connect-s3
+          owner: confluentinc
+          version: 10.5.7
+        - name: debezium-connector-mysql
+          owner: debezium
+          version: 2.2.1
+        - name: kafka-connect-elasticsearch-source
+          owner: dariobalinzo
+          version: 1.5.5
         locationType: confluentHub
     type: onDemand
   dependencies:
