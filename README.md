@@ -1,6 +1,16 @@
 # lsdmesp-confluent
 LSD Managed Event Streaming Platform (MESP) Charts for Confluent (CfK)
 
+## Helm setup
+
+Prepare for offline install
+
+```
+helm dependency update .
+```
+
+## Deploy LSDMESP with Confluent for Kubernetes
+
 Create the namespaces
 ```
 kubectl create ns lsdmesp-confluent
@@ -29,10 +39,33 @@ kubectl create secret tls ca-pair-sslcerts \
   --key=$PROJECT_HOME/certs/ca-key.pem -n lsdmesp-confluent
 ```
 
-Deploy:
+### Deploy:
+
+`(Optional)` Deploy OpenLDAP for RBAC (if no external LDAP server is available):
+```
+LDAP_CHART_HOME=$PROJECT_HOME/assets/openldap
+helm upgrade --install -f $LDAP_CHART_HOME/ldaps-rbac.yaml ldap-dev $LDAP_CHART_HOME --namespace lsdmesp-confluent
+```
+
+### [RBAC] Create MDS secrets for LDAP
+
+
+### [RBAC] Create credential secrets for Confluent components
+
+connect-login.txt
+controlcenter-login.txt
+kafka-login.txt
+kafkarestclass-login.txt
+kafkarestproxy-login.txt
+ksqldb-login.txt
+
+
+### Deploy LSDMESP:
 ```
 helm install lsdmesp-confluent . -f values.yaml -n lsdmesp-confluent
 ```
+
+## Uninstall LSDMESP
 
 Tear down:
 ```
