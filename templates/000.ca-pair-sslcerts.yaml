@@ -6,5 +6,4 @@ kind: Secret
 metadata:
   creationTimestamp: null
   name: ca-pair-sslcerts
-  namespace: lsdmesp-confluent
 type: kubernetes.io/tls
