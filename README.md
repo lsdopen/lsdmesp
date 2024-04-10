@@ -44,21 +44,35 @@ kubectl create secret tls ca-pair-sslcerts \
 `(Optional)` Deploy OpenLDAP for RBAC (if no external LDAP server is available):
 ```
 LDAP_CHART_HOME=$PROJECT_HOME/assets/openldap
-helm upgrade --install -f $LDAP_CHART_HOME/ldaps-rbac.yaml ldap-dev $LDAP_CHART_HOME --namespace lsdmesp-confluent
+helm upgrade --install ldap-dev $LDAP_CHART_HOME --namespace lsdmesp-confluent
 ```
 
-### [RBAC] Create MDS secrets for LDAP
+Test OpenLDAP:
+```
+kubectl --namespace lsdmesp-confluent exec -it ldap-0 -- bash
+ldapsearch -LLL -x -H ldap://ldap.lsdmesp-confluent.svc.cluster.local:389 -b 'dc=test,dc=com' -D "cn=mds,dc=test,dc=com" -w 'Developer!'
+```
 
+### Create MDS secrets
 
-### [RBAC] Create credential secrets for Confluent components
+#### Create YAMLs for required MDS secrets:
 
-connect-login.txt
-controlcenter-login.txt
-kafka-login.txt
-kafkarestclass-login.txt
-kafkarestproxy-login.txt
-ksqldb-login.txt
+- `Create mds-token secret manifest`
 
+```
+kc create secret generic mds-token \
+  --from-file=mdsPublicKey.pem=./assets/certs/mds-publickey.pem \
+  --from-file=mdsTokenKeyPair.pem=./assets/certs/mds-tokenkeypair.pem \
+  --dry-run=client -oyaml > mds-token.yaml
+```
+
+- `Create mds-login secret manifest`
+
+```
+kc create secret generic mds-login \
+  --from-file=ldap.txt=./credentials/ldap-user.txt \
+  --dry-run=client -oyaml > mds-login.yaml
+```
 
 ### Deploy LSDMESP:
 ```

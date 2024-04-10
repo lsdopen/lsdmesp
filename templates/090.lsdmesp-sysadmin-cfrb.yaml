@@ -1,0 +1,149 @@
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-sysadmin-0
+spec:
+  principal:
+    name: cf_kafka
+    type: user
+  role: SystemAdmin
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-sysadmin-1
+spec:
+  clustersScopeByIds:
+    connectClusterId: lsdmesp-confluent.connect
+  principal:
+    name: cf_kafka
+    type: user
+  role: SystemAdmin
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-sysadmin-2
+spec:
+  clustersScopeByIds:
+    ksqlClusterId: lsdmesp-confluent.ksqldb_
+  principal:
+    name: cf_kafka
+    type: user
+  resourcePatterns:
+  - name: ksql-cluster
+    patternType: LITERAL
+    resourceType: KsqlCluster
+  role: ResourceOwner
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-sysadmin-3
+spec:
+  clustersScopeByIds:
+    schemaRegistryClusterId: id_schemaregistry_lsdmesp-confluent
+  principal:
+    name: cf_kafka
+    type: user
+  role: SystemAdmin
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-sysadmin-4
+spec:
+  principal:
+    name: cf_ksqldb
+    type: user
+  role: SystemAdmin
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-sysadmin-5
+spec:
+  clustersScopeByIds:
+    connectClusterId: lsdmesp-confluent.connect
+  principal:
+    name: cf_ksqldb
+    type: user
+  role: SystemAdmin
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-sysadmin-6
+spec:
+  clustersScopeByIds:
+    ksqlClusterId: lsdmesp-confluent.ksqldb_
+  principal:
+    name: cf_ksqldb
+    type: user
+  resourcePatterns:
+  - name: ksql-cluster
+    patternType: LITERAL
+    resourceType: KsqlCluster
+  role: ResourceOwner
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-sysadmin-7
+spec:
+  clustersScopeByIds:
+    schemaRegistryClusterId: id_schemaregistry_lsdmesp-confluent
+  principal:
+    name: cf_ksqldb
+    type: user
+  role: SystemAdmin
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-sysadmin-8
+spec:
+  principal:
+    name: cf_connect
+    type: user
+  role: SystemAdmin
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-sysadmin-9
+spec:
+  clustersScopeByIds:
+    connectClusterId: lsdmesp-confluent.connect
+  principal:
+    name: cf_connect
+    type: user
+  role: SystemAdmin
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-sysadmin-10
+spec:
+  clustersScopeByIds:
+    ksqlClusterId: lsdmesp-confluent.ksqldb_
+  principal:
+    name: cf_connect
+    type: user
+  resourcePatterns:
+  - name: ksql-cluster
+    patternType: LITERAL
+    resourceType: KsqlCluster
+  role: ResourceOwner
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-sysadmin-11
+spec:
+  clustersScopeByIds:
+    schemaRegistryClusterId: id_schemaregistry_lsdmesp-confluent
+  principal:
+    name: cf_connect
+    type: user
+  role: SystemAdmin

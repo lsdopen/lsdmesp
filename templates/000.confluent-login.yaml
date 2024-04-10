@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  basic.txt: YWRtaW46IGtNZlpzcjV6SFo5cSxBZG1pbmlzdHJhdG9ycw==
+  digest-users.json: ewogICJjZl9rYWZrYSI6ICJ1aUdROGk2Z0h2R3QiCn0=
+  digest.txt: dXNlcm5hbWU9Y2Zfa2Fma2EKcGFzc3dvcmQ9dWlHUThpNmdIdkd0
+  plain-users.json: ewogICJjZl9rYWZrYSI6ICJ1aUdROGk2Z0h2R3QiCn0=
+  plain.txt: dXNlcm5hbWU9Y2Zfa2Fma2EKcGFzc3dvcmQ9dWlHUThpNmdIdkd0
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: confluent-login

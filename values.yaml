@@ -1,6 +1,6 @@
 lsdmesp:
-  clusterType: "rancher"
-  cpVersion: "7.5.3"
+  clusterType: "kind"
+  cpVersion: "7.6.0"
   confluent:
     zookeeper:
       enabled: false
@@ -38,7 +38,7 @@ confluent-for-kubernetes:
     registry: docker.io
     repository: confluentinc/confluent-operator
     pullPolicy: IfNotPresent
-    tag: "0.824.40"
+    tag: "0.921.2"
   priorityClassName: ""
   replicas: 1
   namespaced: true
