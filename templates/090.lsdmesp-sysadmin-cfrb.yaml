@@ -14,7 +14,7 @@ metadata:
   name: lsdmesp-sysadmin-1
 spec:
   clustersScopeByIds:
-    connectClusterId: lsdmesp-confluent.connect
+    connectClusterId: {{ .Release.Namespace }}.connect
   principal:
     name: cf_kafka
     type: user
@@ -26,7 +26,7 @@ metadata:
   name: lsdmesp-sysadmin-2
 spec:
   clustersScopeByIds:
-    ksqlClusterId: lsdmesp-confluent.ksqldb_
+    ksqlClusterId: {{ .Release.Namespace }}.ksqldb_
   principal:
     name: cf_kafka
     type: user
@@ -42,7 +42,7 @@ metadata:
   name: lsdmesp-sysadmin-3
 spec:
   clustersScopeByIds:
-    schemaRegistryClusterId: id_schemaregistry_lsdmesp-confluent
+    schemaRegistryClusterId: id_schemaregistry_{{ .Release.Namespace }}
   principal:
     name: cf_kafka
     type: user
@@ -64,7 +64,7 @@ metadata:
   name: lsdmesp-sysadmin-5
 spec:
   clustersScopeByIds:
-    connectClusterId: lsdmesp-confluent.connect
+    connectClusterId: {{ .Release.Namespace }}.connect
   principal:
     name: cf_ksqldb
     type: user
@@ -76,7 +76,7 @@ metadata:
   name: lsdmesp-sysadmin-6
 spec:
   clustersScopeByIds:
-    ksqlClusterId: lsdmesp-confluent.ksqldb_
+    ksqlClusterId: {{ .Release.Namespace }}.ksqldb_
   principal:
     name: cf_ksqldb
     type: user
@@ -92,7 +92,7 @@ metadata:
   name: lsdmesp-sysadmin-7
 spec:
   clustersScopeByIds:
-    schemaRegistryClusterId: id_schemaregistry_lsdmesp-confluent
+    schemaRegistryClusterId: id_schemaregistry_{{ .Release.Namespace }}
   principal:
     name: cf_ksqldb
     type: user
@@ -114,7 +114,7 @@ metadata:
   name: lsdmesp-sysadmin-9
 spec:
   clustersScopeByIds:
-    connectClusterId: lsdmesp-confluent.connect
+    connectClusterId: {{ .Release.Namespace }}.connect
   principal:
     name: cf_connect
     type: user
@@ -126,7 +126,7 @@ metadata:
   name: lsdmesp-sysadmin-10
 spec:
   clustersScopeByIds:
-    ksqlClusterId: lsdmesp-confluent.ksqldb_
+    ksqlClusterId: {{ .Release.Namespace }}.ksqldb_
   principal:
     name: cf_connect
     type: user
@@ -142,7 +142,7 @@ metadata:
   name: lsdmesp-sysadmin-11
 spec:
   clustersScopeByIds:
-    schemaRegistryClusterId: id_schemaregistry_lsdmesp-confluent
+    schemaRegistryClusterId: id_schemaregistry_{{ .Release.Namespace }}
   principal:
     name: cf_connect
     type: user

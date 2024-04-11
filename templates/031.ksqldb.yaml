@@ -17,13 +17,13 @@ spec:
   dataVolumeCapacity: 5Gi
   dependencies:
     kafka:
-      bootstrapEndpoint: kafka.lsdmesp-confluent.svc.cluster.local:9071
+      bootstrapEndpoint: kafka.{{ .Release.Namespace }}.svc.cluster.local:9071
       authentication:
         type: mtls      
       tls:
         enabled: true
     mds:
-      endpoint: https://kafka.lsdmesp-confluent.svc.cluster.local:8090
+      endpoint: https://kafka.{{ .Release.Namespace }}.svc.cluster.local:8090
       tokenKeyPair:
         secretRef: mds-token
       authentication:
@@ -35,7 +35,7 @@ spec:
     schemaRegistry:
       tls:
         enabled: true
-      url: https://schemaregistry.lsdmesp-confluent.svc.cluster.local:8081
+      url: https://schemaregistry.{{ .Release.Namespace }}.svc.cluster.local:8081
   image:
     application: confluentinc/cp-ksqldb-server:{{ .Values.lsdmesp.cpVersion }}
     init: confluentinc/confluent-init-container:{{ .Values.lsdmesp.cpOperatorVersion }}

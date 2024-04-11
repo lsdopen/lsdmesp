@@ -112,7 +112,7 @@ spec:
       provider:
         type: ldap
         ldap:
-          address: ldap://ldap.lsdmesp-confluent.svc.cluster.local:389
+          address: ldap://ldap.{{ .Release.Namespace }}.svc.cluster.local:389
           authentication:
             type: simple
             simple:

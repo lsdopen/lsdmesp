@@ -13,13 +13,13 @@ spec:
       - -Xmx384m
   dependencies:
     kafka:
-      bootstrapEndpoint: kafka.lsdmesp-confluent.svc.cluster.local:9071
+      bootstrapEndpoint: kafka.{{ .Release.Namespace }}.svc.cluster.local:9071
       authentication:
         type: mtls
       tls:
         enabled: true
     mds:
-      endpoint: https://kafka.lsdmesp-confluent.svc.cluster.local:8090
+      endpoint: https://kafka.{{ .Release.Namespace }}.svc.cluster.local:8090
       tokenKeyPair:
         secretRef: mds-token
       authentication:
@@ -29,7 +29,7 @@ spec:
       tls:
         enabled: true
     schemaRegistry:
-      url: https://schemaregistry.lsdmesp-confluent.svc.cluster.local:8081
+      url: https://schemaregistry.{{ .Release.Namespace }}.svc.cluster.local:8081
       tls:
         enabled: true
   image:

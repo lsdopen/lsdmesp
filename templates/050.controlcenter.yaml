@@ -19,13 +19,13 @@ spec:
   dataVolumeCapacity: 10Gi
   dependencies:
     kafka:
-      bootstrapEndpoint: kafka.lsdmesp-confluent.svc.cluster.local:9071
+      bootstrapEndpoint: kafka.{{ .Release.Namespace }}.svc.cluster.local:9071
       authentication:
         type: mtls      
       tls:
         enabled: true
     mds:
-      endpoint: https://kafka.lsdmesp-confluent.svc.cluster.local:8090
+      endpoint: https://kafka.{{ .Release.Namespace }}.svc.cluster.local:8090
       tokenKeyPair:
         secretRef: mds-token
       authentication:
@@ -37,18 +37,18 @@ spec:
     schemaRegistry:
       tls:
         enabled: true
-      url: https://schemaregistry.lsdmesp-confluent.svc.cluster.local:8081
+      url: https://schemaregistry.{{ .Release.Namespace }}.svc.cluster.local:8081
     connect:
     - name: connect
       tls:
         enabled: true
-      url: https://connect.lsdmesp-confluent.svc.cluster.local:8083
+      url: https://connect.{{ .Release.Namespace }}.svc.cluster.local:8083
     ksqldb:
     - name: ksqldb
-      # Is this needed? advertisedUrl: https://ksqldb.lsdmesp-confluent.apps.some.domain:443
+      # Is this needed? advertisedUrl: https://ksqldb.{{ .Release.Namespace }}.apps.some.domain:443
       tls:
         enabled: true
-      url: https://ksqldb.lsdmesp-confluent.svc.cluster.local:8088
+      url: https://ksqldb.{{ .Release.Namespace }}.svc.cluster.local:8088
   # externalAccess:
   #   route:
   #     domain: prd-confluent.apps.some.domain
