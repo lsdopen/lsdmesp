@@ -64,12 +64,7 @@ spec:
       runAsUser: 1000
       runAsNonRoot: true
     resources:
-      limits:
-        cpu: 2
-        memory: 12Gi
-      requests:
-        cpu: 200m
-        memory: 6Gi  
+      {{- toYaml $controlcenter.resources | nindent 6 }}
   replicas: 1
   storageClass:
     name: standard

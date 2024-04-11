@@ -47,12 +47,7 @@ spec:
       runAsUser: 1000
       runAsNonRoot: true
     resources:
-      limits:
-        cpu: 1
-        memory: 2Gi
-      requests:
-        cpu: 100m
-        memory: 1Gi  
+      {{- toYaml $ksqldb.resources | nindent 6 }}
   replicas: 1
   storageClass:
     name: standard  

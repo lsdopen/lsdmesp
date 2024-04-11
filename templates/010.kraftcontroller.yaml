@@ -29,12 +29,7 @@ spec:
       runAsGroup: 1000
       runAsNonRoot: true
     resources:
-      limits:
-        cpu: 500m
-        memory: 1Gi
-      requests:
-        cpu: 20m
-        memory: 512Mi
+      {{- toYaml $kraftcontroller.resources | nindent 6 }}
   replicas: 3
   storageClass:
     name: standard  
