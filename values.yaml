@@ -2,6 +2,7 @@ lsdmesp:
   clusterType: "kind"
   cpVersion: "7.6.0"
   cpOperatorVersion: "2.8.0"
+  storageClass: standard
   confluent:
     kraftcontroller:
       enabled: true
