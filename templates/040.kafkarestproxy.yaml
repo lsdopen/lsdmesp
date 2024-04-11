@@ -33,8 +33,8 @@ spec:
       tls:
         enabled: true
   image:
-    application: confluentinc/cp-kafka-rest:7.6.0
-    init: confluentinc/confluent-init-container:2.8.0
+    application: confluentinc/cp-kafka-rest:{{ .Values.lsdmesp.cpVersion }}
+    init: confluentinc/confluent-init-container:{{ .Values.lsdmesp.cpOperatorVersion }}
   oneReplicaPerNode: true
   podTemplate:
     podSecurityContext:

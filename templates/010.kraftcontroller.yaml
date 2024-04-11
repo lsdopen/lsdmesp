@@ -11,8 +11,8 @@ spec:
     - -Xmx384m
   dataVolumeCapacity: 1Gi
   image:
-    application: docker.io/confluentinc/cp-server:7.6.0
-    init: confluentinc/confluent-init-container:2.8.0
+    application: docker.io/confluentinc/cp-server:{{ .Values.lsdmesp.cpVersion }}
+    init: confluentinc/confluent-init-container:{{ .Values.lsdmesp.cpOperatorVersion }}
   listeners:
     controller:
       tls:

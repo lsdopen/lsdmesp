@@ -56,8 +56,8 @@ spec:
           - RULE:.*CN[\s]?=[\s]?([a-zA-Z0-9.]*)?.*/$1/
           type: mtls
   image:
-    application: confluentinc/cp-server:7.6.0
-    init: confluentinc/confluent-init-container:2.8.0
+    application: confluentinc/cp-server:{{ .Values.lsdmesp.cpVersion }}
+    init: confluentinc/confluent-init-container:{{ .Values.lsdmesp.cpOperatorVersion }}
   listeners:
     internal:
       authentication:
