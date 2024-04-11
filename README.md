@@ -21,23 +21,9 @@ Set PROJECT_HOME env var to project directory
 PROJECT_HOME=$PWD
 ```
 
-Create certs
-```
-openssl genrsa -out $PROJECT_HOME/certs/ca-key.pem 2048
-```
+### Create secrets with random passwords and certs
 
-```
-openssl req -new -key $PROJECT_HOME/certs/ca-key.pem -x509 \
-  -days 3650 \
-  -out $PROJECT_HOME/certs/ca.pem \
-  -subj "/C=US/ST=CA/L=MountainView/O=Confluent/OU=Operator/CN=LocalCA"
-```
-
-```
-kubectl create secret tls ca-pair-sslcerts \
-  --cert=$PROJECT_HOME/certs/ca.pem \
-  --key=$PROJECT_HOME/certs/ca-key.pem -n lsdmesp-confluent
-```
+TODO
 
 ### Deploy:
 
@@ -51,27 +37,6 @@ Test OpenLDAP:
 ```
 kubectl --namespace lsdmesp-confluent exec -it ldap-0 -- bash
 ldapsearch -LLL -x -H ldap://ldap.lsdmesp-confluent.svc.cluster.local:389 -b 'dc=test,dc=com' -D "cn=mds,dc=test,dc=com" -w 'Developer!'
-```
-
-### Create MDS secrets
-
-#### Create YAMLs for required MDS secrets:
-
-- `Create mds-token secret manifest`
-
-```
-kc create secret generic mds-token \
-  --from-file=mdsPublicKey.pem=./assets/certs/mds-publickey.pem \
-  --from-file=mdsTokenKeyPair.pem=./assets/certs/mds-tokenkeypair.pem \
-  --dry-run=client -oyaml > mds-token.yaml
-```
-
-- `Create mds-login secret manifest`
-
-```
-kc create secret generic mds-login \
-  --from-file=ldap.txt=./credentials/ldap-user.txt \
-  --dry-run=client -oyaml > mds-login.yaml
 ```
 
 ### Deploy LSDMESP:
