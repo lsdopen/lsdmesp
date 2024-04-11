@@ -1,12 +1,13 @@
 lsdmesp:
   clusterType: "kind"
   cpVersion: "7.6.0"
+  operatorVersion: "2.8.0"
   confluent:
-    zookeeper:
-      enabled: false
     kraftcontroller:
       enabled: true
     kafka:
+      enabled: true
+    kafkarestclass:
       enabled: true
     schemaregistry:
       enabled: true
@@ -15,7 +16,7 @@ lsdmesp:
     ksqldb:
       enabled: true
     kafkarestproxy:
-      enabled: false
+      enabled: true
     controlcenter:
       enabled: true
 

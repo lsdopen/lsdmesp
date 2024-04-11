@@ -1,3 +1,5 @@
+{{- $kafkarestclass := .Values.lsdmesp.confluent.kafkarestclass -}}
+{{- if $kafkarestclass.enabled -}}
 apiVersion: platform.confluent.io/v1beta1
 kind: KafkaRestClass
 metadata:
@@ -8,3 +10,4 @@ spec:
       bearer:
         secretRef: kafkarestclass-login
       type: bearer
+{{- end -}}
