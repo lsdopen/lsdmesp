@@ -14,6 +14,8 @@ lsdmesp:
         requests:
           cpu: 20m
           memory: 512Mi
+      # number of pod replicas
+      replicas: 3
 
     kafka:
       enabled: true
@@ -25,6 +27,8 @@ lsdmesp:
         requests:
           cpu: 50m
           memory: 3Gi
+      # number of pod replicas
+      replicas: 3
 
     kafkarestclass:
       enabled: true
@@ -39,6 +43,8 @@ lsdmesp:
         requests:
           cpu: 10m
           memory: 512Mi
+      # number of pod replicas
+      replicas: 1
 
     connect:
       enabled: true
@@ -50,6 +56,8 @@ lsdmesp:
         requests:
           cpu: 20m
           memory: 1Gi
+      # number of pod replicas
+      replicas: 1
 
     ksqldb:
       enabled: true
@@ -61,6 +69,8 @@ lsdmesp:
         requests:
           cpu: 100m
           memory: 1Gi
+      # number of pod replicas
+      replicas: 1
 
     kafkarestproxy:
       enabled: true
@@ -72,6 +82,8 @@ lsdmesp:
         requests:
           cpu: 10m
           memory: 512Mi
+      # number of pod replicas
+      replicas: 1
 
     controlcenter:
       enabled: true
@@ -83,6 +95,8 @@ lsdmesp:
         requests:
           cpu: 200m
           memory: 6Gi
+      # number of pod replicas
+      replicas: 1
 
 confluent-for-kubernetes:
   name: confluent-operator

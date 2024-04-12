@@ -30,7 +30,7 @@ spec:
       runAsNonRoot: true
     resources:
       {{- toYaml $kraftcontroller.resources | nindent 6 }}
-  replicas: 3
+  replicas: {{ $kraftcontroller.replicas }}
   storageClass:
     name: {{ .Values.lsdmesp.storageClass }}
   tls:

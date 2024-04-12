@@ -95,7 +95,7 @@ spec:
       runAsNonRoot: true
     resources:
       {{- toYaml $kafka.resources | nindent 6 }}
-  replicas: 3
+  replicas: {{ $kafka.replicas }}
   services:
     mds:
       # Configure this with TLS encryption, but not with external access through a load balancer.

@@ -65,7 +65,7 @@ spec:
       runAsNonRoot: true
     resources:
       {{- toYaml $controlcenter.resources | nindent 6 }}
-  replicas: 1
+  replicas: {{ $controlcenter.replicas }}
   storageClass:
     name: {{ .Values.lsdmesp.storageClass }}
   tls:

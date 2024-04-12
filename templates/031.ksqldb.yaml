@@ -48,7 +48,7 @@ spec:
       runAsNonRoot: true
     resources:
       {{- toYaml $ksqldb.resources | nindent 6 }}
-  replicas: 1
+  replicas: {{ $ksqldb.replicas }}
   storageClass:
     name: {{ .Values.lsdmesp.storageClass }}
   tls:
