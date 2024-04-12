@@ -10,6 +10,10 @@ lsdmesp:
     kraftcontroller:
       # if `true`, then will be provisioned
       enabled: true
+      # java memory sizes
+      jvm:
+        Xms: 384m
+        Xmx: 384m
       # size of the pv needed
       dataVolumeCapacity: 1Gi
       # pod resource limits and request
@@ -26,6 +30,10 @@ lsdmesp:
     kafka:
       # if `true`, then will be provisioned
       enabled: true
+      # java memory sizes
+      jvm:
+        Xms: 1g
+        Xmx: 1g
       # size of the pv needed
       dataVolumeCapacity: 20Gi
       # pod resource limits and request
@@ -46,6 +54,10 @@ lsdmesp:
     schemaregistry:
       # if `true`, then will be provisioned
       enabled: true
+      # java memory sizes
+      jvm:
+        Xms: 384m
+        Xmx: 384m
       # pod resource limits and request
       resources:
         limits:
@@ -60,6 +72,10 @@ lsdmesp:
     connect:
       # if `true`, then will be provisioned
       enabled: true
+      # java memory sizes
+      jvm:
+        Xms: 512m
+        Xmx: 512m
       # pod resource limits and request
       resources:
         limits:
@@ -74,6 +90,10 @@ lsdmesp:
     ksqldb:
       # if `true`, then will be provisioned
       enabled: true
+      # java memory sizes
+      jvm:
+        Xms: 512m
+        Xmx: 512m
       # size of the pv needed
       dataVolumeCapacity: 5Gi
       # pod resource limits and request
@@ -90,6 +110,10 @@ lsdmesp:
     kafkarestproxy:
       # if `true`, then will be provisioned
       enabled: true
+      # java memory sizes
+      jvm:
+        Xms: 384m
+        Xmx: 384m
       # pod resource limits and request
       resources:
         limits:
@@ -104,6 +128,10 @@ lsdmesp:
     controlcenter:
       # if `true`, then will be provisioned
       enabled: true
+      # java memory sizes
+      jvm:
+        Xms: 2g
+        Xmx: 2g
       # size of the pv needed
       dataVolumeCapacity: 10Gi
       # pod resource limits and request

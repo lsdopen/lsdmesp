@@ -7,8 +7,8 @@ metadata:
 spec:
   configOverrides:
     jvm:
-    - -Xms384m
-    - -Xmx384m
+    - -Xms{{ $kraftcontroller.jvm.Xms }}
+    - -Xmx{{ $kraftcontroller.jvm.Xmx }}
   dataVolumeCapacity: {{ $kraftcontroller.dataVolumeCapacity }}
   image:
     application: docker.io/confluentinc/cp-server:{{ .Values.lsdmesp.cpVersion }}

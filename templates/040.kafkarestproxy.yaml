@@ -9,8 +9,8 @@ spec:
     type: rbac
   configOverrides:
     jvm:
-      - -Xms384m
-      - -Xmx384m
+      - -Xms{{ $kafkarestproxy.jvm.Xms }}
+      - -Xmx{{ $kafkarestproxy.jvm.Xmx }}
   dependencies:
     kafka:
       bootstrapEndpoint: kafka.{{ .Release.Namespace }}.svc.cluster.local:9071

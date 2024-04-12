@@ -9,8 +9,8 @@ spec:
     type: rbac
   configOverrides:
     jvm:
-      - -Xms2g
-      - -Xmx2g
+      - -Xms{{ $controlcenter.jvm.Xms }}
+      - -Xmx{{ $controlcenter.jvm.Xmx }}
     server:
       - confluent.controlcenter.internal.topics.retention.ms=21600000
       - confluent.metrics.topic.retention.ms=21600000

@@ -12,8 +12,8 @@ spec:
       - User:cf_kafka
   configOverrides:
     jvm:
-    - -Xms1g
-    - -Xmx1g
+    - -Xms{{ $kafka.jvm.Xms }}
+    - -Xmx{{ $kafka.jvm.Xmx }}
     server:
     - auto.create.topics.enable=true
     - delete.topic.enable=true

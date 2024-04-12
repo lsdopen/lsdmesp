@@ -9,8 +9,8 @@ spec:
     type: rbac
   configOverrides:
     jvm:
-      - -Xms512m
-      - -Xmx512m
+      - -Xms{{ $ksqldb.jvm.Xms }}
+      - -Xmx{{ $ksqldb.jvm.Xmx }}
     server:
       - ksql.internal.topic.replicas={{ .Values.lsdmesp.defaultReplicationFactor }}
       - ksql.logging.processing.topic.replication.factor={{ .Values.lsdmesp.defaultReplicationFactor }}

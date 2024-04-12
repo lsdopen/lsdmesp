@@ -39,8 +39,8 @@ spec:
     type: onDemand
   configOverrides:
     jvm:
-      - -Xms512m
-      - -Xmx512m
+      - -Xms{{ $connect.jvm.Xms }}
+      - -Xmx{{ $connect.jvm.Xmx }}
   dependencies:
     kafka:
       bootstrapEndpoint: kafka.{{ .Release.Namespace }}.svc.cluster.local:9071

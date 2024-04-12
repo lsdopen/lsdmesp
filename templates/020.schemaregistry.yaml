@@ -9,8 +9,8 @@ spec:
     type: rbac
   configOverrides:
     jvm:
-      - -Xms384m
-      - -Xmx384m
+      - -Xms{{ $schemaregistry.jvm.Xms }}
+      - -Xmx{{ $schemaregistry.jvm.Xmx }}
   dependencies:
     kafka:
       authentication:
