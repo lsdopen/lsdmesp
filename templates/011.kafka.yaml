@@ -22,21 +22,21 @@ spec:
     server:
     - auto.create.topics.enable=true
     - delete.topic.enable=true
-    - num.partitions=6
-    - min.insync.replicas=2
-    - default.replication.factor=3
-    - confluent.license.topic.replication.factor=3
-    - confluent.license.topic.min.isr=2
-    - offsets.topic.replication.factor=3
-    - offsets.topic.min.isr=2
-    - transaction.state.log.replication.factor=3
-    - transaction.state.log.min.isr=2
-    - confluent.cluster.link.metadata.topic.replication.factor=3
-    - confluent.tier.metadata.replication.factor=3
-    - confluent.balancer.topic.replication.factor=3
-    - confluent.metadata.topic.replication.factor=3
-    - confluent.metrics.reporter.topic.min.isr=2
-    - confluent.security.event.logger.exporter.kafka.topic.replicas=3
+    - num.partitions={{ .Values.lsdmesp.defaultNumPartitions }}
+    - min.insync.replicas={{ .Values.lsdmesp.defaultMinInSyncReplicas }}
+    - default.replication.factor={{ .Values.lsdmesp.defaultReplicationFactor }}
+    - confluent.license.topic.replication.factor={{ .Values.lsdmesp.defaultReplicationFactor }}
+    - confluent.license.topic.min.isr={{ .Values.lsdmesp.defaultMinInSyncReplicas }}
+    - offsets.topic.replication.factor={{ .Values.lsdmesp.defaultReplicationFactor }}
+    - offsets.topic.min.isr={{ .Values.lsdmesp.defaultMinInSyncReplicas }}
+    - transaction.state.log.replication.factor={{ .Values.lsdmesp.defaultReplicationFactor }}
+    - transaction.state.log.min.isr={{ .Values.lsdmesp.defaultMinInSyncReplicas }}
+    - confluent.cluster.link.metadata.topic.replication.factor={{ .Values.lsdmesp.defaultReplicationFactor }}
+    - confluent.tier.metadata.replication.factor={{ .Values.lsdmesp.defaultReplicationFactor }}
+    - confluent.balancer.topic.replication.factor={{ .Values.lsdmesp.defaultReplicationFactor }}
+    - confluent.metadata.topic.replication.factor={{ .Values.lsdmesp.defaultReplicationFactor }}
+    - confluent.metrics.reporter.topic.min.isr={{ .Values.lsdmesp.defaultMinInSyncReplicas }}
+    - confluent.security.event.logger.exporter.kafka.topic.replicas={{ .Values.lsdmesp.defaultReplicationFactor }}
     - log.retention.ms=86400000
   dataVolumeCapacity: {{ $kafka.dataVolumeCapacity }}
   dependencies:
