@@ -10,11 +10,6 @@ spec:
     superUsers:
       - User:kafka
       - User:cf_kafka
-      # - User:cf_schemaregistry
-      # - User:cf_connect
-      # - User:cf_ksqldb
-      # - User:cf_kafkarestproxy
-      # - User:cf_controlcenter
   configOverrides:
     jvm:
     - -Xms1g
@@ -83,7 +78,7 @@ spec:
     authentication:
       type: mtls
     enabled: true
-    replicationFactor: 3
+    replicationFactor: {{ .Values.lsdmesp.defaultReplicationFactor }}
     tls:
       enabled: true
   oneReplicaPerNode: true

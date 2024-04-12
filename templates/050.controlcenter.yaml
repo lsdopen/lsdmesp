@@ -57,7 +57,7 @@ spec:
   image:
     application: confluentinc/cp-enterprise-control-center:{{ .Values.lsdmesp.cpVersion }}
     init: confluentinc/confluent-init-container:{{ .Values.lsdmesp.cpOperatorVersion }}
-  internalTopicReplicatorFactor: 3
+  internalTopicReplicatorFactor: {{ .Values.lsdmesp.defaultReplicationFactor }}
   podTemplate:
     podSecurityContext:
       fsGroup: 1000
