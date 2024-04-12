@@ -16,7 +16,7 @@ spec:
       - confluent.metrics.topic.retention.ms=21600000
       - confluent.monitoring.interceptor.topic.retention.ms=21600000
       # - confluent.controlcenter.rest.advertised.url=https://controlcenter.some.domain
-  dataVolumeCapacity: 10Gi
+  dataVolumeCapacity: {{ $controlcenter.dataVolumeCapacity }}
   dependencies:
     kafka:
       bootstrapEndpoint: kafka.{{ .Release.Namespace }}.svc.cluster.local:9071

@@ -14,7 +14,7 @@ spec:
     server:
       - ksql.internal.topic.replicas=3
       - ksql.logging.processing.topic.replication.factor=3
-  dataVolumeCapacity: 5Gi
+  dataVolumeCapacity: {{ $ksqldb.dataVolumeCapacity }}
   dependencies:
     kafka:
       bootstrapEndpoint: kafka.{{ .Release.Namespace }}.svc.cluster.local:9071

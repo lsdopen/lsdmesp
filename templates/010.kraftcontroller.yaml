@@ -9,7 +9,7 @@ spec:
     jvm:
     - -Xms384m
     - -Xmx384m
-  dataVolumeCapacity: 1Gi
+  dataVolumeCapacity: {{ $kraftcontroller.dataVolumeCapacity }}
   image:
     application: docker.io/confluentinc/cp-server:{{ .Values.lsdmesp.cpVersion }}
     init: confluentinc/confluent-init-container:{{ .Values.lsdmesp.cpOperatorVersion }}

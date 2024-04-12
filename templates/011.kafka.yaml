@@ -38,7 +38,7 @@ spec:
     - confluent.metrics.reporter.topic.min.isr=2
     - confluent.security.event.logger.exporter.kafka.topic.replicas=3
     - log.retention.ms=86400000
-  dataVolumeCapacity: 20Gi
+  dataVolumeCapacity: {{ $kafka.dataVolumeCapacity }}
   dependencies:
     kafkaRest:
       authentication:

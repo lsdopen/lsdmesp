@@ -6,6 +6,8 @@ lsdmesp:
   confluent:
     kraftcontroller:
       enabled: true
+      # size of the pv needed
+      dataVolumeCapacity: 1Gi
       # pod resource limits and request
       resources:
         limits:
@@ -19,6 +21,8 @@ lsdmesp:
 
     kafka:
       enabled: true
+      # size of the pv needed
+      dataVolumeCapacity: 20Gi
       # pod resource limits and request
       resources:
         limits:
@@ -61,6 +65,8 @@ lsdmesp:
 
     ksqldb:
       enabled: true
+      # size of the pv needed
+      dataVolumeCapacity: 5Gi
       # pod resource limits and request
       resources:
         limits:
@@ -87,6 +93,8 @@ lsdmesp:
 
     controlcenter:
       enabled: true
+      # size of the pv needed
+      dataVolumeCapacity: 10Gi
       # pod resource limits and request
       resources:
         limits:
