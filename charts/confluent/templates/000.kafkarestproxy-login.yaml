@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  bearer.txt: dXNlcm5hbWU9Y2ZfcmVzdHByb3h5CnBhc3N3b3JkPU1aR2tuUHZkTDZ5ZQ==
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: kafkarestproxy-login

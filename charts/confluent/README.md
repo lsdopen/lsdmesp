@@ -2,6 +2,16 @@
 
 LSD Managed Event Streaming Platform (MESP) Charts for Confluent (CfK)
 
+## Helm setup
+
+Prepare for offline install
+
+```
+helm dependency update .
+```
+
+## Deploy LSDMESP with Confluent for Kubernetes
+
 Create the namespaces
 ```
 kubectl create ns lsdmesp-confluent
@@ -12,28 +22,30 @@ Set PROJECT_HOME env var to project directory
 PROJECT_HOME=$PWD
 ```
 
-Create certs
+### Create secrets with random passwords and certs
+
+TODO
+
+### Deploy:
+
+`(Optional)` Deploy OpenLDAP for RBAC (if no external LDAP server is available):
 ```
-openssl genrsa -out $PROJECT_HOME/certs/ca-key.pem 2048
+LDAP_CHART_HOME=$PROJECT_HOME/assets/openldap
+helm upgrade --install ldap-dev $LDAP_CHART_HOME --namespace lsdmesp-confluent
 ```
 
+Test OpenLDAP:
 ```
-openssl req -new -key $PROJECT_HOME/certs/ca-key.pem -x509 \
-  -days 3650 \
-  -out $PROJECT_HOME/certs/ca.pem \
-  -subj "/C=US/ST=CA/L=MountainView/O=Confluent/OU=Operator/CN=LocalCA"
-```
-
-```
-kubectl create secret tls ca-pair-sslcerts \
-  --cert=$PROJECT_HOME/certs/ca.pem \
-  --key=$PROJECT_HOME/certs/ca-key.pem -n lsdmesp-confluent
+kubectl --namespace lsdmesp-confluent exec -it ldap-0 -- bash
+ldapsearch -LLL -x -H ldap://ldap.lsdmesp-confluent.svc.cluster.local:389 -b 'dc=test,dc=com' -D "cn=mds,dc=test,dc=com" -w 'Developer!'
 ```
 
-Deploy:
+### Deploy LSDMESP:
 ```
 helm install lsdmesp-confluent . -f values.yaml -n lsdmesp-confluent
 ```
+
+## Uninstall LSDMESP
 
 Tear down:
 ```
@@ -43,6 +55,3 @@ kubectl -n lsdmesp-confluent delete secret ca-pair-sslcerts
 for crd in $(kubectl get crd --no-headers -ojsonpath='{.items[*].metadata.name}' | grep confluent); do kubectl delete crd $crd; done
 kubectl delete ns lsdmesp-confluent
 ```
-
-TODO: security context
-TODO: ingress for kafka, kafka-0-internal, kafka-1-internal, kafka-2-internal, kafka-3-internal services (port 9092)
