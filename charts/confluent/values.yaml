@@ -1,23 +1,149 @@
 lsdmesp:
-  clusterType: "rancher"
-  cpVersion: "7.5.3"
+  clusterType: "kind"
+  cpVersion: "7.6.0"
+  cpOperatorVersion: "2.8.0"
+  storageClass: standard
+  defaultReplicationFactor: 3
+  defaultMinInSyncReplicas: 2
+  defaultNumPartitions: 6
   confluent:
-    zookeeper:
-      enabled: false
     kraftcontroller:
+      # if `true`, then will be provisioned
       enabled: true
+      # java memory sizes
+      jvm:
+        Xms: 384m
+        Xmx: 384m
+      # size of the pv needed
+      dataVolumeCapacity: 1Gi
+      # pod resource limits and request
+      resources:
+        limits:
+          cpu: 500m
+          memory: 1Gi
+        requests:
+          cpu: 20m
+          memory: 512Mi
+      # number of pod replicas
+      replicas: 3
+
     kafka:
+      # if `true`, then will be provisioned
       enabled: true
+      # java memory sizes
+      jvm:
+        Xms: 1g
+        Xmx: 1g
+      # size of the pv needed
+      dataVolumeCapacity: 20Gi
+      # pod resource limits and request
+      resources:
+        limits:
+          cpu: 1
+          memory: 8Gi
+        requests:
+          cpu: 50m
+          memory: 3Gi
+      # number of pod replicas
+      replicas: 3
+
+    kafkarestclass:
+      # if `true`, then will be provisioned
+      enabled: true
+
     schemaregistry:
+      # if `true`, then will be provisioned
       enabled: true
+      # java memory sizes
+      jvm:
+        Xms: 384m
+        Xmx: 384m
+      # pod resource limits and request
+      resources:
+        limits:
+          cpu: 200m
+          memory: 1Gi
+        requests:
+          cpu: 10m
+          memory: 512Mi
+      # number of pod replicas
+      replicas: 1
+
     connect:
+      # if `true`, then will be provisioned
       enabled: true
+      # java memory sizes
+      jvm:
+        Xms: 512m
+        Xmx: 512m
+      # pod resource limits and request
+      resources:
+        limits:
+          cpu: 1
+          memory: 2Gi
+        requests:
+          cpu: 20m
+          memory: 1Gi
+      # number of pod replicas
+      replicas: 1
+
     ksqldb:
+      # if `true`, then will be provisioned
       enabled: true
+      # java memory sizes
+      jvm:
+        Xms: 512m
+        Xmx: 512m
+      # size of the pv needed
+      dataVolumeCapacity: 5Gi
+      # pod resource limits and request
+      resources:
+        limits:
+          cpu: 1
+          memory: 2Gi
+        requests:
+          cpu: 100m
+          memory: 1Gi
+      # number of pod replicas
+      replicas: 1
+
     kafkarestproxy:
-      enabled: false
-    controlcenter:
+      # if `true`, then will be provisioned
       enabled: true
+      # java memory sizes
+      jvm:
+        Xms: 384m
+        Xmx: 384m
+      # pod resource limits and request
+      resources:
+        limits:
+          cpu: 500m
+          memory: 1Gi
+        requests:
+          cpu: 10m
+          memory: 512Mi
+      # number of pod replicas
+      replicas: 1
+
+    controlcenter:
+      # if `true`, then will be provisioned
+      enabled: true
+      # java memory sizes
+      jvm:
+        Xms: 2g
+        Xmx: 2g
+      # size of the pv needed
+      dataVolumeCapacity: 10Gi
+      # pod resource limits and request
+      resources:
+        limits:
+          cpu: 2
+          memory: 12Gi
+        requests:
+          cpu: 200m
+          memory: 6Gi
+      # number of pod replicas
+      replicas: 1
 
 confluent-for-kubernetes:
   name: confluent-operator
@@ -38,7 +164,7 @@ confluent-for-kubernetes:
     registry: docker.io
     repository: confluentinc/confluent-operator
     pullPolicy: IfNotPresent
-    tag: "0.824.40"
+    tag: "0.921.2"
   priorityClassName: ""
   replicas: 1
   namespaced: true
