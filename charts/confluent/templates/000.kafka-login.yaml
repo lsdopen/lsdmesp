@@ -1,7 +1,0 @@
-apiVersion: v1
-data:
-  bearer.txt: dXNlcm5hbWU9Y2Zfa2Fma2EKcGFzc3dvcmQ9dWlHUThpNmdIdkd0
-kind: Secret
-metadata:
-  creationTimestamp: null
-  name: kafka-login
