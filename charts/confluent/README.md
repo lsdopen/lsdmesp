@@ -43,3 +43,6 @@ kubectl -n lsdmesp-confluent delete secret ca-pair-sslcerts
 for crd in $(kubectl get crd --no-headers -ojsonpath='{.items[*].metadata.name}' | grep confluent); do kubectl delete crd $crd; done
 kubectl delete ns lsdmesp-confluent
 ```
+
+TODO: security context
+TODO: ingress for kafka, kafka-0-internal, kafka-1-internal, kafka-2-internal, kafka-3-internal services (port 9092)
