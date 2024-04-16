@@ -6,10 +6,24 @@ lsdmesp:
   defaultReplicationFactor: 3
   defaultMinInSyncReplicas: 2
   defaultNumPartitions: 6
+
+  tls:
+    ca:
+      cert: ""
+      key: ""
+    mds:
+      key: ""
+      publicKey: ""
+
+  ldap:
+    # if `true`, then will be provisioned
+    enabled: true
+    readOnlyUser:
+      username: mds
+      password: ""
+
   confluent:
     kraftcontroller:
-      # if `true`, then will be provisioned
-      enabled: true
       # java memory sizes
       jvm:
         Xms: 384m
@@ -30,6 +44,9 @@ lsdmesp:
     kafka:
       # if `true`, then will be provisioned
       enabled: true
+      # credential config
+      username: cf_kafka
+      password: ""
       # java memory sizes
       jvm:
         Xms: 1g
@@ -50,10 +67,16 @@ lsdmesp:
     kafkarestclass:
       # if `true`, then will be provisioned
       enabled: true
+      # credential config
+      username: cf_kafka
+      password: ""
 
     schemaregistry:
       # if `true`, then will be provisioned
       enabled: true
+      # credential config
+      username: cf_schemaregistry
+      password: ""
       # java memory sizes
       jvm:
         Xms: 384m
@@ -72,6 +95,9 @@ lsdmesp:
     connect:
       # if `true`, then will be provisioned
       enabled: true
+      # credential config
+      username: cf_connect
+      password: ""
       # java memory sizes
       jvm:
         Xms: 512m
@@ -90,6 +116,9 @@ lsdmesp:
     ksqldb:
       # if `true`, then will be provisioned
       enabled: true
+      # credential config
+      username: cf_ksqldb
+      password: ""
       # java memory sizes
       jvm:
         Xms: 512m
@@ -110,6 +139,9 @@ lsdmesp:
     kafkarestproxy:
       # if `true`, then will be provisioned
       enabled: true
+      # credential config
+      username: cf_restproxy
+      password: ""
       # java memory sizes
       jvm:
         Xms: 384m
@@ -128,6 +160,9 @@ lsdmesp:
     controlcenter:
       # if `true`, then will be provisioned
       enabled: true
+      # credential config
+      username: cf_controlcenter
+      password: ""
       # java memory sizes
       jvm:
         Xms: 2g

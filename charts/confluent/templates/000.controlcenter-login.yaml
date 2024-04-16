@@ -1,7 +1,0 @@
-apiVersion: v1
-data:
-  bearer.txt: dXNlcm5hbWU9Y2ZfY29udHJvbGNlbnRlcgpwYXNzd29yZD1QcUtmdzNITURuNEM=
-kind: Secret
-metadata:
-  creationTimestamp: null
-  name: controlcenter-login
