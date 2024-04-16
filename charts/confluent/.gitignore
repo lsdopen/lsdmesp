@@ -2,7 +2,7 @@
 
 # IDE files
 .vscode/
-.idea/
+../../.idea/
 
 # Additional ignores
 tmp/
