@@ -4,6 +4,7 @@ apiVersion: platform.confluent.io/v1beta1
 kind: SchemaRegistry
 metadata:
   name: schemaregistry
+  namespace: {{ .Release.Namespace }}
 spec:
   authorization:
     type: rbac

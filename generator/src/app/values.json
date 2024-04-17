@@ -1,0 +1,32 @@
+{
+    "lsdmesp": {
+        "ldap": {
+            "readOnlyUser": {
+                "password": "placeholder"
+            }
+        },
+        "confluent": {
+            "connect": {
+                "password": "placeholder"
+            },
+            "controlcenter": {
+                "password": "placeholder"
+            },
+            "kafka": {
+                "password": "placeholder"
+            },
+            "kafkarestclass": {
+                "password": "placeholder"
+            },
+            "kafkarestproxy": {
+                "password": "placeholder"
+            },
+            "ksqldb": {
+                "password": "placeholder"
+            },
+            "schemaregistry": {
+                "password": "placeholder"
+            }
+        }
+    }
+}

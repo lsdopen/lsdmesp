@@ -4,6 +4,7 @@ apiVersion: platform.confluent.io/v1beta1
 kind: Kafka
 metadata:
   name: kafka
+  namespace: {{ .Release.Namespace }}
 spec:
   authorization:
     type: rbac

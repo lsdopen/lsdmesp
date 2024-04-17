@@ -1,3 +1,5 @@
+{{- $ldap := .Values.lsdmesp.ldap -}}
+{{- if $ldap.enabled }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -20,14 +22,14 @@ spec:
         - --copy-service
         - --loglevel=debug
         imagePullPolicy: IfNotPresent
-        image: {{ .Values.image }}
+        image: {{ $ldap.image }}
         ports:
         - containerPort: 389
           name: ldap
         - containerPort: 636
           name: ldaps
         env:
-        {{- if .Values.tls.enabled }}
+        {{- if $ldap.tls.enabled }}
         - name: LDAP_TLS_VERIFY_CLIENT
           value: try
         - name: LDAP_TLS_CRT_FILENAME
@@ -36,15 +38,15 @@ spec:
           value: tls.key
         - name: LDAP_TLS_CA_CRT_FILENAME
           value: ca.crt
-        - name: LDAP_TLS
-          value: "true"
         {{- end }}
-        {{- range $key, $val := .Values.env }}
+        - name: LDAP_TLS
+          value: "{{ $ldap.tls.enabled }}"
+        {{- range $key, $val := $ldap.env }}
         {{ printf "- name: %s" $key }}
         {{ printf "  value: \"%s\"" $val }}
         {{- end }}
         volumeMounts:
-        {{- if .Values.tls.enabled }}
+        {{- if $ldap.tls.enabled }}
         - mountPath: /container/service/slapd/assets/certs
           name: sslcerts-volume
         {{- end }}
@@ -52,23 +54,19 @@ spec:
           name: ldap-data
         - mountPath: /etc/ldap/slapd.d
           name: ldap-config
-       {{- if .Values.ldifs }}
         - mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom
           name: customldif
-       {{- end }}
       volumes:
-      {{- if .Values.tls.enabled }}
+      {{- if $ldap.tls.enabled }}
       - name: sslcerts-volume
         secret:
           defaultMode: 420
-          secretName: {{ .Values.name }}-sslcerts
+          secretName: {{ .Release.name }}-sslcerts
       {{- end }}
-      {{- if .Values.ldifs }}
       - name: customldif
-        configMap:
+        secret:
           defaultMode: 420
-          name: {{ .Values.name }}-ldifs
-      {{- end }}
+          secretName: {{ .Release.name }}-ldifs
   volumeClaimTemplates:
   - metadata:
       name: ldap-data
@@ -84,3 +82,4 @@ spec:
       resources:
         requests:
           storage: 500Mi
+{{- end }}

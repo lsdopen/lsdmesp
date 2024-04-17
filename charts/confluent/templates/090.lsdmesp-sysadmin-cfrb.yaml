@@ -2,6 +2,7 @@ apiVersion: platform.confluent.io/v1beta1
 kind: ConfluentRolebinding
 metadata:
   name: lsdmesp-sysadmin-0
+  namespace: {{ .Release.Namespace }}
 spec:
   principal:
     name: cf_kafka
@@ -12,6 +13,7 @@ apiVersion: platform.confluent.io/v1beta1
 kind: ConfluentRolebinding
 metadata:
   name: lsdmesp-sysadmin-1
+  namespace: {{ .Release.Namespace }}
 spec:
   clustersScopeByIds:
     connectClusterId: {{ .Release.Namespace }}.connect
@@ -24,6 +26,7 @@ apiVersion: platform.confluent.io/v1beta1
 kind: ConfluentRolebinding
 metadata:
   name: lsdmesp-sysadmin-2
+  namespace: {{ .Release.Namespace }}
 spec:
   clustersScopeByIds:
     ksqlClusterId: {{ .Release.Namespace }}.ksqldb_
@@ -40,6 +43,7 @@ apiVersion: platform.confluent.io/v1beta1
 kind: ConfluentRolebinding
 metadata:
   name: lsdmesp-sysadmin-3
+  namespace: {{ .Release.Namespace }}
 spec:
   clustersScopeByIds:
     schemaRegistryClusterId: id_schemaregistry_{{ .Release.Namespace }}
@@ -52,6 +56,7 @@ apiVersion: platform.confluent.io/v1beta1
 kind: ConfluentRolebinding
 metadata:
   name: lsdmesp-sysadmin-4
+  namespace: {{ .Release.Namespace }}
 spec:
   principal:
     name: cf_ksqldb
@@ -62,6 +67,7 @@ apiVersion: platform.confluent.io/v1beta1
 kind: ConfluentRolebinding
 metadata:
   name: lsdmesp-sysadmin-5
+  namespace: {{ .Release.Namespace }}
 spec:
   clustersScopeByIds:
     connectClusterId: {{ .Release.Namespace }}.connect
@@ -74,6 +80,7 @@ apiVersion: platform.confluent.io/v1beta1
 kind: ConfluentRolebinding
 metadata:
   name: lsdmesp-sysadmin-6
+  namespace: {{ .Release.Namespace }}
 spec:
   clustersScopeByIds:
     ksqlClusterId: {{ .Release.Namespace }}.ksqldb_
@@ -90,6 +97,7 @@ apiVersion: platform.confluent.io/v1beta1
 kind: ConfluentRolebinding
 metadata:
   name: lsdmesp-sysadmin-7
+  namespace: {{ .Release.Namespace }}
 spec:
   clustersScopeByIds:
     schemaRegistryClusterId: id_schemaregistry_{{ .Release.Namespace }}
@@ -102,6 +110,7 @@ apiVersion: platform.confluent.io/v1beta1
 kind: ConfluentRolebinding
 metadata:
   name: lsdmesp-sysadmin-8
+  namespace: {{ .Release.Namespace }}
 spec:
   principal:
     name: cf_connect
@@ -112,6 +121,7 @@ apiVersion: platform.confluent.io/v1beta1
 kind: ConfluentRolebinding
 metadata:
   name: lsdmesp-sysadmin-9
+  namespace: {{ .Release.Namespace }}
 spec:
   clustersScopeByIds:
     connectClusterId: {{ .Release.Namespace }}.connect
@@ -124,6 +134,7 @@ apiVersion: platform.confluent.io/v1beta1
 kind: ConfluentRolebinding
 metadata:
   name: lsdmesp-sysadmin-10
+  namespace: {{ .Release.Namespace }}
 spec:
   clustersScopeByIds:
     ksqlClusterId: {{ .Release.Namespace }}.ksqldb_
@@ -140,6 +151,7 @@ apiVersion: platform.confluent.io/v1beta1
 kind: ConfluentRolebinding
 metadata:
   name: lsdmesp-sysadmin-11
+  namespace: {{ .Release.Namespace }}
 spec:
   clustersScopeByIds:
     schemaRegistryClusterId: id_schemaregistry_{{ .Release.Namespace }}
