@@ -1,6 +1,5 @@
 import pem  # type: ignore
-
-from generator.src.app.settings import CREDENTIALS_PATH
+from src.app.settings import CREDENTIALS_PATH
 
 CA = CREDENTIALS_PATH / "ca.pem"
 CA_KEY = CREDENTIALS_PATH / "ca-key.pem"

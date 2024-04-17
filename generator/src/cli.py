@@ -1,8 +1,7 @@
 import click
-
-from generator.src.app.create_tls_artifact import generate_tls_artifacts
-from generator.src.app.create_values_yaml import write_yaml
-from generator.src.app.settings import VALUES, VALUES_YAML_PATH
+from src.app.create_tls_artifact import generate_tls_artifacts
+from src.app.create_values_yaml import write_yaml
+from src.app.settings import VALUES, VALUES_YAML_PATH
 
 CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
 

@@ -1,12 +1,12 @@
-from generator.src.app.formatter import yaml
-from generator.src.app.set_password import (
+from src.app.formatter import yaml
+from src.app.set_password import (
     confluent_services,
     ldap_user,
     set_confluent_service_password,
     set_ldap_user_password,
 )
-from generator.src.app.set_tls_artifact import TLS_SECTION, set_tls_values
-from generator.src.app.settings import VALUES, VALUES_YAML_PATH
+from src.app.set_tls_artifact import TLS_SECTION, set_tls_values
+from src.app.settings import VALUES, VALUES_YAML_PATH
 
 
 def write_yaml(path, data):

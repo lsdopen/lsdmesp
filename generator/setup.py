@@ -15,6 +15,6 @@ setup(
     ],
     entry_points="""
     [console_scripts]
-    mesp=generator.src.cli:cli
+    mesp=src.cli:cli
     """,
 )
