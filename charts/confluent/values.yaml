@@ -21,6 +21,25 @@ lsdmesp:
     readOnlyUser:
       username: mds
       password: ""
+    image: osixia/openldap:1.5.0
+    tls:
+      enabled: false
+      fullchain: |-
+      privkey: |-
+      cacerts: |-
+
+    env: {}
+
+    # Add additional ldifs to the core confluent ones
+    extra_ldifs:
+#      06_cf_groupou.ldif: |-
+#        dn: ou=users,{{ LDAP_BASE_DN }}
+#        objectClass: organizationalUnit
+#        ou: Users
+#        dn: ou=groups,{{ LDAP_BASE_DN }}
+#        objectClass: organizationalUnit
+#        ou: Groups
+
 
   confluent:
     kraftcontroller:

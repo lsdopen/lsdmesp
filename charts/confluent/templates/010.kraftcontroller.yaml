@@ -3,6 +3,7 @@ apiVersion: platform.confluent.io/v1beta1
 kind: KRaftController
 metadata:
   name: kraftcontroller
+  namespace: {{ .Release.Namespace }}
 spec:
   configOverrides:
     jvm:
