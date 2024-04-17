@@ -31,7 +31,7 @@ lsdmesp:
     env: {}
 
     # Add additional ldifs to the core confluent ones
-    extra_ldifs:
+    extra_ldifs: {}
 #      06_cf_groupou.ldif: |-
 #        dn: ou=users,{{ LDAP_BASE_DN }}
 #        objectClass: organizationalUnit
