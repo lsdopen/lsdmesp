@@ -1,8 +1,8 @@
 import click
 
-from .app.create_values_yaml import write_yaml
-from .app.settings import VALUES, VALUES_YAML_PATH
-from .app.tls_artifact import generate_tls_artifacts
+from generator.src.app.create_tls_artifact import generate_tls_artifacts
+from generator.src.app.create_values_yaml import write_yaml
+from generator.src.app.settings import VALUES, VALUES_YAML_PATH
 
 CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
 
@@ -25,7 +25,7 @@ def create_values_yaml():
     """
     Create helm values file.
     """
-    write_yaml()
+    write_yaml(VALUES_YAML_PATH, VALUES)
 
 
 @cli.command()
@@ -33,5 +33,5 @@ def create_all_artifacts():
     """
     Creates all authentication artifacts.
     """
-    generate_tls_artifacts
+    generate_tls_artifacts()
     write_yaml(VALUES_YAML_PATH, VALUES)

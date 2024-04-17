@@ -1,6 +1,6 @@
 import subprocess
 
-from src.app.settings import TLS_SCRIPT
+from generator.src.app.settings import TLS_SCRIPT
 
 
 def generate_tls_artifacts():

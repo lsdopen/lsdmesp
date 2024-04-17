@@ -1,5 +1,5 @@
-from src.app.password import generate_password
-from src.app.settings import VALUES
+from generator.src.app.password import generate_password
+from generator.src.app.settings import VALUES
 
 ldap_user = VALUES["lsdmesp"]["ldap"]["readOnlyUser"]
 confluent_services = VALUES["lsdmesp"]["confluent"].values()

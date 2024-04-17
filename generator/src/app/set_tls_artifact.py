@@ -1,5 +1,11 @@
 import pem  # type: ignore
-from src.app.settings import CA, CA_KEY, MDS_PUBLIC_KEY, MDS_TOKEN_KEY_PAIR
+
+from generator.src.app.settings import CREDENTIALS_PATH
+
+CA = CREDENTIALS_PATH / "ca.pem"
+CA_KEY = CREDENTIALS_PATH / "ca-key.pem"
+MDS_PUBLIC_KEY = CREDENTIALS_PATH / "mds-publickey.pem"
+MDS_TOKEN_KEY_PAIR = CREDENTIALS_PATH / "mds-tokenkeypair.pem"
 
 
 def read_tls_artifact(path):
