@@ -44,19 +44,19 @@ spec:
         - name: LDAP_READONLY_USER
           value: "true"
         - name: LDAP_READONLY_USER_USERNAME
-          value: $ldap.readOnlyUser.username
+          value: "{{ $ldap.readOnlyUser.username }}"
         - name: LDAP_READONLY_USER_PASSWORD
-          value: $ldap.readOnlyUser.password
+          value: "{{ $ldap.readOnlyUser.password }}"
         - name: LDAP_ORGANISATION
-          value: $ldap.organisation
+          value: "{{ $ldap.organisation }}"
         - name: LDAP_DOMAIN
-          value: $ldap.domain
+          value: "{{ $ldap.domain }}"
         - name: LDAP_ADMIN_PASSWORD
-          value: $ldap.admin_password
+          value: "{{ $ldap.admin_password }}"
         - name: LDAP_CONFIG_PASSWORD
-          value: $ldap.config_password
+          value: "{{ $ldap.config_password }}"
         - name: LDAP_BASE_DN
-          value: $ldap.basedn
+          value: "{{ $ldap.basedn }}"
         {{- range $key, $val := $ldap.env }}
         {{ printf "- name: %s" $key }}
         {{ printf "  value: \"%s\"" $val }}
