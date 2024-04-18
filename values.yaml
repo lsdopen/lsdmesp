@@ -1,6 +1,7 @@
 lsdmesp:
   ldap:
     readOnlyUser:
+      username: cn=mds,dc=test,dc=com
       password: Developer!
     env:
       LDAP_ORGANISATION: "Test Inc."
@@ -17,9 +18,6 @@ lsdmesp:
     controlcenter:
       password: '{(kLWbjg2K3F'
     kafka:
-      password: (2FbgWk3Kj{L
-    kafkarestclass:
-      # this needs to be the same as for the kafka user
       password: (2FbgWk3Kj{L
     kafkarestproxy:
       password: WkF{L(bj2K3g

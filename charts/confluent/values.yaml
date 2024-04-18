@@ -19,7 +19,7 @@ lsdmesp:
     # if `true`, then will be provisioned
     enabled: true
     readOnlyUser:
-      username: cn=mds,dc=test,dc=com
+      username: ""
       password: ""
     image: osixia/openldap:1.5.0
     tls:
@@ -27,6 +27,15 @@ lsdmesp:
       fullchain: |-
       privkey: |-
       cacerts: |-
+    env: {}
+#      LDAP_ORGANISATION: "Test Inc."
+#      LDAP_DOMAIN: "test.com"
+#      LDAP_ADMIN_PASSWORD: "confluentrox"
+#      LDAP_CONFIG_PASSWORD: "confluentconfigrox"
+#      LDAP_READONLY_USER: "true"
+#      LDAP_READONLY_USER_USERNAME: "mds"
+#      LDAP_READONLY_USER_PASSWORD: "Developer!"
+#      LDAP_BASE_DN: "dc=test,dc=com"
 
     # Add additional ldifs to the core confluent ones
     extra_ldifs: {}
@@ -84,9 +93,6 @@ lsdmesp:
     kafkarestclass:
       # if `true`, then will be provisioned
       enabled: true
-      # credential config
-      username: cf_kafka
-      password: ""
 
     schemaregistry:
       # if `true`, then will be provisioned
