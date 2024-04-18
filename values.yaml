@@ -1,17 +1,13 @@
 lsdmesp:
   ldap:
     readOnlyUser:
-      username: cn=mds,dc=test,dc=com
+      username: mds
       password: Developer!
-    env:
-      LDAP_ORGANISATION: "Test Inc."
-      LDAP_DOMAIN: "test.com"
-      LDAP_ADMIN_PASSWORD: "confluentrox"
-      LDAP_CONFIG_PASSWORD: "confluentconfigrox"
-      LDAP_READONLY_USER: "true"
-      LDAP_READONLY_USER_USERNAME: "mds"
-      LDAP_READONLY_USER_PASSWORD: "Developer!"
-      LDAP_BASE_DN: "dc=test,dc=com"
+    organisation: "Test Inc."
+    domain: "test.com"
+    admin_password: "confluentrox"
+    config_password: "confluentconfigrox"
+    basedn: "dc=test,dc=com"
   confluent:
     connect:
       password: bk(2KW{LgFj3
