@@ -1,7 +1,16 @@
 lsdmesp:
   ldap:
     readOnlyUser:
-      password: kLg3{(bKjFW2
+      password: Developer!
+    env:
+      LDAP_ORGANISATION: "Test Inc."
+      LDAP_DOMAIN: "test.com"
+      LDAP_ADMIN_PASSWORD: "confluentrox"
+      LDAP_CONFIG_PASSWORD: "confluentconfigrox"
+      LDAP_READONLY_USER: "true"
+      LDAP_READONLY_USER_USERNAME: "mds"
+      LDAP_READONLY_USER_PASSWORD: "Developer!"
+      LDAP_BASE_DN: "dc=test,dc=com"
   confluent:
     connect:
       password: bk(2KW{LgFj3
@@ -10,7 +19,8 @@ lsdmesp:
     kafka:
       password: (2FbgWk3Kj{L
     kafkarestclass:
-      password: (2gL3KbkWj{F
+      # this needs to be the same as for the kafka user
+      password: (2FbgWk3Kj{L
     kafkarestproxy:
       password: WkF{L(bj2K3g
     ksqldb:

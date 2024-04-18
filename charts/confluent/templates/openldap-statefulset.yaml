@@ -61,12 +61,12 @@ spec:
       - name: sslcerts-volume
         secret:
           defaultMode: 420
-          secretName: {{ .Release.name }}-sslcerts
+          secretName: {{ .Release.Name }}-sslcerts
       {{- end }}
       - name: customldif
         secret:
           defaultMode: 420
-          secretName: {{ .Release.name }}-ldifs
+          secretName: {{ .Release.Name }}-ldifs
   volumeClaimTemplates:
   - metadata:
       name: ldap-data

@@ -15,6 +15,7 @@ helm dependency update .
 Create the namespaces
 ```
 kubectl create ns lsdmesp-confluent
+kubectl config set-context --current --namespace lsdmesp-confluent
 ```
 
 Set PROJECT_HOME env var to project directory

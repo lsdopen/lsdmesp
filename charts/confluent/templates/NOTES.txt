@@ -10,7 +10,7 @@ Kafka password: {{ .Values.lsdmesp.confluent.kafka.password }}
 OpenLdap Helm charts based on the osixia/openldap
 
 {{- if .Values.lsdmesp.ldap.tls.enabled }}
-TLS Address: ldaps://{{ .Release.name }}.{{ .Release.Namespace }}.svc.cluster.local:636
+TLS Address: ldaps://ldap.{{ .Release.Namespace }}.svc.cluster.local:636
 {{- end }}
-Address: ldap://{{ .Release.name}}.{{ .Release.Namespace }}.svc.cluster.local:389
+Address: ldap://ldap.{{ .Release.Namespace }}.svc.cluster.local:389
 {{- end }}
