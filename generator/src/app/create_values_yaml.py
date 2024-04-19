@@ -1,18 +1,16 @@
 from src.app.formatter import yaml
 from src.app.set_password import (
-    confluent_services,
-    ldap_user,
     set_confluent_service_password,
-    set_ldap_user_password,
+    set_ldap_admin_config_password,
 )
-from src.app.set_tls_artifact import TLS_SECTION, set_tls_values
+from src.app.set_tls_artifact import set_tls_values
 from src.app.settings import VALUES, VALUES_YAML_PATH
 
 
 def write_yaml(path, data):
-    set_ldap_user_password(ldap_user)
-    set_confluent_service_password(confluent_services)
-    set_tls_values(VALUES["lsdmesp"], TLS_SECTION)
+    set_ldap_admin_config_password()
+    set_confluent_service_password()
+    set_tls_values()
     with open(path, "w") as file:
         yaml.dump(data, file, sort_keys=False)
 

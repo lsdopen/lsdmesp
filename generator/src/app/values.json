@@ -3,7 +3,9 @@
         "ldap": {
             "readOnlyUser": {
                 "password": "placeholder"
-            }
+            },
+            "admin_password": "placeholder",
+            "config_password": "placeholder"
         },
         "confluent": {
             "connect": {
