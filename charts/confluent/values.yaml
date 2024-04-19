@@ -19,7 +19,7 @@ lsdmesp:
     # if `true`, then will be provisioned
     enabled: true
     readOnlyUser:
-      username: ""
+      username: "mds"
       password: ""
     image: osixia/openldap:1.5.0
     tls:
@@ -27,11 +27,11 @@ lsdmesp:
       fullchain: |-
       privkey: |-
       cacerts: |-
-    organisation: ""
-    domain: ""
+    organisation: "Test Inc."
+    domain: "test.com"
     admin_password: ""
     config_password: ""
-    basedn: ""
+    basedn: "dc=test,dc=com"
     env: {}
 
     # Add additional ldifs to the core confluent ones

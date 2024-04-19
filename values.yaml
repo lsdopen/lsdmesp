@@ -1,13 +1,9 @@
 lsdmesp:
   ldap:
     readOnlyUser:
-      username: mds
       password: Developer!
-    organisation: "Test Inc."
-    domain: "test.com"
     admin_password: "confluentrox"
     config_password: "confluentconfigrox"
-    basedn: "dc=test,dc=com"
   confluent:
     connect:
       password: bk(2KW{LgFj3
