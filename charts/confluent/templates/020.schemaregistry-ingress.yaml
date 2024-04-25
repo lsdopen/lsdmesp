@@ -5,6 +5,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Release.Name }}-schemaregistry
+{{- with $schemaregistry.ingress.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
 spec:
   ingressClassName: {{ $schemaregistry.ingress.ingressClassName }}
   rules:
