@@ -1,0 +1,25 @@
+{{- $connect := .Values.lsdmesp.confluent.connect -}}
+{{- if $connect.ingress.enabled -}}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-connect
+spec:
+  ingressClassName: {{ $connect.ingress.ingressClassName }}
+  rules:
+    - host: connect.{{ $connect.ingress.baseDomain }}
+      http:
+        paths:
+          - backend:
+              service:
+                name: connect
+                port:
+                  number: 9092
+            path: /
+            pathType: ImplementationSpecific
+  tls:
+    - hosts:
+        - connect.{{ $connect.ingress.baseDomain }}
+      secretName: {{ $connect.ingress.tls.secretName }}
+{{- end -}}

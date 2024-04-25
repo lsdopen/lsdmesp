@@ -1,0 +1,25 @@
+{{- $controlcenter := .Values.lsdmesp.confluent.controlcenter -}}
+{{- if $controlcenter.ingress.enabled -}}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-controlcenter
+spec:
+  ingressClassName: {{ $controlcenter.ingress.ingressClassName }}
+  rules:
+    - host: controlcenter.{{ $controlcenter.ingress.baseDomain }}
+      http:
+        paths:
+          - backend:
+              service:
+                name: controlcenter
+                port:
+                  number: 9092
+            path: /
+            pathType: ImplementationSpecific
+  tls:
+    - hosts:
+        - controlcenter.{{ $controlcenter.ingress.baseDomain }}
+      secretName: {{ $controlcenter.ingress.tls.secretName }}
+{{- end -}}
