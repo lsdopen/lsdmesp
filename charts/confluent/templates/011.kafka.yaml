@@ -70,16 +70,16 @@ spec:
       tls:
         enabled: true
     external:
-{{- if $kafka.ingress.enabled -}}
       externalAccess:
+      {{- if $kafka.ingress.enabled }}
         type: staticForHostBasedRouting
         staticForHostBasedRouting:
           domain: {{ $kafka.ingress.baseDomain }}
           brokerPrefix: kafka-broker-
           port: 443
-{{- else -}}
-      externalAccess: {{ $kafka.externalAccess }}
-{{- end -}}
+      {{- else -}}
+        {{ toYaml $kafka.externalAccess | nindent 8 }}
+      {{- end }}
       authentication:
         type: ldap
       tls:

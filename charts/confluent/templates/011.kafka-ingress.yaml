@@ -1,5 +1,5 @@
 {{- $kafka := .Values.lsdmesp.confluent.kafka -}}
-{{- if $kafka.ingress.enabled -}}
+{{- if $kafka.ingress.enabled }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -22,12 +22,12 @@ spec:
     - hosts:
         - kafka.{{ $kafka.ingress.baseDomain }}
       secretName: {{ $kafka.ingress.tls.secretName }}
-{{- range $i := $kafka.replicas -}}
+{{- range $i := until ($kafka.replicas | int) }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Release.Name }}-kafka-broker-{{ $i }}
+  name: {{ $.Release.Name }}-kafka-broker-{{ $i }}
 {{- with $kafka.ingress.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
