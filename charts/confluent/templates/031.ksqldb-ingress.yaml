@@ -17,7 +17,7 @@ spec:
         paths:
           - backend:
               service:
-                name: ksqldb
+                name: ksqldb-0-internal
                 port:
                   number: 8088
             path: /
