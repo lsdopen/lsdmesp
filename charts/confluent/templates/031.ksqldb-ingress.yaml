@@ -15,7 +15,7 @@ spec:
               service:
                 name: ksqldb
                 port:
-                  number: 9092
+                  number: 8088
             path: /
             pathType: ImplementationSpecific
   tls:
