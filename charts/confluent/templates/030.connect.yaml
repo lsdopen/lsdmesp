@@ -63,7 +63,9 @@ spec:
       tls:
         enabled: true
       url: https://schemaregistry.{{ .Release.Namespace }}.svc.cluster.local:8081
+  {{- if $connect.externalAccess }}
   externalAccess: {{ $connect.externalAccess }}
+  {{- end }}
   image:
     application: confluentinc/cp-server-connect:{{ .Values.lsdmesp.cpVersion }}
     init: confluentinc/confluent-init-container:{{ .Values.lsdmesp.cpOperatorVersion }}

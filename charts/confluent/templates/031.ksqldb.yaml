@@ -41,9 +41,11 @@ spec:
     application: confluentinc/cp-ksqldb-server:{{ .Values.lsdmesp.cpVersion }}
     init: confluentinc/confluent-init-container:{{ .Values.lsdmesp.cpOperatorVersion }}
   internalTopicReplicationFactor: {{ .Values.lsdmesp.defaultReplicationFactor }}
+  {{- if $ksqldb.externalAccess }}
   listeners:
     external:
       externalAccess: {{ $ksqldb.externalAccess }}
+  {{- end }}
   oneReplicaPerNode: true
   podTemplate:
     podSecurityContext:

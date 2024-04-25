@@ -33,9 +33,11 @@ spec:
     application: confluentinc/cp-schema-registry:{{ .Values.lsdmesp.cpVersion }}
     init: confluentinc/confluent-init-container:{{ .Values.lsdmesp.cpOperatorVersion }}
   internalTopicReplicatorFactor: {{ .Values.lsdmesp.defaultReplicationFactor }}
+  {{- if $schemaregistry.externalAccess }}
   listeners:
     external:
       externalAccess: {{ $schemaregistry.externalAccess }}
+  {{- end }}
   oneReplicaPerNode: true
   podTemplate:
     podSecurityContext:

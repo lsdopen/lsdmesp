@@ -50,7 +50,9 @@ spec:
       tls:
         enabled: true
       url: https://ksqldb.{{ .Release.Namespace }}.svc.cluster.local:8088
+  {{- if $controlcenter.externalAccess }}
   externalAccess: {{ $controlcenter.externalAccess }}
+  {{- end }}
   image:
     application: confluentinc/cp-enterprise-control-center:{{ .Values.lsdmesp.cpVersion }}
     init: confluentinc/confluent-init-container:{{ .Values.lsdmesp.cpOperatorVersion }}
