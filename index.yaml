@@ -35,6 +35,39 @@ entries:
     - https://github.com/lsdopen/lsdmesp/releases/download/lsdmesp-confluent-1.0.0/lsdmesp-confluent-1.0.0.tgz
     version: 1.0.0
   - apiVersion: v2
+    appVersion: 0.5.3
+    created: "2024-04-25T13:13:35.457026264Z"
+    dependencies:
+    - name: confluent-for-kubernetes
+      repository: https://packages.confluent.io/helm
+      version: 0.921.2
+    description: 'LSDMESP CFK: LSD Event Streaming Platform with Confluent Operator'
+    digest: f0c4d4c7b66b571b696d97f3e00e2ebbbdc127a6170c75c99f6989464e2b7eab
+    home: https://github.com/lsdopen/lsdmesp.cfk
+    keywords:
+    - lsdmesp
+    - confluent
+    - confluent operator
+    - confluent platform
+    - cfk
+    - operator
+    - event
+    - stream
+    - kubernetes
+    - kafka
+    - messaging
+    - topic
+    maintainers:
+    - email: support@lsdopen.io
+      name: LSD
+      url: https://lsdopen.io
+    name: lsdmesp-confluent
+    sources:
+    - https://github.com/lsdopen/lsdmesp.cfk
+    urls:
+    - https://github.com/lsdopen/lsdmesp/releases/download/lsdmesp-confluent-0.5.3/lsdmesp-confluent-0.5.3.tgz
+    version: 0.5.3
+  - apiVersion: v2
     appVersion: 0.5.2
     created: "2024-04-25T12:45:28.636376077Z"
     dependencies:
@@ -463,4 +496,4 @@ entries:
     urls:
     - https://github.com/lsdopen/lsdmesp/releases/download/lsdmesp-confluent-0.2.0/lsdmesp-confluent-0.2.0.tgz
     version: 0.2.0
-generated: "2024-04-25T12:45:28.63646934Z"
+generated: "2024-04-25T13:13:35.457130287Z"
