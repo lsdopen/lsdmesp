@@ -86,6 +86,18 @@ lsdmesp:
           memory: 3Gi
       # number of pod replicas
       replicas: 3
+      externalAccess: {}
+      ingress:
+        # -- Specifies whether an ingress for Kafka should be created
+        enabled: false
+        ingressClassName: "nginx"
+        # -- Annotations for the Kafka ingress
+        annotations: {}
+        # -- Base domain configuration for the Kafka and brokers ingress ingress
+        baseDomain: "example.com"
+        # -- TLS host configuration will be dynamically built based on the base domain. You can change the secret name here.
+        tls:
+          secretName: kafka-tls
 
     kafkarestclass:
       # if `true`, then will be provisioned
@@ -111,6 +123,18 @@ lsdmesp:
           memory: 512Mi
       # number of pod replicas
       replicas: 1
+      externalAccess: {}
+      ingress:
+        # -- Specifies whether an ingress for Schema Registry should be created
+        enabled: false
+        ingressClassName: "nginx"
+        # -- Annotations for the Schema Registry ingress
+        annotations: {}
+        # -- Base domain configuration for the  Schema Registry ingress
+        baseDomain: "example.com"
+        # -- TLS host configuration will be dynamically built based on the base domain. You can change the secret name here.
+        tls:
+          secretName: schemaregistry-tls
 
     connect:
       # if `true`, then will be provisioned
@@ -132,6 +156,18 @@ lsdmesp:
           memory: 1Gi
       # number of pod replicas
       replicas: 1
+      externalAccess: {}
+      ingress:
+        # -- Specifies whether an ingress for Connect should be created
+        enabled: false
+        ingressClassName: "nginx"
+        # -- Annotations for the Connect ingress
+        annotations: {}
+        # -- Base domain configuration for the  Connect ingress
+        baseDomain: "example.com"
+        # -- TLS host configuration will be dynamically built based on the base domain. You can change the secret name here.
+        tls:
+          secretName: connect-tls
 
     ksqldb:
       # if `true`, then will be provisioned
@@ -155,6 +191,18 @@ lsdmesp:
           memory: 1Gi
       # number of pod replicas
       replicas: 1
+      externalAccess: {}
+      ingress:
+        # -- Specifies whether an ingress for KSQLDB should be created
+        enabled: false
+        ingressClassName: "nginx"
+        # -- Annotations for the KSQLDB ingress
+        annotations: {}
+        # -- Base domain configuration for the KSQLDB ingress
+        baseDomain: "example.com"
+        # -- TLS host configuration will be dynamically built based on the base domain. You can change the secret name here.
+        tls:
+          secretName: ksqldb-tls
 
     kafkarestproxy:
       # if `true`, then will be provisioned
@@ -199,6 +247,18 @@ lsdmesp:
           memory: 6Gi
       # number of pod replicas
       replicas: 1
+      externalAccess: {}
+      ingress:
+        # -- Specifies whether an ingress for Control Center should be created
+        enabled: false
+        ingressClassName: "nginx"
+        # -- Annotations for the Control Center ingress
+        annotations: {}
+        # -- Base domain configuration for the Control Center ingress
+        baseDomain: "example.com"
+        # -- TLS host configuration will be dynamically built based on the base domain. You can change the secret name here.
+        tls:
+          secretName: controlcenter-tls
 
 confluent-for-kubernetes:
   name: confluent-operator

@@ -1,0 +1,25 @@
+{{- $ksqldb := .Values.lsdmesp.confluent.ksqldb -}}
+{{- if $ksqldb.ingress.enabled -}}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-ksqldb
+spec:
+  ingressClassName: {{ $ksqldb.ingress.ingressClassName }}
+  rules:
+    - host: ksqldb.{{ $ksqldb.ingress.baseDomain }}
+      http:
+        paths:
+          - backend:
+              service:
+                name: ksqldb
+                port:
+                  number: 9092
+            path: /
+            pathType: ImplementationSpecific
+  tls:
+    - hosts:
+        - ksqldb.{{ $ksqldb.ingress.baseDomain }}
+      secretName: {{ $ksqldb.ingress.tls.secretName }}
+{{- end -}}
