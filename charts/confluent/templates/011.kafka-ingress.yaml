@@ -1,5 +1,20 @@
 {{- $kafka := .Values.lsdmesp.confluent.kafka -}}
 {{- if $kafka.ingress.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-kafka
+spec:
+  ports:
+    - name: external
+      port: 9092
+  selector:
+    app: kafka
+    clusterId: {{ .Release.Name }}
+    confluent-platform: "true"
+    type: kafka
+  sessionAffinity: None
+  type: ClusterIP
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -17,7 +32,7 @@ spec:
         paths:
           - backend:
               service:
-                name: kafka
+                name: kafka-boot
                 port:
                   number: 9092
             path: /
