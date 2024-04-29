@@ -7,6 +7,7 @@
 # Additional ignores
 tmp/
 certs/
+charts/
 
 # Customer configs
 values.*.yaml
