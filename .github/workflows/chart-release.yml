@@ -28,6 +28,10 @@ jobs:
         with:
           version: v3.8.1
 
+      - name: Add dependency repos
+        run: |
+          helm repo add confluentinc https://packages.confluent.io/helm
+
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.5.0
         with:
