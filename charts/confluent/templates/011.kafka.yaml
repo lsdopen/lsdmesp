@@ -125,12 +125,12 @@ spec:
             groupNameAttribute: cn
             groupObjectClass: groupOfNames
             groupMemberAttribute: member
-            groupMemberAttributePattern: cn=(.*),ou=users,dc=test,dc=com
-            groupSearchBase: ou=groups,dc=test,dc=com
+            groupMemberAttributePattern: cn=(.*),ou=users,{{ .Values.lsdmesp.ldap.basedn }}
+            groupSearchBase: ou=groups,{{ .Values.lsdmesp.ldap.basedn }}
             groupSearchScope: 1
             userNameAttribute: cn
             userObjectClass: organizationalRole
-            userSearchBase: dc=test,dc=com
+            userSearchBase: {{ .Values.lsdmesp.ldap.basedn }}
             userSearchScope: 2
   storageClass:
     name: {{ .Values.lsdmesp.storageClass }}
