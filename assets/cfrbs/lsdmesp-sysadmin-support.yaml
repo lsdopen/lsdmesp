@@ -1,0 +1,10 @@
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-sysadmin-support
+  namespace: lsdmesp-confluent
+spec:
+  principal:
+    name: support
+    type: group
+  role: SystemAdmin
