@@ -1,5 +1,12 @@
 #!/bin/bash
 
+#
+# 1) Create confluent-cli pod
+# 2) kubectl get secret ca-pair-sslcerts -ojson | jq -r '.data."tls.crt"' | base64 -d > ca.pem
+# 3) kubectl cp ca.pem confluent-cli:/opt
+# 4) kubectl exec -it confluent-cli bash
+#
+
 confluent login --url https://kafka:8090 --ca-cert-path /opt/ca.pem
 
 CLUSTER_ID=$(confluent cluster describe --url https://kafka:8090 --ca-cert-path /opt/ca.pem | grep kafka-cluster | awk '{print $3}')
