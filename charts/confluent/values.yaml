@@ -36,14 +36,18 @@ lsdmesp:
 
     # Add additional ldifs to the core confluent ones
     extra_ldifs: {}
-#      06_cf_groupou.ldif: |-
-#        dn: ou=users,{{ LDAP_BASE_DN }}
-#        objectClass: organizationalUnit
-#        ou: Users
-#        dn: ou=groups,{{ LDAP_BASE_DN }}
-#        objectClass: organizationalUnit
-#        ou: Groups
-
+#      07_cf_support.ldif: |-
+#        dn: cn=bob,ou=users,{{ LDAP_BASE_DN }}
+#        userPassword: bob-secret
+#        description: Example user
+#        objectClass: simpleSecurityObject
+#        objectClass: organizationalRole
+#        cn: bob
+#
+#        dn: cn=support,ou=groups,{{ LDAP_BASE_DN }}
+#        cn: support
+#        objectClass: groupOfNames
+#        member: cn=bob,ou=users,{{ LDAP_BASE_DN }}
 
   confluent:
     kraftcontroller:

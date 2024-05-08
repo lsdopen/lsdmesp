@@ -34,6 +34,7 @@ spec:
     - confluent.metrics.reporter.topic.min.isr={{ .Values.lsdmesp.defaultMinInSyncReplicas }}
     - confluent.security.event.logger.exporter.kafka.topic.replicas={{ .Values.lsdmesp.defaultReplicationFactor }}
     - log.retention.ms=86400000
+    - ldap.search.mode=GROUPS
   dataVolumeCapacity: {{ $kafka.dataVolumeCapacity }}
   dependencies:
     kafkaRest:
@@ -122,16 +123,15 @@ spec:
               secretRef: mds-login
           configurations:
             groupNameAttribute: cn
-            groupObjectClass: group
+            groupObjectClass: groupOfNames
             groupMemberAttribute: member
-            groupMemberAttributePattern: CN=(.*),DC=test,DC=com
-            groupSearchBase: dc=test,dc=com
+            groupMemberAttributePattern: cn=(.*),ou=users,dc=test,dc=com
+            groupSearchBase: ou=groups,dc=test,dc=com
             groupSearchScope: 1
             userNameAttribute: cn
-            userMemberOfAttributePattern: CN=(.*),DC=test,DC=com
             userObjectClass: organizationalRole
             userSearchBase: dc=test,dc=com
-            userSearchScope: 1
+            userSearchScope: 2
   storageClass:
     name: {{ .Values.lsdmesp.storageClass }}
   tls:
