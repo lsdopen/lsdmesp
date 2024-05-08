@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: confluent-cli
+  namespace: lsdmesp-confluent
+spec:
+  containers:
+    - image: confluentinc/confluent-cli:latest
+      command:
+        - sleep
+        - "360000"
+      imagePullPolicy: IfNotPresent
+      name: confluent-cli
+
+      securityContext:
+        privileged: true
+        runAsUser: 0
+
+  restartPolicy: Always
