@@ -1,0 +1,14 @@
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-teamblue-read-topic
+  namespace: lsdmesp-confluent
+spec:
+  principal:
+    name: TeamBlueRead
+    type: group
+  resourcePatterns:
+    - name: prod.teamblue.
+      patternType: PREFIXED
+      resourceType: Topic
+  role: DeveloperRead

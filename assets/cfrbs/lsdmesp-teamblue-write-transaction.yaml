@@ -1,0 +1,14 @@
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-teamblue-write-transaction
+  namespace: lsdmesp-confluent
+spec:
+  principal:
+    name: TeamBlueWrite
+    type: group
+  resourcePatterns:
+    - name: prod.teamblue.
+      patternType: PREFIXED
+      resourceType: TransactionalId
+  role: DeveloperWrite
