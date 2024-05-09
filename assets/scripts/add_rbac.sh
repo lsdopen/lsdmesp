@@ -33,6 +33,8 @@ confluent iam rbac role-binding create \
   --schema-registry-cluster "$SCHEMA_REGISTRY_CLUSTER"
 
 confluent iam rbac role-binding create --principal Group:TeamBlueAdmin --role ResourceOwner --resource Topic:prod.teamblue. --prefix --kafka-cluster "$CLUSTER_ID"
+confluent iam rbac role-binding create --principal Group:TeamBlueAdmin --role ResourceOwner --resource Group:prod.teamblue. --prefix --kafka-cluster "$CLUSTER_ID"
+confluent iam rbac role-binding create --principal Group:TeamBlueAdmin --role ResourceOwner --resource TransactionalId:prod.teamblue. --prefix --kafka-cluster "$CLUSTER_ID"
 confluent iam rbac role-binding create \
   --principal Group:TeamBlueAdmin \
   --role ResourceOwner \
@@ -51,3 +53,77 @@ confluent iam rbac role-binding list --kafka-cluster "$CLUSTER_ID" --principal G
 confluent iam rbac role-binding list --kafka-cluster "$CLUSTER_ID" --principal Group:TeamBlueAdmin --schema-registry-cluster "$SCHEMA_REGISTRY_CLUSTER"
 
 echo "Done!"
+
+
++---------------+--------------------+
+| Principal     | Group:TeamBlueRead |
+| Role          | DeveloperRead      |
+| Resource Type | Topic              |
+| Name          | prod.teamblue.     |
+| Pattern Type  | PREFIXED           |
++---------------+--------------------+
++---------------+--------------------+
+| Principal     | Group:TeamBlueRead |
+| Role          | DeveloperRead      |
+| Resource Type | Group              |
+| Name          | prod.teamblue.     |
+| Pattern Type  | PREFIXED           |
++---------------+--------------------+
++---------------+--------------------+
+| Principal     | Group:TeamBlueRead |
+| Role          | DeveloperRead      |
+| Resource Type | Subject            |
+| Name          | prod.teamblue.     |
+| Pattern Type  | PREFIXED           |
++---------------+--------------------+
+
++---------------+---------------------+
+| Principal     | Group:TeamBlueWrite |
+| Role          | DeveloperWrite      |
+| Resource Type | Topic               |
+| Name          | prod.teamblue.      |
+| Pattern Type  | PREFIXED            |
++---------------+---------------------+
++---------------+---------------------+
+| Principal     | Group:TeamBlueWrite |
+| Role          | DeveloperWrite      |
+| Resource Type | TransactionalId     |
+| Name          | prod.teamblue.      |
+| Pattern Type  | PREFIXED            |
++---------------+---------------------+
++---------------+---------------------+
+| Principal     | Group:TeamBlueWrite |
+| Role          | DeveloperWrite      |
+| Resource Type | Subject             |
+| Name          | prod.teamblue.      |
+| Pattern Type  | PREFIXED            |
++---------------+---------------------+
+
++---------------+---------------------+
+| Principal     | Group:TeamBlueAdmin |
+| Role          | ResourceOwner       |
+| Resource Type | Topic               |
+| Name          | prod.teamblue.      |
+| Pattern Type  | PREFIXED            |
++---------------+---------------------+
++---------------+---------------------+
+| Principal     | Group:TeamBlueAdmin |
+| Role          | ResourceOwner       |
+| Resource Type | Group               |
+| Name          | prod.teamblue.      |
+| Pattern Type  | PREFIXED            |
++---------------+---------------------+
++---------------+---------------------+
+| Principal     | Group:TeamBlueAdmin |
+| Role          | ResourceOwner       |
+| Resource Type | TransactionalId     |
+| Name          | prod.teamblue.      |
+| Pattern Type  | PREFIXED            |
++---------------+---------------------+
++---------------+---------------------+
+| Principal     | Group:TeamBlueAdmin |
+| Role          | ResourceOwner       |
+| Resource Type | Subject             |
+| Name          | prod.teamblue.      |
+| Pattern Type  | PREFIXED            |
++---------------+---------------------+
