@@ -7,6 +7,9 @@ lsdmesp:
   defaultMinInSyncReplicas: 2
   defaultNumPartitions: 6
 
+  security:
+    enabledDemo: false
+
   tls:
     ca:
       cert: ""

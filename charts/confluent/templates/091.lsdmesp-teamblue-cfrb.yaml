@@ -1,0 +1,191 @@
+{{- if .Values.lsdmesp.security.enabledDemo -}}
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-teamblue-admin-connector
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: TeamBlueAdmin
+    type: group
+  clustersScopeByIds:
+    connectClusterId: {{ .Release.Namespace }}.connect
+  resourcePatterns:
+    - name: prod.teamblue.
+      patternType: PREFIXED
+      resourceType: Connector
+  role: ResourceOwner
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-teamblue-admin-group
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: TeamBlueAdmin
+    type: group
+  resourcePatterns:
+    - name: prod.teamblue.
+      patternType: PREFIXED
+      resourceType: Group
+  role: ResourceOwner
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-teamblue-admin-ksqlcluster
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: TeamBlueAdmin
+    type: group
+  clustersScopeByIds:
+    ksqlClusterId: {{ .Release.Namespace }}.ksqldb_
+  resourcePatterns:
+    - name: ksql-cluster
+      patternType: LITERAL
+      resourceType: KsqlCluster
+  role: ResourceOwner
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-teamblue-admin-subject
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: TeamBlueAdmin
+    type: group
+  clustersScopeByIds:
+    schemaRegistryClusterId: id_schemaregistry_{{ .Release.Namespace }}
+  resourcePatterns:
+    - name: prod.teamblue.
+      patternType: PREFIXED
+      resourceType: Subject
+  role: ResourceOwner
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-teamblue-admin-topic
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: TeamBlueAdmin
+    type: group
+  resourcePatterns:
+    - name: prod.teamblue.
+      patternType: PREFIXED
+      resourceType: Topic
+  role: ResourceOwner
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-teamblue-admin-transaction
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: TeamBlueAdmin
+    type: group
+  resourcePatterns:
+    - name: prod.teamblue.
+      patternType: PREFIXED
+      resourceType: TransactionalId
+  role: ResourceOwner
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-teamblue-read-group
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: TeamBlueRead
+    type: group
+  resourcePatterns:
+    - name: prod.teamblue.
+      patternType: PREFIXED
+      resourceType: Group
+  role: DeveloperRead
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-teamblue-read-subject
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: TeamBlueRead
+    type: group
+  clustersScopeByIds:
+    schemaRegistryClusterId: id_schemaregistry_{{ .Release.Namespace }}
+  resourcePatterns:
+    - name: prod.teamblue.
+      patternType: PREFIXED
+      resourceType: Subject
+  role: DeveloperRead
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-teamblue-read-topic
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: TeamBlueRead
+    type: group
+  resourcePatterns:
+    - name: prod.teamblue.
+      patternType: PREFIXED
+      resourceType: Topic
+  role: DeveloperRead
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-teamblue-write-subject
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: TeamBlueWrite
+    type: group
+  clustersScopeByIds:
+    schemaRegistryClusterId: id_schemaregistry_{{ .Release.Namespace }}
+  resourcePatterns:
+    - name: prod.teamblue.
+      patternType: PREFIXED
+      resourceType: Subject
+  role: DeveloperWrite
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-teamblue-write-topic
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: TeamBlueWrite
+    type: group
+  resourcePatterns:
+    - name: prod.teamblue.
+      patternType: PREFIXED
+      resourceType: Topic
+  role: DeveloperWrite
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-teamblue-write-transaction
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: TeamBlueWrite
+    type: group
+  resourcePatterns:
+    - name: prod.teamblue.
+      patternType: PREFIXED
+      resourceType: TransactionalId
+  role: DeveloperWrite
+{{- end -}}
