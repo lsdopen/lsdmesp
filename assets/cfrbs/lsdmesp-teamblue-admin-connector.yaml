@@ -1,0 +1,16 @@
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-teamblue-admin-connector
+  namespace: lsdmesp-confluent
+spec:
+  principal:
+    name: TeamBlueAdmin
+    type: group
+  clustersScopeByIds:
+    connectClusterId: lsdmesp-confluent.connect
+  resourcePatterns:
+    - name: prod.teamblue.
+      patternType: PREFIXED
+      resourceType: Connector
+  role: ResourceOwner

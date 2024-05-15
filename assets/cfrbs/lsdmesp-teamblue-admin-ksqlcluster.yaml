@@ -1,0 +1,16 @@
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-teamblue-admin-ksqlcluster
+  namespace: lsdmesp-confluent
+spec:
+  principal:
+    name: TeamBlueAdmin
+    type: group
+  clustersScopeByIds:
+    ksqlClusterId: lsdmesp-confluent.ksqldb_
+  resourcePatterns:
+    - name: ksql-cluster
+      patternType: LITERAL
+      resourceType: KsqlCluster
+  role: ResourceOwner
