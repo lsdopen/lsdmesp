@@ -37,6 +37,10 @@ spec:
       tls:
         enabled: true
       url: https://schemaregistry.{{ .Release.Namespace }}.svc.cluster.local:8081
+    connect:
+      tls:
+        enabled: true
+      url: https://connect.{{ .Release.Namespace }}.svc.cluster.local:8083
   image:
     application: confluentinc/cp-ksqldb-server:{{ .Values.lsdmesp.cpVersion }}
     init: confluentinc/confluent-init-container:{{ .Values.lsdmesp.cpOperatorVersion }}
