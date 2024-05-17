@@ -51,6 +51,21 @@ spec:
 apiVersion: platform.confluent.io/v1beta1
 kind: ConfluentRolebinding
 metadata:
+  name: lsdmesp-teamblue-admin-ksqldb-group
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: TeamBlueAdmin
+    type: group
+  resourcePatterns:
+    - name: _confluent-ksql-
+      patternType: PREFIXED
+      resourceType: Group
+  role: DeveloperRead
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
   name: lsdmesp-teamblue-admin-subject
   namespace: {{ .Release.Namespace }}
 spec:
