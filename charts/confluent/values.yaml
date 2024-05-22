@@ -10,6 +10,15 @@ lsdmesp:
   security:
     enabledDemo: false
 
+  armyKnife:
+    enabled: true
+    image: lsdopen/kafka-army-knife:latest
+    replicas: 0
+
+  confluentCli:
+    enabled: true
+    replicas: 0
+
   tls:
     ca:
       cert: ""

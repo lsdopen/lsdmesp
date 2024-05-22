@@ -1,0 +1,26 @@
+{{- if .Values.lsdmesp.confluentCli.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: confluent-cli
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: confluent-cli
+spec:
+  replicas: {{ .Values.lsdmesp.confluentCli.replicas }}
+  selector:
+    matchLabels:
+      app: confluent-cli
+  template:
+    metadata:
+      labels:
+        app: confluent-cli
+    spec:
+      containers:
+        - image: confluentinc/confluent-cli:latest
+          command:
+            - sleep
+            - "360000"
+          imagePullPolicy: IfNotPresent
+          name: confluent-cli
+{{- end -}}

@@ -1,0 +1,71 @@
+{{- if .Values.lsdmesp.armyKnife.enabled -}}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kafka-army-knife-client-properties
+  namespace: {{ .Release.Namespace }}
+stringData:
+  client.properties: |-
+    security.protocol=SASL_SSL
+    sasl.mechanism=PLAIN
+    sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="{{ .Values.lsdmesp.confluent.kafka.username }}" password="{{ .Values.lsdmesp.confluent.kafka.password }}";
+    ssl.truststore.location=/root/lsdmesp.truststore.jks
+    ssl.truststore.password=112233
+    basic.auth.credentials.source=USER_INFO
+    basic.auth.user.info={{ .Values.lsdmesp.confluent.kafka.username }}:{{ .Values.lsdmesp.confluent.kafka.password }}
+    schema.registry.ssl.truststore.location=/root/lsdmesp.truststore.jks
+    schema.registry.ssl.truststore.password=112233
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-army-knife
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: kafka-army-knife
+spec:
+  replicas: {{ .Values.lsdmesp.armyKnife.replicas }}
+  selector:
+    matchLabels:
+      app: kafka-army-knife
+  template:
+    metadata:
+      labels:
+        app: kafka-army-knife
+    spec:
+      containers:
+        - image: {{ .Values.lsdmesp.armyKnife.image }}
+          env:
+            - name: LSDMESP_BOOTSTRAP_SERVERS
+              value: "kafka.{{ .Release.Namespace }}.svc.cluster.local:9092"
+            - name: LSDMESP_SCHEMA_REGISTRY_URL
+              value: "https://schemaregistry.{{ .Release.Namespace }}.svc.cluster.local:8081"
+          command:
+            - sleep
+            - "360000"
+          imagePullPolicy: IfNotPresent
+          name: kafka-army-knife
+          lifecycle:
+            postStart:
+              exec:
+                command: [ 'sh', '-c', "keytool -keystore /root/lsdmesp.truststore.jks -alias CARoot -importcert -file /root/certs/ca.pem -storepass 112233 -noprompt" ]
+          volumeMounts:
+            - mountPath: /root/etc
+              name: kafka-army-knife-client-properties
+            - mountPath: /root/certs
+              name: ca-pair-sslcerts-tls-crt
+          securityContext:
+            runAsUser: 0
+      volumes:
+        - secret:
+            defaultMode: 420
+            secretName: kafka-army-knife-client-properties
+          name: kafka-army-knife-client-properties
+        - secret:
+            defaultMode: 420
+            secretName: ca-pair-sslcerts
+            items:
+              - key: tls.crt
+                path: ca.pem
+          name: ca-pair-sslcerts-tls-crt
+{{- end -}}
