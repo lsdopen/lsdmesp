@@ -6,6 +6,11 @@ Definition (CRD) as well as managing other Confluent Platform services
 Kafka user: {{ .Values.lsdmesp.confluent.kafka.username }}
 Kafka password: {{ .Values.lsdmesp.confluent.kafka.password }}
 
+{{- if .Values.lsdmesp.armyKnife.enabled }}
+From within the kafka army knife one can run commands like the following:
+kafka-topics --list --bootstrap-server $LSDMESP_BOOTSTRAP_SERVERS --command-config /root/etc/client.properties
+{{ end }}
+
 {{- if .Values.lsdmesp.ldap.enabled }}
 OpenLdap Helm charts based on the osixia/openldap
 
