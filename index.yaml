@@ -1,5 +1,40 @@
 apiVersion: v1
 entries:
+  lsdmesp:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2024-05-31T14:09:53.02796604Z"
+    dependencies:
+    - name: strimzi-kafka-operator
+      repository: https://strimzi.io/charts/
+      version: 0.41.0
+    - name: cp-helm-charts
+      repository: https://confluentinc.github.io/cp-helm-charts/
+      version: 0.6.1
+    - name: kafka-ui
+      repository: https://provectus.github.io/kafka-ui-charts
+      version: 0.7.6
+    description: 'LSDMESP: LSD Event Streaming Platform'
+    digest: 52594eebf82c4128bdf8a326309f2951236700f78d50499745c1c00b87d6f105
+    home: https://github.com/lsdopen/lsdmesp
+    keywords:
+    - lsdmesp
+    - event
+    - stream
+    - kubernetes
+    - kafka
+    - messaging
+    - topic
+    maintainers:
+    - email: support@lsdopen.io
+      name: LSD
+      url: https://lsdopen.io
+    name: lsdmesp
+    sources:
+    - https://github.com/lsdopen/lsdmesp
+    urls:
+    - https://github.com/lsdopen/lsdmesp/releases/download/lsdmesp-1.0.0/lsdmesp-1.0.0.tgz
+    version: 1.0.0
   lsdmesp-confluent:
   - apiVersion: v2
     appVersion: 1.0.0
@@ -694,4 +729,4 @@ entries:
     urls:
     - https://github.com/lsdopen/lsdmesp/releases/download/lsdmesp-confluent-0.2.0/lsdmesp-confluent-0.2.0.tgz
     version: 0.2.0
-generated: "2024-05-23T10:25:20.836074466Z"
+generated: "2024-05-31T14:09:53.028017446Z"
