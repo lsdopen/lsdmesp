@@ -1,0 +1,203 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: lsdmesp
+  namespace: lsdmesp
+spec:
+  clientsCa:
+    generateCertificateAuthority: true
+    renewalDays: 30
+    validityDays: 3650
+  clusterCa:
+    generateCertificateAuthority: true
+    renewalDays: 30
+    validityDays: 3650
+  cruiseControl:
+    config:
+      sample.store.topic.replication.factor: 3
+    metricsConfig:
+      type: jmxPrometheusExporter
+      valueFrom:
+        configMapKeyRef:
+          name: cruise-control-metrics
+          key: metrics-config.yml      
+  entityOperator:
+    topicOperator:
+      resources:
+        limits:
+          cpu: "1"
+          memory: 512Mi
+        requests:
+          cpu: 500m
+          memory: 256Mi
+    userOperator:
+      resources:
+        limits:
+          cpu: "1"
+          memory: 512Mi
+        requests:
+          cpu: 500m
+          memory: 256Mi
+  kafka:
+    version: {{ .Values.lsdmesp.strimzi.kafka.version }}
+    replicas: 3
+    authorization:
+      superUsers:
+      - ANONYMOUS
+      - CN=lsdadmin
+      type: simple
+    config:
+      auto.create.topics.enable: "false"
+      num.partitions: 6
+      default.replication.factor: 3
+      min.insync.replicas: 2
+      offsets.topic.replication.factor: 3
+      transaction.state.log.replication.factor: 3
+      transaction.state.log.min.isr: 2
+      zookeeper.session.timeout.ms: 18000
+      replica.socket.timeout.ms: 30000
+      request.timeout.ms: 30000
+      offsets.commit.timeout.ms: 5000
+      inter.broker.protocol.version: "3.2"
+      log.message.format.version: "3.2"
+      log.cleanup.policy: delete
+      log.retention.ms: 604800000
+    jvmOptions:
+      -Xms: 3g
+      -Xmx: 3g
+    listeners:
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+      - name: tls
+        port: 9093
+        type: internal
+        tls: true
+      - name: external
+        port: 9094
+        type: nodeport
+        tls: true
+        authentication:
+          type: tls
+        configuration:
+          bootstrap:
+            nodePort: 32100
+          brokerCertChainAndKey:
+            certificate: tls.crt
+            key: tls.key
+            secretName: lsdmesp-external-ca-cert            
+          brokers:
+          - broker: 0
+            advertisedHost: broker0.{{ .Values.lsdmesp.strimzi.kafka.externalDomain }}
+            nodePort: 32000
+          - broker: 1
+            advertisedHost: broker1.{{ .Values.lsdmesp.strimzi.kafka.externalDomain }}
+            nodePort: 32001
+          - broker: 2
+            advertisedHost: broker2.{{ .Values.lsdmesp.strimzi.kafka.externalDomain }}
+            nodePort: 32002
+    readinessProbe:
+      initialDelaySeconds: 15
+      timeoutSeconds: 5
+    livenessProbe:
+      initialDelaySeconds: 15
+      timeoutSeconds: 5
+    resources:
+      limits:
+        cpu: 4
+        memory: 16Gi
+      requests:
+        cpu: 2
+        memory: 16Gi
+    storage:
+      type: jbod
+      volumes:
+      - deleteClaim: false
+        id: 0
+        size: 200Gi
+        type: persistent-claim            
+    metricsConfig:
+      type: jmxPrometheusExporter
+      valueFrom:
+        configMapKeyRef:
+          name: kafka-metrics
+          key: kafka-metrics-config.yml
+    template:
+      pod:
+        affinity:
+          nodeAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - preference:
+                matchExpressions:
+                - key: accept-pod
+                  operator: In
+                  values:
+                  - lsdmesp-kafka-0
+              weight: 80
+            - preference:
+                matchExpressions:
+                - key: accept-pod
+                  operator: In
+                  values:
+                  - lsdmesp-kafka-1
+              weight: 40
+            - preference:
+                matchExpressions:
+                - key: accept-pod
+                  operator: In
+                  values:
+                  - lsdmesp-kafka-2
+              weight: 20          
+          podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchExpressions:
+                  - key: application
+                    operator: In
+                    values:
+                    - kafka
+                topologyKey: kubernetes.io/hostname
+  kafkaExporter:
+    topicRegex: ".*"
+    groupRegex: ".*"
+  zookeeper:
+    jvmOptions:
+      -Xms: 1g
+      -Xmx: 1g
+    replicas: 3
+    readinessProbe:
+      initialDelaySeconds: 15
+      timeoutSeconds: 5
+    livenessProbe:
+      initialDelaySeconds: 15
+      timeoutSeconds: 5    
+    resources:
+      limits:
+        cpu: 1
+        memory: 4Gi
+      requests:
+        cpu: 1
+        memory: 4Gi
+    storage:
+      deleteClaim: false
+      size: 50Gi
+      type: persistent-claim
+    metricsConfig:
+      type: jmxPrometheusExporter
+      valueFrom:
+        configMapKeyRef:
+          name: kafka-metrics
+          key: zookeeper-metrics-config.yml      
+    template:
+      pod:
+        affinity:
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                - key: application
+                  operator: In
+                  values:
+                  - zookeeper
+              topologyKey: kubernetes.io/hostname

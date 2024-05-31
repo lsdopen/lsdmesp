@@ -1,0 +1,21 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: generic-producer
+  labels:
+    strimzi.io/cluster: {{ .Values.lsdmesp.strimzi.clusterName }}
+spec:
+  authentication:
+    type: tls
+  authorization:
+    type: simple
+    acls:
+      - resource:
+          type: topic
+          name: "*"
+          patternType: literal
+        operations:
+          - Create
+          - Describe
+          - Write
+        host: "*"

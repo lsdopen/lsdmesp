@@ -1,0 +1,12 @@
+dependencies:
+- name: strimzi-kafka-operator
+  repository: https://strimzi.io/charts/
+  version: 0.41.0
+- name: cp-helm-charts
+  repository: https://confluentinc.github.io/cp-helm-charts/
+  version: 0.6.1
+- name: kafka-ui
+  repository: https://provectus.github.io/kafka-ui-charts
+  version: 0.7.6
+digest: sha256:d32149ad72aab47d7c225c715a1cc00d71ba5775167944542edecbbfbf333185
+generated: "2024-05-31T15:36:20.809334791+02:00"

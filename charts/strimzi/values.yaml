@@ -1,0 +1,304 @@
+# Default values for lsdmesp.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+lsdmesp:
+  clusterType: "rancher"
+  cpVersion: &anchorcpVersion "7.6.2"
+  confluentKsqldbURL: &anchorconfluentKsqldbURL "ksqldb.apps.mesp.lsdopen.io"
+  confluentSchemaRegistryURL: &anchorconfluentSchemaRegistryURL "schema-registry.apps.mesp.lsdopen.io"
+  strimziConnectURL: &anchorstrimziConnectURL "connect.apps.mesp.lsdopen.io"
+  kafkaBootstrapURL: &anchorkafkaBootstrapURL "bootstrap.mesp.lsdopen.io:32100"
+  kafkaExternalDomain: &anchorkafkaExternalDomain "mesp.lsdopen.io"
+  kafkaUIURL: &anchorkafkaUIURL "kafka-ui.apps.mesp.lsdopen.io"
+  kafkaConnectUIURL: &anchorkafkaConnectUIURL "connect-ui.apps.mesp.lsdopen.io"
+  kafkaSchemaRegistryUIURL: &anchorkafkaSchemaRegistryUIURL "schema-registry-ui.apps.mesp.lsdopen.io"
+  kafkaAllUIUsername: &anchorkafkaAllUIUsername "kafka"
+  kafkaAllUIPassword: &anchorkafkaAllUIPassword "secretpassword"
+  prometheus:
+    # Requires podmonitors.monitoring.coreos.com CRD
+    enableMetrics: true
+  strimzi:
+    clusterName: lsdmesp
+    kafka:
+      version: 3.6.2
+      bootstrap: *anchorkafkaBootstrapURL
+      externalDomain: *anchorkafkaExternalDomain
+    connect:
+      ingress:
+        url: *anchorstrimziConnectURL
+  kafka:
+    kafkaguis:
+      auth:
+        enabled: true
+        secretName: "lsdmesp-guis-basic-auth"
+        username: *anchorkafkaAllUIUsername
+        password: *anchorkafkaAllUIPassword
+    kafkaui:
+      enabled: true
+      ingress:
+        url: *anchorkafkaUIURL
+  confluent:
+    ksqldb:
+      ingress:
+        url: *anchorconfluentKsqldbURL
+    schemaRegistry:
+      ingress:
+        url: *anchorconfluentSchemaRegistryURL
+
+cp-helm-charts:
+  ## ------------------------------------------------------
+  ## Zookeeper
+  ## ------------------------------------------------------
+  cp-zookeeper:
+    enabled: false
+  ## ------------------------------------------------------
+  ## Kafka Brokers
+  ## ------------------------------------------------------
+  cp-kafka:
+    enabled: false
+  ## ------------------------------------------------------
+  ## Connect
+  ## ------------------------------------------------------
+  cp-kafka-connect:
+    enabled: false
+  ## ------------------------------------------------------
+  ## Control Center (Commercial Feature)
+  ## ------------------------------------------------------
+  cp-control-center:
+    enabled: false
+  ## ------------------------------------------------------
+  ## Schema Registry
+  ## ------------------------------------------------------
+  cp-schema-registry:
+    enabled: true
+    replicaCount: 2
+    image: confluentinc/cp-schema-registry
+    imageTag: *anchorcpVersion
+    heapOptions: "-Xms512m -Xmx512m"
+    kafka:
+      bootstrapServers: "PLAINTEXT://lsdmesp-kafka-bootstrap:9092"
+    resources:
+      limits:
+        memory: 2Gi
+        cpu: 1
+      requests:
+        memory: 768Mi
+        cpu: 500m
+  ## ------------------------------------------------------
+  ## REST Proxy
+  ## ------------------------------------------------------
+  cp-kafka-rest:
+    enabled: false
+    replicaCount: 1
+    image: confluentinc/cp-kafka-rest
+    imageTag: *anchorcpVersion
+    heapOptions: "-Xms512m -Xmx512m"
+    cp-kafka:
+      bootstrapServers: "PLAINTEXT://lsdmesp-kafka-bootstrap:9092"
+    cp-schema-registry:
+      url: "http://lsdmesp-cp-schema-registry:8081"
+    resources:
+      limits:
+        memory: 2Gi
+        cpu: 500m
+      requests:
+        memory: 768Mi
+        cpu: 100m
+  ## ------------------------------------------------------
+  ## KSQL Server
+  ## ------------------------------------------------------
+  cp-ksql-server:
+    enabled: false
+    replicaCount: 0
+    image: confluentinc/cp-ksqldb-server
+    imageTag: *anchorcpVersion
+    heapOptions: "-Xms512M -Xmx3g"
+    serviceId: lsdmesp-ksql-server
+    ksql:
+      headless: false
+    configurationOverrides:
+      ksql.connect.url: "http://lsdmesp-connect-api:8083"
+      ksql.extension.dir: /opt/ksqldb-udfs
+      ksql.internal.topic.replicas: 3
+      listeners: "http://0.0.0.0:8088"
+      ksql.service.id: lsdmesp-ksql-server
+      log4j.root.loglevel: WARN
+      confluent.support.metrics.enable: false
+      ksql.streams.num.stream.threads: 2
+      ksql.streams.consumer.heartbeat.interval.ms: 10000
+      ksql.streams.consumer.session.timeout.ms: 180000
+      ksql.streams.consumer.max.poll.interval.ms: "86400000"
+      ksql.streams.consumer.request.timeout.ms: 60000
+    kafka:
+      bootstrapServers: "PLAINTEXT://lsdmesp-kafka-bootstrap:9092"
+    cp-schema-registry:
+      url: "http://lsdmesp-cp-schema-registry:8081"
+    resources:
+      requests:
+        cpu: 1
+        memory: 4Gi
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - cp-ksql-server
+              - key: release
+                operator: In
+                values:
+                - lsdmesp
+            topologyKey: kubernetes.io/hostname
+          weight: 100
+
+strimzi-kafka-operator:
+  watchNamespaces: ["lsdmesp"]
+  watchAnyNamespace: false
+  defaultImageRegistry: quay.io
+  defaultImageRepository: strimzi
+  defaultImageTag: 0.41.0
+  image:
+    imagePullPolicy: IfNotPresent
+    name: operator
+    tag: 0.41.0
+  logVolume: co-config-volume
+  logConfigMap: strimzi-cluster-operator
+  logLevel: ${env:STRIMZI_LOG_LEVEL:-INFO}
+  fullReconciliationIntervalMs: 120000
+  operationTimeoutMs: 300000
+  kubernetesServiceDnsDomain: cluster.local
+  featureGates: ""
+  tmpDirSizeLimit: 1Mi
+  tolerations: []
+  affinity: {}
+  nodeSelector: {}
+  kafka:
+    image:
+      registry: ""
+      repository: ""
+      name: kafka
+      tagPrefix: ""
+  kafkaConnect:
+    image:
+      registry: "docker.io"
+      repository: "lsdtrip"
+      name: kafka-connect
+      tagPrefix: ""
+  topicOperator:
+    image:
+      registry: ""
+      repository: ""
+      name: operator
+      tag: ""
+  userOperator:
+    image:
+      registry:
+      repository:
+      name: operator
+      tag: ""
+  kafkaInit:
+    image:
+      registry: ""
+      repository: ""
+      name: operator
+      tag: ""
+  tlsSidecarEntityOperator:
+    image:
+      registry: ""
+      repository: ""
+      name: kafka
+      tagPrefix: ""
+  kafkaMirrorMaker:
+    image:
+      registry: ""
+      repository: ""
+      name: kafka
+      tagPrefix: ""
+  kafkaBridge:
+    image:
+      registry: ""
+      repository:
+      name: kafka-bridge
+      tag: 0.28.0
+  kafkaExporter:
+    image:
+      registry: ""
+      repository: ""
+      name: kafka
+      tagPrefix: ""
+  jmxTrans:
+    image:
+      registry: ""
+      repository: ""
+      name: jmxtrans
+      tag: ""
+  kafkaMirrorMaker2:
+    image:
+      registry: ""
+      repository: ""
+      name: kafka
+      tagPrefix: ""
+  cruiseControl:
+    image:
+      registry: ""
+      repository: ""
+      name: kafka
+      tagPrefix: ""
+  kanikoExecutor:
+    image:
+      registry: ""
+      repository: ""
+      name: kaniko-executor
+      tag: ""
+  mavenBuilder:
+    image:
+      registry: ""
+      repository: ""
+      name: maven-builder
+      tag: ""
+  resources:
+    limits:
+      memory: 384Mi
+      cpu: 1000m
+    requests:
+      memory: 384Mi
+      cpu: 200m
+  livenessProbe:
+    initialDelaySeconds: 10
+    periodSeconds: 30
+  readinessProbe:
+    initialDelaySeconds: 10
+    periodSeconds: 30
+  createGlobalResources: true
+  labelsExclusionPattern: ""
+  generateNetworkPolicy: true
+  connectBuildTimeoutMs: 300000
+
+kafka-ui:
+  yamlApplicationConfig:
+    kafka:
+      clusters:
+        - name: lsdmesp
+          bootstrapServers: lsdmesp-kafka-bootstrap:9092
+          schemaRegistry: http://lsdmesp-cp-schema-registry:8081
+          readOnly: true
+          kafkaConnect:
+            - name: connect-1
+              address: http://lsdmesp-connect-api:8083
+    auth:
+      type: disabled
+    management:
+      health:
+        ldap:
+          enabled: false          
+  ingress:
+    enabled: false
+    ingressClassName: nginx
+    path: /
+    host: *anchorkafkaUIURL
+    tls:
+      enabled: false
+      secretName: ""
