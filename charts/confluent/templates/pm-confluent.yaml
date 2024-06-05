@@ -1,0 +1,19 @@
+{{- if index .Values "kube-prometheus-stack" "install" -}}
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels:
+    monitoring: lsdmesp-confluent
+  name: pm-confluent
+spec:
+  jobLabel: platform.confluent.io/type
+  podMetricsEndpoints:
+    - port: prometheus
+      interval: 60s
+      scheme: http
+      scrapeTimeout: 30s
+  selector:
+    matchExpressions:
+      - key: confluent-platform
+        operator: Exists
+{{- end -}}

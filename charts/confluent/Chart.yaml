@@ -28,3 +28,7 @@ dependencies:
   - name: confluent-for-kubernetes
     version: "0.921.2"
     repository: https://packages.confluent.io/helm
+  - name: kube-prometheus-stack
+    condition: kube-prometheus-stack.install
+    version: "59.0.0"
+    repository: https://prometheus-community.github.io/helm-charts

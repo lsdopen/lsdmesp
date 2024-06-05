@@ -309,6 +309,26 @@ lsdmesp:
         tls:
           secretName: controlcenter-tls
 
+kube-prometheus-stack:
+  install: false
+
+  prometheus:
+    prometheusSpec:
+      podMonitorSelector:
+        matchLabels:
+          monitoring: lsdmesp-confluent
+      podMonitorNamespaceSelector: { }
+      probeSelector:
+        matchLabels:
+          monitoring: lsdmesp-confluent
+      probeNamespaceSelector: { }
+      ruleSelector:
+        matchLabels:
+          monitoring: lsdmesp-confluent
+      scrapeConfigSelector:
+        matchLabels:
+          monitoring: lsdmesp-confluent
+
 confluent-for-kubernetes:
   name: confluent-operator
   licenseKey: ""
