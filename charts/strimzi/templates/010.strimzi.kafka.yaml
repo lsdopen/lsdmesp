@@ -28,16 +28,16 @@ spec:
           cpu: "1"
           memory: 512Mi
         requests:
-          cpu: 500m
-          memory: 256Mi
+          cpu: 10m
+          memory: 10Mi
     userOperator:
       resources:
         limits:
           cpu: "1"
           memory: 512Mi
         requests:
-          cpu: 500m
-          memory: 256Mi
+          cpu: 10m
+          memory: 10Mi
   kafka:
     version: {{ .Values.lsdmesp.strimzi.kafka.version }}
     replicas: 3
@@ -63,8 +63,8 @@ spec:
       log.cleanup.policy: delete
       log.retention.ms: 604800000
     jvmOptions:
-      -Xms: 3g
-      -Xmx: 3g
+      -Xms: 1g
+      -Xmx: 1g
     listeners:
       - name: plain
         port: 9092
@@ -83,10 +83,10 @@ spec:
         configuration:
           bootstrap:
             nodePort: 32100
-{{/*          brokerCertChainAndKey:*/}}
-{{/*            certificate: tls.crt*/}}
-{{/*            key: tls.key*/}}
-{{/*            secretName: lsdmesp-external-ca-cert            */}}
+          # brokerCertChainAndKey:
+          #   certificate: tls.crt*
+          #   key: tls.key*
+          #   secretName: lsdmesp-external-ca-cert
           brokers:
           - broker: 0
             advertisedHost: broker0.{{ .Values.lsdmesp.strimzi.kafka.externalDomain }}
@@ -105,17 +105,17 @@ spec:
       timeoutSeconds: 5
     resources:
       limits:
-        cpu: 4
-        memory: 16Gi
+        cpu: 1
+        memory: 8Gi
       requests:
-        cpu: 2
-        memory: 16Gi
+        cpu: 50m
+        memory: 3Gi
     storage:
       type: jbod
       volumes:
       - deleteClaim: false
         id: 0
-        size: 200Gi
+        size: 20Gi
         type: persistent-claim            
     metricsConfig:
       type: jmxPrometheusExporter
@@ -163,8 +163,8 @@ spec:
     groupRegex: ".*"
   zookeeper:
     jvmOptions:
-      -Xms: 1g
-      -Xmx: 1g
+      -Xms: 384m
+      -Xmx: 384m
     replicas: 3
     readinessProbe:
       initialDelaySeconds: 15
@@ -174,14 +174,14 @@ spec:
       timeoutSeconds: 5    
     resources:
       limits:
-        cpu: 1
-        memory: 4Gi
+        cpu: 500m
+        memory: 1Gi
       requests:
-        cpu: 1
-        memory: 4Gi
+        cpu: 10m
+        memory: 512Mi
     storage:
       deleteClaim: false
-      size: 50Gi
+      size: 10Gi
       type: persistent-claim
     metricsConfig:
       type: jmxPrometheusExporter

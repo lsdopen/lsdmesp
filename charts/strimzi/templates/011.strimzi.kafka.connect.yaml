@@ -25,8 +25,8 @@ spec:
     offset.storage.replication.factor: -1
     status.storage.replication.factor: -1    
   jvmOptions:
-    -Xms: 1536m
-    -Xmx: 1536m
+    -Xms: 512m
+    -Xmx: 512m
   logging:
     loggers:
       connect.root.logger.level: WARN
@@ -42,8 +42,8 @@ spec:
       cpu: 1
       memory: 2Gi
     requests:
-      cpu: 1
-      memory: 2Gi
+      cpu: 20m
+      memory: 1Gi
   template:
     pod:
       affinity:
