@@ -83,10 +83,10 @@ spec:
         configuration:
           bootstrap:
             nodePort: 32100
-          brokerCertChainAndKey:
-            certificate: tls.crt
-            key: tls.key
-            secretName: lsdmesp-external-ca-cert            
+{{/*          brokerCertChainAndKey:*/}}
+{{/*            certificate: tls.crt*/}}
+{{/*            key: tls.key*/}}
+{{/*            secretName: lsdmesp-external-ca-cert            */}}
           brokers:
           - broker: 0
             advertisedHost: broker0.{{ .Values.lsdmesp.strimzi.kafka.externalDomain }}

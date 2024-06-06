@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 lsdmesp:
   clusterType: "rancher"
-  cpVersion: &anchorcpVersion "7.6.2"
+  cpVersion: &anchorcpVersion "7.6.1"
   confluentKsqldbURL: &anchorconfluentKsqldbURL "ksqldb.apps.mesp.lsdopen.io"
   confluentSchemaRegistryURL: &anchorconfluentSchemaRegistryURL "schema-registry.apps.mesp.lsdopen.io"
   strimziConnectURL: &anchorstrimziConnectURL "connect.apps.mesp.lsdopen.io"
@@ -16,11 +16,11 @@ lsdmesp:
   kafkaAllUIPassword: &anchorkafkaAllUIPassword "secretpassword"
   prometheus:
     # Requires podmonitors.monitoring.coreos.com CRD
-    enableMetrics: true
+    enableMetrics: false
   strimzi:
     clusterName: lsdmesp
     kafka:
-      version: 3.6.2
+      version: 3.6.1
       bootstrap: *anchorkafkaBootstrapURL
       externalDomain: *anchorkafkaExternalDomain
     connect:
@@ -83,7 +83,7 @@ cp-helm-charts:
         cpu: 1
       requests:
         memory: 768Mi
-        cpu: 500m
+        cpu: 10m
   ## ------------------------------------------------------
   ## REST Proxy
   ## ------------------------------------------------------
@@ -103,7 +103,7 @@ cp-helm-charts:
         cpu: 500m
       requests:
         memory: 768Mi
-        cpu: 100m
+        cpu: 10m
   ## ------------------------------------------------------
   ## KSQL Server
   ## ------------------------------------------------------
@@ -135,7 +135,7 @@ cp-helm-charts:
       url: "http://lsdmesp-cp-schema-registry:8081"
     resources:
       requests:
-        cpu: 1
+        cpu: 10m
         memory: 4Gi
     affinity:
       podAntiAffinity:
@@ -155,26 +155,55 @@ cp-helm-charts:
           weight: 100
 
 strimzi-kafka-operator:
-  watchNamespaces: ["lsdmesp"]
+  replicas: 1
+  watchNamespaces: []
   watchAnyNamespace: false
   defaultImageRegistry: quay.io
   defaultImageRepository: strimzi
   defaultImageTag: 0.41.0
   image:
     imagePullPolicy: IfNotPresent
+    registry: ""
+    repository: ""
     name: operator
-    tag: 0.41.0
+    tag: ""
+    # imagePullSecrets:
+    #   - name: secretname
   logVolume: co-config-volume
   logConfigMap: strimzi-cluster-operator
+  logConfiguration: ""
   logLevel: ${env:STRIMZI_LOG_LEVEL:-INFO}
   fullReconciliationIntervalMs: 120000
   operationTimeoutMs: 300000
   kubernetesServiceDnsDomain: cluster.local
   featureGates: ""
   tmpDirSizeLimit: 1Mi
+  extraEnvs: []
   tolerations: []
   affinity: {}
+  annotations: {}
+  labels: {}
   nodeSelector: {}
+  priorityClassName: ""
+  podSecurityContext: {}
+  securityContext: {}
+  rbac:
+    create: yes
+  serviceAccountCreate: yes
+  serviceAccount: strimzi-cluster-operator
+  leaderElection:
+    enable: true
+  podDisruptionBudget:
+    enabled: false
+    minAvailable: 1
+    maxUnavailable:
+  dashboards:
+    enabled: false
+    namespace: ~
+    label: grafana_dashboard # this is the default value from the grafana chart
+    labelValue: "1" # this is the default value from the grafana chart
+    annotations: {}
+    extraLabels: {}
   kafka:
     image:
       registry: ""
@@ -205,12 +234,6 @@ strimzi-kafka-operator:
       repository: ""
       name: operator
       tag: ""
-  tlsSidecarEntityOperator:
-    image:
-      registry: ""
-      repository: ""
-      name: kafka
-      tagPrefix: ""
   kafkaMirrorMaker:
     image:
       registry: ""
@@ -229,12 +252,6 @@ strimzi-kafka-operator:
       repository: ""
       name: kafka
       tagPrefix: ""
-  jmxTrans:
-    image:
-      registry: ""
-      repository: ""
-      name: jmxtrans
-      tag: ""
   kafkaMirrorMaker2:
     image:
       registry: ""
@@ -265,7 +282,7 @@ strimzi-kafka-operator:
       cpu: 1000m
     requests:
       memory: 384Mi
-      cpu: 200m
+      cpu: 10m
   livenessProbe:
     initialDelaySeconds: 10
     periodSeconds: 30
@@ -273,6 +290,7 @@ strimzi-kafka-operator:
     initialDelaySeconds: 10
     periodSeconds: 30
   createGlobalResources: true
+  createAggregateRoles: false
   labelsExclusionPattern: ""
   generateNetworkPolicy: true
   connectBuildTimeoutMs: 300000
