@@ -4,7 +4,7 @@ metadata:
   name: lsdmesp
   namespace: lsdmesp
 spec:
-  version: 3.2.3
+  version: 3.6.1
   replicas: 2
   bootstrapServers: lsdmesp-kafka-bootstrap:9093
   config:

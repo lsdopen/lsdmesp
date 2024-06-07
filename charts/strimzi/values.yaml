@@ -4,6 +4,7 @@
 lsdmesp:
   clusterType: "rancher"
   cpVersion: &anchorcpVersion "7.6.1"
+  storageClass: standard
   confluentKsqldbURL: &anchorconfluentKsqldbURL "ksqldb.apps.mesp.lsdopen.io"
   confluentSchemaRegistryURL: &anchorconfluentSchemaRegistryURL "schema-registry.apps.mesp.lsdopen.io"
   strimziConnectURL: &anchorstrimziConnectURL "connect.apps.mesp.lsdopen.io"
@@ -108,20 +109,18 @@ cp-helm-charts:
   ## KSQL Server
   ## ------------------------------------------------------
   cp-ksql-server:
-    enabled: false
-    replicaCount: 0
+    enabled: true
+    replicaCount: 1
     image: confluentinc/cp-ksqldb-server
     imageTag: *anchorcpVersion
-    heapOptions: "-Xms512M -Xmx3g"
-    serviceId: lsdmesp-ksql-server
+    heapOptions: "-Xms512M -Xmx1g"
+    overrideServiceId: lsdmesp-ksql-server
     ksql:
       headless: false
     configurationOverrides:
       ksql.connect.url: "http://lsdmesp-connect-api:8083"
       ksql.extension.dir: /opt/ksqldb-udfs
       ksql.internal.topic.replicas: 3
-      listeners: "http://0.0.0.0:8088"
-      ksql.service.id: lsdmesp-ksql-server
       log4j.root.loglevel: WARN
       confluent.support.metrics.enable: false
       ksql.streams.num.stream.threads: 2
@@ -136,7 +135,7 @@ cp-helm-charts:
     resources:
       requests:
         cpu: 10m
-        memory: 4Gi
+        memory: 2Gi
     affinity:
       podAntiAffinity:
         preferredDuringSchedulingIgnoredDuringExecution:
@@ -302,7 +301,7 @@ kafka-ui:
         - name: lsdmesp
           bootstrapServers: lsdmesp-kafka-bootstrap:9092
           schemaRegistry: http://lsdmesp-cp-schema-registry:8081
-          readOnly: true
+          readOnly: false
           kafkaConnect:
             - name: connect-1
               address: http://lsdmesp-connect-api:8083
