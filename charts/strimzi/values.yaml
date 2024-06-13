@@ -46,6 +46,11 @@ lsdmesp:
       ingress:
         url: *anchorconfluentSchemaRegistryURL
 
+  armyKnife:
+    enabled: true
+    image: lsdopen/kafka-army-knife:latest
+    replicas: 0
+
 cp-helm-charts:
   ## ------------------------------------------------------
   ## Zookeeper
