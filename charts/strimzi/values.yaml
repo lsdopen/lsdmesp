@@ -51,7 +51,7 @@ lsdmesp:
     image: lsdopen/kafka-army-knife:latest
     replicas: 0
 
-cp-helm-charts:
+cp-helm:
   ## ------------------------------------------------------
   ## Zookeeper
   ## ------------------------------------------------------
@@ -94,7 +94,7 @@ cp-helm-charts:
   ## REST Proxy
   ## ------------------------------------------------------
   cp-kafka-rest:
-    enabled: false
+    enabled: true
     replicaCount: 1
     image: confluentinc/cp-kafka-rest
     imageTag: *anchorcpVersion
