@@ -12,7 +12,7 @@ Find out where the brokers are running:
 
 > kc get pods -owide | grep lsdmesp-broker
 
-And then find the worker node details:
+And then find the worker node details (for kind clusters):
 
 > kc get nodes -owide | grep kind-worker
 
@@ -32,7 +32,7 @@ cd assets/testing-strimzi/scripts/bin
 ./create_client_properties.sh lsdadmin
 ```
 
-Finally connect to the nodeport port for any of the brokersL
+Finally connect to the nodeport port for any of the brokers:
 
 > kafka-topics --list --bootstrap-server broker0.mesp.lsdopen.io:32100 --command-config ../config/lsdadmin.properties
 
