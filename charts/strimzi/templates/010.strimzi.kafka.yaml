@@ -86,8 +86,12 @@ spec:
     replicas: 3
     authorization:
       superUsers:
-      - ANONYMOUS
       - CN=lsdadmin
+      {{- if eq .Values.lsdmesp.internalSecurity.authentication "mtls" }}
+      - CN=lsdmesp
+      {{- else }}
+      - ANONYMOUS
+      {{- end }}
       type: simple
     config:
       auto.create.topics.enable: "false"
@@ -115,6 +119,10 @@ spec:
         port: 9093
         type: internal
         tls: true
+        {{- if eq .Values.lsdmesp.internalSecurity.authentication "mtls" }}
+        authentication:
+          type: tls
+        {{- end }}
       - name: external
         port: 9094
         type: nodeport

@@ -18,6 +18,8 @@ lsdmesp:
   prometheus:
     # Requires podmonitors.monitoring.coreos.com CRD
     enableMetrics: false
+  internalSecurity:
+    authentication: mtls
   strimzi:
     clusterName: lsdmesp
     kafka:
@@ -77,12 +79,14 @@ cp-helm:
   ## ------------------------------------------------------
   cp-schema-registry:
     enabled: true
+    internalSecurity:
+      authentication: mtls
     replicaCount: 2
     image: confluentinc/cp-schema-registry
     imageTag: *anchorcpVersion
     heapOptions: "-Xms512m -Xmx512m"
     kafka:
-      bootstrapServers: "PLAINTEXT://lsdmesp-kafka-bootstrap:9092"
+      bootstrapServers: "SSL://lsdmesp-kafka-bootstrap:9093"
     resources:
       limits:
         memory: 2Gi
@@ -94,7 +98,7 @@ cp-helm:
   ## REST Proxy
   ## ------------------------------------------------------
   cp-kafka-rest:
-    enabled: true
+    enabled: false
     replicaCount: 1
     image: confluentinc/cp-kafka-rest
     imageTag: *anchorcpVersion
@@ -114,7 +118,7 @@ cp-helm:
   ## KSQL Server
   ## ------------------------------------------------------
   cp-ksql-server:
-    enabled: true
+    enabled: false
     replicaCount: 1
     image: confluentinc/cp-ksqldb-server
     imageTag: *anchorcpVersion

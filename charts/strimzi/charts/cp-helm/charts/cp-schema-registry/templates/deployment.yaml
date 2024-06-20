@@ -73,6 +73,13 @@ spec:
             {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
+          {{- if eq .Values.internalSecurity.authentication "mtls" }}
+          volumeMounts:
+            - name: lsdmesp
+              mountPath: /opt/kafka/certs-lsdmesp
+            - name: lsdmesp-cluster-ca-cert
+              mountPath: /opt/kafka/certs-cluster-ca
+          {{- end }}
           env:
           - name: SCHEMA_REGISTRY_HOST_NAME
             valueFrom:
@@ -88,6 +95,29 @@ spec:
             value: "true"
           - name: SCHEMA_REGISTRY_HEAP_OPTS
             value: "{{ .Values.heapOptions }}"
+          {{- if eq .Values.internalSecurity.authentication "mtls" }}
+          - name: SCHEMA_REGISTRY_KAFKASTORE_SECURITY_PROTOCOL
+            value: "SSL"
+          - name: SCHEMA_REGISTRY_KAFKASTORE_SSL_TRUSTSTORE_LOCATION
+            value: "/opt/kafka/certs-cluster-ca/ca.p12"
+          - name: SCHEMA_REGISTRY_KAFKASTORE_SSL_TRUSTSTORE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp-cluster-ca-cert
+                key: ca.password
+          - name: SCHEMA_REGISTRY_KAFKASTORE_SSL_KEYSTORE_LOCATION
+            value: "/opt/kafka/certs-lsdmesp/user.p12"
+          - name: SCHEMA_REGISTRY_KAFKASTORE_SSL_KEYSTORE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp
+                key: user.password
+          - name: SCHEMA_REGISTRY_KAFKASTORE_SSL_KEY_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp
+                key: user.password
+          {{- end }}
           {{ range $configName, $configValue := .Values.configurationOverrides }}
           - name: SCHEMA_REGISTRY_{{ $configName | replace "." "_" | upper }}
             value: {{ $configValue | quote }}
@@ -109,6 +139,16 @@ spec:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}
       {{- end }}
       volumes:
+      {{- if eq .Values.internalSecurity.authentication "mtls" }}
+      - name: lsdmesp-cluster-ca-cert
+        secret:
+          defaultMode: 292
+          secretName: lsdmesp-cluster-ca-cert
+      - name: lsdmesp
+        secret:
+          defaultMode: 292
+          secretName: lsdmesp
+      {{- end }}
       {{- if .Values.prometheus.jmx.enabled }}
       - name: jmx-config
         configMap:

@@ -64,3 +64,11 @@ spec:
     trustedCertificates:
       - secretName: lsdmesp-cluster-ca-cert
         certificate: ca.crt
+  {{- if eq .Values.lsdmesp.internalSecurity.authentication "mtls" }}
+  authentication:
+    type: tls
+    certificateAndKey:
+      secretName: lsdmesp
+      certificate: user.crt
+      key: user.key
+  {{- end }}
