@@ -329,6 +329,18 @@ kafka-ui:
           key: ca.password
     - name: KAFKA_CLUSTERS_0_PROPERTIES_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM
       value: ""
+    - name: KAFKA_CLUSTERS_0_KSQLDBSERVER
+      value: "http://lsdmesp-cp-ksql-server:8088"
+    - name: KAFKA_CLUSTERS_0_NAME
+      value: "lsdmesp"
+    - name: KAFKA_CLUSTERS_0_READONLY
+      value: "false"
+    - name: KAFKA_CLUSTERS_0_SCHEMAREGISTRY
+      value: "http://lsdmesp-cp-schema-registry:8081"
+    - name: KAFKA_CLUSTERS_0_KAFKACONNECT_0_NAME
+      value: "connect-1"
+    - name: KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS
+      value: "http://lsdmesp-connect-api:8083"
   volumeMounts:
     - name: lsdmesp
       mountPath: /opt/kafka/certs-lsdmesp
