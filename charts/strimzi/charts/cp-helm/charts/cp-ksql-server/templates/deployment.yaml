@@ -70,6 +70,12 @@ spec:
           resources:
 {{ toYaml .Values.resources | indent 12 }}
           volumeMounts:
+          {{- if eq .Values.internalSecurity.authentication "mtls" }}
+          - name: lsdmesp
+            mountPath: /opt/kafka/certs-lsdmesp
+          - name: lsdmesp-cluster-ca-cert
+            mountPath: /opt/kafka/certs-cluster-ca
+          {{- end }}
           {{- if .Values.ksql.headless }}
           - name: ksql-queries
             mountPath: /etc/ksql/queries
@@ -90,6 +96,29 @@ spec:
           - name: KSQL_LISTENERS
             value: http://0.0.0.0:8088
           {{- end }}
+          {{- if eq .Values.internalSecurity.authentication "mtls" }}
+          - name: KSQL_SECURITY_PROTOCOL
+            value: "SSL"
+          - name: KSQL_SSL_TRUSTSTORE_LOCATION
+            value: "/opt/kafka/certs-cluster-ca/ca.p12"
+          - name: KSQL_SSL_TRUSTSTORE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp-cluster-ca-cert
+                key: ca.password
+          - name: KSQL_SSL_KEYSTORE_LOCATION
+            value: "/opt/kafka/certs-lsdmesp/user.p12"
+          - name: KSQL_SSL_KEYSTORE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp
+                key: user.password
+          - name: KSQL_SSL_KEY_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp
+                key: user.password
+          {{- end }}
           {{- range $key, $value := .Values.configurationOverrides }}
           - name: {{ printf "KSQL_%s" $key | replace "." "_" | upper | quote }}
             value: {{ $value | quote }}
@@ -103,6 +132,16 @@ spec:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}
       {{- end }}
       volumes:
+      {{- if eq .Values.internalSecurity.authentication "mtls" }}
+      - name: lsdmesp-cluster-ca-cert
+        secret:
+          defaultMode: 292
+          secretName: lsdmesp-cluster-ca-cert
+      - name: lsdmesp
+        secret:
+          defaultMode: 292
+          secretName: lsdmesp
+      {{- end }}
       {{- if .Values.prometheus.jmx.enabled }}
       - name: jmx-config
         configMap:

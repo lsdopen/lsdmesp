@@ -98,13 +98,15 @@ cp-helm:
   ## REST Proxy
   ## ------------------------------------------------------
   cp-kafka-rest:
-    enabled: false
+    enabled: true
+    internalSecurity:
+      authentication: mtls
     replicaCount: 1
     image: confluentinc/cp-kafka-rest
     imageTag: *anchorcpVersion
     heapOptions: "-Xms512m -Xmx512m"
     cp-kafka:
-      bootstrapServers: "PLAINTEXT://lsdmesp-kafka-bootstrap:9092"
+      bootstrapServers: "SSL://lsdmesp-kafka-bootstrap:9093"
     cp-schema-registry:
       url: "http://lsdmesp-cp-schema-registry:8081"
     resources:
@@ -118,7 +120,9 @@ cp-helm:
   ## KSQL Server
   ## ------------------------------------------------------
   cp-ksql-server:
-    enabled: false
+    enabled: true
+    internalSecurity:
+      authentication: mtls
     replicaCount: 1
     image: confluentinc/cp-ksqldb-server
     imageTag: *anchorcpVersion
@@ -138,7 +142,7 @@ cp-helm:
       ksql.streams.consumer.max.poll.interval.ms: "86400000"
       ksql.streams.consumer.request.timeout.ms: 60000
     kafka:
-      bootstrapServers: "PLAINTEXT://lsdmesp-kafka-bootstrap:9092"
+      bootstrapServers: "SSL://lsdmesp-kafka-bootstrap:9093"
     cp-schema-registry:
       url: "http://lsdmesp-cp-schema-registry:8081"
     resources:
