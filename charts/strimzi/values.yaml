@@ -308,6 +308,41 @@ strimzi-kafka-operator:
   connectBuildTimeoutMs: 300000
 
 kafka-ui:
+  env:
+    - name: KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL
+      value: "SSL"
+    - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
+      value: "SSL://lsdmesp-kafka-bootstrap:9093"
+    - name: KAFKA_CLUSTERS_0_PROPERTIES_SSL_KEYSTORE_LOCATION
+      value: "/opt/kafka/certs-lsdmesp/user.p12"
+    - name: KAFKA_CLUSTERS_0_PROPERTIES_SSL_KEYSTORE_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: lsdmesp
+          key: user.password
+    - name: KAFKA_CLUSTERS_0_PROPERTIES_SSL_TRUSTSTORE_LOCATION
+      value: "/opt/kafka/certs-cluster-ca/ca.p12"
+    - name: KAFKA_CLUSTERS_0_PROPERTIES_SSL_TRUSTSTORE_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: lsdmesp-cluster-ca-cert
+          key: ca.password
+    - name: KAFKA_CLUSTERS_0_PROPERTIES_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM
+      value: ""
+  volumeMounts:
+    - name: lsdmesp
+      mountPath: /opt/kafka/certs-lsdmesp
+    - name: lsdmesp-cluster-ca-cert
+      mountPath: /opt/kafka/certs-cluster-ca
+  volumes:
+    - name: lsdmesp-cluster-ca-cert
+      secret:
+        defaultMode: 292
+        secretName: lsdmesp-cluster-ca-cert
+    - name: lsdmesp
+      secret:
+        defaultMode: 292
+        secretName: lsdmesp
   yamlApplicationConfig:
     kafka:
       clusters:
