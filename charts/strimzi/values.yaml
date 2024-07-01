@@ -2,9 +2,12 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 lsdmesp:
-  clusterType: "rancher"
+  clusterType: "kind"
   cpVersion: &anchorcpVersion "7.6.1"
   storageClass: standard
+  defaultReplicationFactor: 3
+  defaultMinInSyncReplicas: 2
+  defaultNumPartitions: 6
   confluentKsqldbURL: &anchorconfluentKsqldbURL "ksqldb.apps.mesp.lsdopen.io"
   confluentSchemaRegistryURL: &anchorconfluentSchemaRegistryURL "schema-registry.apps.mesp.lsdopen.io"
   strimziConnectURL: &anchorstrimziConnectURL "connect.apps.mesp.lsdopen.io"
@@ -15,20 +18,61 @@ lsdmesp:
   kafkaSchemaRegistryUIURL: &anchorkafkaSchemaRegistryUIURL "schema-registry-ui.apps.mesp.lsdopen.io"
   kafkaAllUIUsername: &anchorkafkaAllUIUsername "kafka"
   kafkaAllUIPassword: &anchorkafkaAllUIPassword "secretpassword"
+  
   prometheus:
     # Requires podmonitors.monitoring.coreos.com CRD
     enableMetrics: false
+
   internalSecurity:
     authentication: mtls
+
   strimzi:
     clusterName: lsdmesp
+    logVersion: 3.6
+    version: 3.6.1
+
+    kraftcontroller:
+      # java memory sizes
+      jvm:
+        Xms: 384m
+        Xmx: 384m
+      # size of the pv needed
+      dataVolumeCapacity: 1Gi
+      # pod resource limits and request
+      resources:
+        limits:
+          cpu: 500m
+          memory: 1Gi
+        requests:
+          cpu: 20m
+          memory: 512Mi
+      # number of pod replicas
+      replicas: 3
+
     kafka:
-      version: 3.6.1
       bootstrap: *anchorkafkaBootstrapURL
       externalDomain: *anchorkafkaExternalDomain
+      # java memory sizes
+      jvm:
+        Xms: 1g
+        Xmx: 1g
+      # size of the pv needed
+      dataVolumeCapacity: 20Gi
+      # pod resource limits and request
+      resources:
+        limits:
+          cpu: 1
+          memory: 8Gi
+        requests:
+          cpu: 50m
+          memory: 3Gi
+      # number of pod replicas
+      replicas: 3
+
     connect:
       ingress:
         url: *anchorstrimziConnectURL
+
   kafka:
     kafkaguis:
       auth:
@@ -40,6 +84,7 @@ lsdmesp:
       enabled: true
       ingress:
         url: *anchorkafkaUIURL
+
   confluent:
     ksqldb:
       ingress:
@@ -372,10 +417,13 @@ kafka-ui:
         ldap:
           enabled: false          
   ingress:
-    enabled: false
+    annotations:
+      nginx.ingress.kubernetes.io/auth-type: basic
+      nginx.ingress.kubernetes.io/auth-secret: lsdmesp-guis-basic-auth
+      nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
+    enabled: true
     ingressClassName: nginx
     path: /
     host: *anchorkafkaUIURL
     tls:
-      enabled: false
-      secretName: ""
+      enabled: true

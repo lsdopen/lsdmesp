@@ -1,5 +1,5 @@
 # Kafka Connect Ingress and NodePort
-{{- if or (eq .Values.lsdmesp.clusterType "gke") (eq .Values.lsdmesp.clusterType "rancher") -}}
+{{- if or (eq .Values.lsdmesp.clusterType "gke") (eq .Values.lsdmesp.clusterType "rancher") (eq .Values.lsdmesp.clusterType "kind") -}}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
