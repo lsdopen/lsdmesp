@@ -350,4 +350,4 @@ MigrationBackup/
 .ionide/
 
 # Additional files
-./*.pem
+*.pem

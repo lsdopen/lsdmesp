@@ -114,20 +114,10 @@ spec:
   entityOperator:
     topicOperator:
       resources:
-        limits:
-          cpu: "1"
-          memory: 512Mi
-        requests:
-          cpu: 10m
-          memory: 10Mi
+        {{- toYaml .Values.lsdmesp.strimzi.topicOperator.resources | nindent 8 }}
     userOperator:
       resources:
-        limits:
-          cpu: "1"
-          memory: 512Mi
-        requests:
-          cpu: 10m
-          memory: 10Mi
+        {{- toYaml .Values.lsdmesp.strimzi.userOperator.resources | nindent 8 }}
   kafka:
     version: {{ .Values.lsdmesp.strimzi.version }}
     authorization:

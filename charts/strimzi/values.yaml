@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 lsdmesp:
   clusterType: "kind"
-  cpVersion: &anchorcpVersion "7.6.1"
+  cpVersion: "7.6.1"
   storageClass: standard
   defaultReplicationFactor: 3
   defaultMinInSyncReplicas: 2
@@ -11,14 +11,10 @@ lsdmesp:
   confluentKsqldbURL: &anchorconfluentKsqldbURL "ksqldb.apps.mesp.lsdopen.io"
   confluentSchemaRegistryURL: &anchorconfluentSchemaRegistryURL "schema-registry.apps.mesp.lsdopen.io"
   strimziConnectURL: &anchorstrimziConnectURL "connect.apps.mesp.lsdopen.io"
-  kafkaBootstrapURL: &anchorkafkaBootstrapURL "bootstrap.mesp.lsdopen.io:32100"
-  kafkaExternalDomain: &anchorkafkaExternalDomain "mesp.lsdopen.io"
   kafkaUIURL: &anchorkafkaUIURL "kafka-ui.apps.mesp.lsdopen.io"
-  kafkaConnectUIURL: &anchorkafkaConnectUIURL "connect-ui.apps.mesp.lsdopen.io"
-  kafkaSchemaRegistryUIURL: &anchorkafkaSchemaRegistryUIURL "schema-registry-ui.apps.mesp.lsdopen.io"
   kafkaAllUIUsername: &anchorkafkaAllUIUsername "kafka"
   kafkaAllUIPassword: &anchorkafkaAllUIPassword "secretpassword"
-  
+
   prometheus:
     # Requires podmonitors.monitoring.coreos.com CRD
     enableMetrics: false
@@ -28,7 +24,6 @@ lsdmesp:
 
   strimzi:
     clusterName: lsdmesp
-    logVersion: 3.6
     version: 3.6.1
 
     kraftcontroller:
@@ -50,8 +45,8 @@ lsdmesp:
       replicas: 3
 
     kafka:
-      bootstrap: *anchorkafkaBootstrapURL
-      externalDomain: *anchorkafkaExternalDomain
+      bootstrap: "bootstrap.mesp.lsdopen.io:32100"
+      externalDomain: "mesp.lsdopen.io"
       # java memory sizes
       jvm:
         Xms: 1g
@@ -68,6 +63,26 @@ lsdmesp:
           memory: 3Gi
       # number of pod replicas
       replicas: 3
+
+    topicOperator:
+      # pod resource limits and request
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 10m
+          memory: 10Mi
+
+    userOperator:
+      # pod resource limits and request
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 10m
+          memory: 10Mi
 
     connect:
       ingress:
@@ -128,7 +143,7 @@ cp-helm:
       authentication: mtls
     replicaCount: 2
     image: confluentinc/cp-schema-registry
-    imageTag: *anchorcpVersion
+    imageTag: "7.6.1"
     heapOptions: "-Xms512m -Xmx512m"
     kafka:
       bootstrapServers: "SSL://lsdmesp-kafka-bootstrap:9093"
@@ -148,7 +163,7 @@ cp-helm:
       authentication: mtls
     replicaCount: 1
     image: confluentinc/cp-kafka-rest
-    imageTag: *anchorcpVersion
+    imageTag: "7.6.1"
     heapOptions: "-Xms512m -Xmx512m"
     cp-kafka:
       bootstrapServers: "SSL://lsdmesp-kafka-bootstrap:9093"
@@ -170,7 +185,7 @@ cp-helm:
       authentication: mtls
     replicaCount: 1
     image: confluentinc/cp-ksqldb-server
-    imageTag: *anchorcpVersion
+    imageTag: "7.6.1"
     heapOptions: "-Xms512M -Xmx1g"
     overrideServiceId: lsdmesp-ksql-server
     ksql:
