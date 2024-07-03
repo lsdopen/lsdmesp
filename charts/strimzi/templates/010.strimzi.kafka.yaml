@@ -76,7 +76,7 @@ spec:
                 - lsdmesp-broker-2
             weight: 20
         podAntiAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
+          requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
                 matchExpressions:
                 - key: strimzi.io/pool-name

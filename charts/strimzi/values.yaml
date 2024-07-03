@@ -11,7 +11,6 @@ lsdmesp:
   confluentKsqldbURL: &anchorconfluentKsqldbURL "ksqldb.apps.mesp.lsdopen.io"
   confluentSchemaRegistryURL: &anchorconfluentSchemaRegistryURL "schema-registry.apps.mesp.lsdopen.io"
   strimziConnectURL: &anchorstrimziConnectURL "connect.apps.mesp.lsdopen.io"
-  kafkaUIURL: &anchorkafkaUIURL "kafka-ui.apps.mesp.lsdopen.io"
   kafkaAllUIUsername: &anchorkafkaAllUIUsername "kafka"
   kafkaAllUIPassword: &anchorkafkaAllUIPassword "secretpassword"
 
@@ -98,7 +97,7 @@ lsdmesp:
     kafkaui:
       enabled: true
       ingress:
-        url: *anchorkafkaUIURL
+        url: "kafka-ui.apps.mesp.lsdopen.io"
 
   confluent:
     ksqldb:
@@ -439,6 +438,6 @@ kafka-ui:
     enabled: true
     ingressClassName: nginx
     path: /
-    host: *anchorkafkaUIURL
+    host: "kafka-ui.apps.mesp.lsdopen.io"
     tls:
       enabled: true
