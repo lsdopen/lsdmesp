@@ -32,3 +32,6 @@ MANIFEST
 .venv
 env/
 venv/
+
+# Additional
+tmp/

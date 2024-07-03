@@ -4,6 +4,10 @@
 
 replicaCount: 1
 
+## Internal security
+internalSecurity:
+  authentication: mtls
+
 ## Image Info
 ## ref: https://hub.docker.com/r/confluentinc/cp-kafka/
 image: confluentinc/cp-kafka-rest

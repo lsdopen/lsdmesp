@@ -4,6 +4,10 @@
 
 replicaCount: 1
 
+## Internal security
+internalSecurity:
+  authentication: mtls
+
 ## Image Info
 ## ref: https://hub.docker.com/r/confluentinc/cp-ksql-server/
 image: confluentinc/cp-ksqldb-server

@@ -1,0 +1,11 @@
+{{- if eq .Values.lsdmesp.internalSecurity.authentication "mtls" }}
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: lsdmesp
+  labels:
+    strimzi.io/cluster: {{ .Values.lsdmesp.strimzi.clusterName }}
+spec:
+  authentication:
+    type: tls
+{{- end }}
