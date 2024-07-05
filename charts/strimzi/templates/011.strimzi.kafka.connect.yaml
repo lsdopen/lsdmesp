@@ -12,6 +12,8 @@ spec:
     group.id: connect-cluster
     heartbeat.interval.ms: 3000
     key.converter.schema.registry.url: http://lsdmesp-cp-schema-registry:8081
+    key.converter.basic.auth.credentials.source: USER_INFO
+    key.converter.schema.registry.basic.auth.user.info: bob:bob-secret
     offset.flush.interval.ms: 60000
     offset.flush.timeout.ms: 5000
     offset.storage.topic: connect-cluster-offsets
@@ -20,6 +22,8 @@ spec:
     session.timeout.ms: 10000
     status.storage.topic: connect-cluster-status
     value.converter.schema.registry.url: http://lsdmesp-cp-schema-registry:8081
+    value.converter.basic.auth.credentials.source: USER_INFO
+    value.converter.schema.registry.basic.auth.user.info: bob:bob-secret
     worker.sync.timeout.ms: 3000
     config.storage.replication.factor: -1
     offset.storage.replication.factor: -1

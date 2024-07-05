@@ -69,10 +69,18 @@ spec:
             {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
-          {{- if eq .Values.internalSecurity.authentication "mtls" }}
           volumeMounts:
+          {{- if .Values.restSecurity.basic.enabled }}
+            - name: lsdmesp-jaas-config
+              mountPath: /opt/kafka/jaas-config
+            - name: lsdmesp-passwords
+              mountPath: /opt/kafka/lsdmesp-passwords
+          {{- end }}
+          {{- if eq .Values.internalSecurity.authentication "mtls" }}
             - name: lsdmesp
               mountPath: /opt/kafka/certs-lsdmesp
+          {{- end }}
+          {{- if or (eq .Values.internalSecurity.authentication "mtls") (.Values.restSecurity.tls.enabled) }}
             - name: lsdmesp-cluster-ca-cert
               mountPath: /opt/kafka/certs-cluster-ca
           {{- end }}
@@ -85,6 +93,18 @@ spec:
             value: {{ template "cp-kafka-rest.kafka.bootstrapServers" . }}
           - name: KAFKA_REST_SCHEMA_REGISTRY_URL
             value: {{ template "cp-kafka-rest.cp-schema-registry.service-name" . }}
+          {{- if .Values.restSecurity.basic.enabled }}
+          - name: KAFKA_REST_SCHEMA_REGISTRY_BASIC_AUTH_CREDENTIALS_SOURCE
+            value: "USER_INFO"
+          - name: KAFKA_REST_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
+            value: "bob:bob-secret"
+          - name: KAFKA_REST_AUTHENTICATION_METHOD
+            value: "BASIC"
+          - name: KAFKA_REST_AUTHENTICATION_ROLES
+            value: "admin,developer"
+          - name: KAFKA_REST_AUTHENTICATION_REALM
+            value: "LSDMESPRealm"
+          {{- end }}
           - name: KAFKAREST_HEAP_OPTS
             value: "{{ .Values.heapOptions }}"
           {{- if eq .Values.internalSecurity.authentication "mtls" }}
@@ -118,6 +138,10 @@ spec:
           - name: {{ $key | quote }}
             value: {{ $value | quote }}
           {{- end }}
+          {{- if .Values.kafkaRestOpts }}
+          - name: KAFKAREST_OPTS
+            value: "{{ .Values.kafkaRestOpts }}"
+          {{- end }}
           {{- if .Values.jmx.port }}
           - name: JMX_PORT
             value: "{{ .Values.jmx.port }}"
@@ -127,15 +151,26 @@ spec:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}
       {{- end }}
       volumes:
+      {{- if .Values.restSecurity.basic.enabled }}
+      - name: lsdmesp-jaas-config
+        configMap:
+          name: lsdmesp-jaas-config
+      - secret:
+          defaultMode: 420
+          secretName: lsdmesp-passwords
+        name: lsdmesp-passwords
+      {{- end }}
       {{- if eq .Values.internalSecurity.authentication "mtls" }}
-      - name: lsdmesp-cluster-ca-cert
-        secret:
-          defaultMode: 292
-          secretName: lsdmesp-cluster-ca-cert
       - name: lsdmesp
         secret:
           defaultMode: 292
           secretName: lsdmesp
+      {{- end }}
+      {{- if or (eq .Values.internalSecurity.authentication "mtls") (.Values.restSecurity.tls.enabled) }}
+      - name: lsdmesp-cluster-ca-cert
+        secret:
+          defaultMode: 292
+          secretName: lsdmesp-cluster-ca-cert
       {{- end }}
       {{- if .Values.prometheus.jmx.enabled }}
       - name: jmx-config

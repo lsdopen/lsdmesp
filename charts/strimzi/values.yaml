@@ -113,6 +113,11 @@ lsdmesp:
     replicas: 0
 
 cp-helm:
+  # REST API security
+  restSecurity:
+    basic:
+      enabled: true
+
   ## ------------------------------------------------------
   ## Zookeeper
   ## ------------------------------------------------------
@@ -144,6 +149,7 @@ cp-helm:
     image: confluentinc/cp-schema-registry
     imageTag: "7.6.1"
     heapOptions: "-Xms512m -Xmx512m"
+    schemaRegistryOpts: "-Djava.security.auth.login.config=/opt/kafka/jaas-config/jaas_config.conf"
     kafka:
       bootstrapServers: "SSL://lsdmesp-kafka-bootstrap:9093"
     resources:
@@ -164,6 +170,7 @@ cp-helm:
     image: confluentinc/cp-kafka-rest
     imageTag: "7.6.1"
     heapOptions: "-Xms512m -Xmx512m"
+    kafkaRestOpts: "-Djava.security.auth.login.config=/opt/kafka/jaas-config/jaas_config.conf"
     cp-kafka:
       bootstrapServers: "SSL://lsdmesp-kafka-bootstrap:9093"
     cp-schema-registry:
@@ -186,6 +193,7 @@ cp-helm:
     image: confluentinc/cp-ksqldb-server
     imageTag: "7.6.1"
     heapOptions: "-Xms512M -Xmx1g"
+    ksqlOpts: "-Djava.security.auth.login.config=/opt/kafka/jaas-config/jaas_config.conf"
     overrideServiceId: lsdmesp-ksql-server
     ksql:
       headless: false
@@ -390,12 +398,20 @@ kafka-ui:
       value: ""
     - name: KAFKA_CLUSTERS_0_KSQLDBSERVER
       value: "http://lsdmesp-cp-ksql-server:8088"
+    - name: KAFKA_CLUSTERS_0_KSQLDBSERVERAUTH_USERNAME
+      value: "bob"
+    - name: KAFKA_CLUSTERS_0_KSQLDBSERVERAUTH_PASSWORD
+      value: "bob-secret"
     - name: KAFKA_CLUSTERS_0_NAME
       value: "lsdmesp"
     - name: KAFKA_CLUSTERS_0_READONLY
       value: "false"
     - name: KAFKA_CLUSTERS_0_SCHEMAREGISTRY
       value: "http://lsdmesp-cp-schema-registry:8081"
+    - name: KAFKA_CLUSTERS_0_SCHEMAREGISTRYAUTH_USERNAME
+      value: "bob"
+    - name: KAFKA_CLUSTERS_0_SCHEMAREGISTRYAUTH_PASSWORD
+      value: "bob-secret"
     - name: KAFKA_CLUSTERS_0_KAFKACONNECT_0_NAME
       value: "connect-1"
     - name: KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS

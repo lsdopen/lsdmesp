@@ -70,9 +70,17 @@ spec:
           resources:
 {{ toYaml .Values.resources | indent 12 }}
           volumeMounts:
+          {{- if .Values.restSecurity.basic.enabled }}
+          - name: lsdmesp-jaas-config
+            mountPath: /opt/kafka/jaas-config
+          - name: lsdmesp-passwords
+            mountPath: /opt/kafka/lsdmesp-passwords
+          {{- end }}
           {{- if eq .Values.internalSecurity.authentication "mtls" }}
           - name: lsdmesp
             mountPath: /opt/kafka/certs-lsdmesp
+          {{- end }}
+          {{- if or (eq .Values.internalSecurity.authentication "mtls") (.Values.restSecurity.tls.enabled) }}
           - name: lsdmesp-cluster-ca-cert
             mountPath: /opt/kafka/certs-cluster-ca
           {{- end }}
@@ -87,6 +95,18 @@ spec:
             value: {{ template "cp-ksql-server.serviceId" . }}
           - name: KSQL_KSQL_SCHEMA_REGISTRY_URL
             value: {{ template "cp-ksql-server.cp-schema-registry.service-name" . }}
+          {{- if .Values.restSecurity.basic.enabled }}
+          - name: KSQL_KSQL_SCHEMA_REGISTRY_BASIC_AUTH_CREDENTIALS_SOURCE
+            value: "USER_INFO"
+          - name: KSQL_KSQL_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
+            value: "bob:bob-secret"
+          - name: KSQL_AUTHENTICATION_METHOD
+            value: "BASIC"
+          - name: KSQL_AUTHENTICATION_ROLES
+            value: "admin,developer"
+          - name: KSQL_AUTHENTICATION_REALM
+            value: "LSDMESPRealm"
+          {{- end }}
           - name: KSQL_HEAP_OPTS
             value: "{{ .Values.heapOptions }}"
           {{- if .Values.ksql.headless }}
@@ -123,6 +143,10 @@ spec:
           - name: {{ printf "KSQL_%s" $key | replace "." "_" | upper | quote }}
             value: {{ $value | quote }}
           {{- end }}
+          {{- if .Values.ksqlOpts }}
+          - name: KSQL_OPTS
+            value: "{{ .Values.ksqlOpts }}"
+          {{- end }}
           {{- if .Values.jmx.port }}
           - name: JMX_PORT
             value: "{{ .Values.jmx.port }}"
@@ -132,15 +156,26 @@ spec:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}
       {{- end }}
       volumes:
+      {{- if .Values.restSecurity.basic.enabled }}
+      - name: lsdmesp-jaas-config
+        configMap:
+          name: lsdmesp-jaas-config
+      - secret:
+          defaultMode: 420
+          secretName: lsdmesp-passwords
+        name: lsdmesp-passwords
+      {{- end }}
       {{- if eq .Values.internalSecurity.authentication "mtls" }}
-      - name: lsdmesp-cluster-ca-cert
-        secret:
-          defaultMode: 292
-          secretName: lsdmesp-cluster-ca-cert
       - name: lsdmesp
         secret:
           defaultMode: 292
           secretName: lsdmesp
+      {{- end }}
+      {{- if or (eq .Values.internalSecurity.authentication "mtls") (.Values.restSecurity.tls.enabled) }}
+      - name: lsdmesp-cluster-ca-cert
+        secret:
+          defaultMode: 292
+          secretName: lsdmesp-cluster-ca-cert
       {{- end }}
       {{- if .Values.prometheus.jmx.enabled }}
       - name: jmx-config

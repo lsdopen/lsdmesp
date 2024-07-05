@@ -7,6 +7,12 @@ replicaCount: 1
 ## Internal security
 internalSecurity:
   authentication: mtls
+# REST API security
+restSecurity:
+  tls:
+    enabled: true
+  basic:
+    enabled: true
 
 ## Image Info
 ## ref: https://hub.docker.com/r/confluentinc/cp-ksql-server/

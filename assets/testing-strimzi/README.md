@@ -46,6 +46,8 @@ curl -X POST \
   "name": "prod.teamblue.datagen.conn",
   "config": {
     "value.converter.schema.registry.url": "http://lsdmesp-cp-schema-registry:8081",
+    "value.converter.basic.auth.credentials.source": "USER_INFO",
+    "value.converter.schema.registry.basic.auth.user.info": "bob:bob-secret",
     "name": "prod.teamblue.datagen.conn",
     "connector.class": "io.confluent.kafka.connect.datagen.DatagenConnector",
     "value.converter": "io.confluent.connect.avro.AvroConverter",
@@ -114,4 +116,11 @@ curl -X "POST" "http://lsdmesp-cp-ksql-server:8088/ksql" \
 "ksql": "describe prod_teamblue_datagen_stream_copy;",
 "streamsProperties": {}
 }'
+```
+
+
+### Kafka Rest Proxy Test with Avro Schema
+
+```
+curl -X POST -H "Content-Type: application/vnd.kafka.avro.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data '{"value_schema": "{\"type\": \"record\", \"name\": \"User\", \"fields\": [{\"name\": \"name\", \"type\": \"string\"}]}", "records": [{"value": {"name": "testUser"}}]}' "http://lsdmesp-cp-kafka-rest:8082/topics/avrotest"
 ```
