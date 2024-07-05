@@ -1,0 +1,13 @@
+{{- if .Values.restSecurity.basic.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lsdmesp-jaas-config
+data:
+  jaas_config.conf: |+
+    LSDMESPRealm {
+    org.eclipse.jetty.jaas.spi.PropertyFileLoginModule required
+    file="/opt/kafka/lsdmesp-passwords/passwords.txt"
+    debug="false";
+    };
+{{- end }}
