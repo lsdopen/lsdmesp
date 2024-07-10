@@ -110,7 +110,7 @@ lsdmesp:
   armyKnife:
     enabled: true
     image: lsdopen/kafka-army-knife:latest
-    replicas: 0
+    replicas: 1
 
 cp-helm:
   # REST API security
@@ -170,7 +170,7 @@ cp-helm:
         enabled: true
       basic:
         enabled: true
-    replicaCount: 2
+    replicaCount: 1
     image: confluentinc/cp-schema-registry
     imageTag: "7.6.1"
     heapOptions: "-Xms512m -Xmx512m"
@@ -457,7 +457,11 @@ kafka-ui:
     - name: KAFKA_CLUSTERS_0_KAFKACONNECT_0_NAME
       value: "connect-1"
     - name: KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS
-      value: "http://lsdmesp-cp-kafka-connect:8083"
+      value: "https://lsdmesp-cp-kafka-connect:8083"
+    - name: KAFKA_CLUSTERS_0_KAFKACONNECT_0_USERNAME
+      value: "bob"
+    - name: KAFKA_CLUSTERS_0_KAFKACONNECT_0_PASSWORD
+      value: "bob-secret"
   volumeMounts:
     - name: lsdmesp
       mountPath: /opt/kafka/certs-lsdmesp

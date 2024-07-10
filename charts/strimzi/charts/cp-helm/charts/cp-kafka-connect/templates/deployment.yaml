@@ -74,6 +74,32 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
+            {{- if .Values.restSecurity.tls.enabled }}
+            - name: CONNECT_LISTENERS
+              value: https://0.0.0.0:{{ .Values.servicePort }}
+            - name: CONNECT_LISTENERS_HTTPS_SSL_TRUSTSTORE_LOCATION
+              value: "/opt/kafka/basicauth/truststore.p12"
+            - name: CONNECT_LISTENERS_HTTPS_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lsdmesp-tls
+                  key: password
+            - name: CONNECT_LISTENERS_HTTPS_SSL_KEYSTORE_LOCATION
+              value: "/opt/kafka/basicauth/keystore.p12"
+            - name: CONNECT_LISTENERS_HTTPS_SSL_KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lsdmesp-tls
+                  key: password
+            - name: CONNECT_LISTENERS_HTTPS_SSL_KEY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lsdmesp-tls
+                  key: password
+            {{- else }}
+            - name: CONNECT_LISTENERS
+              value: http://0.0.0.0:{{ .Values.servicePort }}
+            {{- end }}
             - name: CONNECT_BOOTSTRAP_SERVERS
               value: {{ template "cp-kafka-connect.kafka.bootstrapServers" . }}
             - name: CONNECT_GROUP_ID
@@ -97,6 +123,14 @@ spec:
             {{- if .Values.restSecurity.basic.enabled }}
             - name: CONNECT_REST_EXTENSION_CLASSES
               value: "org.apache.kafka.connect.rest.basic.auth.extension.BasicAuthSecurityRestExtension"
+            - name: CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_BASIC_AUTH_CREDENTIALS_SOURCE
+              value: "USER_INFO"
+            - name: CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
+              value: "bob:bob-secret"
+            - name: CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_BASIC_AUTH_CREDENTIALS_SOURCE
+              value: "USER_INFO"
+            - name: CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
+              value: "bob:bob-secret"
             {{- end }}
             {{- if eq .Values.internalSecurity.authentication "mtls" }}
             - name: CONNECT_SECURITY_PROTOCOL
@@ -120,6 +154,22 @@ spec:
                 secretKeyRef:
                   name: lsdmesp
                   key: user.password
+            {{- end }}
+            {{- if .Values.restSecurity.tls.enabled }}
+            - name: CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION
+              value: "/opt/kafka/basicauth/truststore.p12"
+            - name: CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lsdmesp-tls
+                  key: password
+            - name: CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION
+              value: "/opt/kafka/basicauth/truststore.p12"
+            - name: CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lsdmesp-tls
+                  key: password
             {{- end }}
             {{- range $key, $value := .Values.configurationOverrides }}
             - name: {{ printf "CONNECT_%s" $key | replace "." "_" | upper | quote }}
