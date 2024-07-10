@@ -167,7 +167,7 @@ spec:
           brokerCertChainAndKey:
             certificate: tls.crt
             key: tls.key
-            secretName: lsdmesp-external-ca-cert
+            secretName: lsdmesp-tls
           brokers:
           - broker: 0
             advertisedHost: broker0.{{ $kafka.externalDomain }}

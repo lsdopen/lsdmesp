@@ -351,3 +351,5 @@ MigrationBackup/
 
 # Additional files
 *.pem
+*.crt
+*.key

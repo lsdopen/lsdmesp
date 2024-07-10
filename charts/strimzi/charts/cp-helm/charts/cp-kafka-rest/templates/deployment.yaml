@@ -84,11 +84,22 @@ spec:
             - name: lsdmesp-cluster-ca-cert
               mountPath: /opt/kafka/certs-cluster-ca
           {{- end }}
+          {{- if .Values.restSecurity.tls.enabled }}
+            - name: lsdmesp-tls
+              mountPath: /opt/kafka/basicauth
+          {{- end }}
           env:
           - name: KAFKA_REST_HOST_NAME
             valueFrom:
               fieldRef:
                 fieldPath: status.podIP
+          {{- if .Values.restSecurity.tls.enabled }}
+          - name: KAFKA_REST_LISTENERS
+            value: https://0.0.0.0:{{ .Values.servicePort }}
+          {{- else }}
+          - name: KAFKA_REST_LISTENERS
+            value: http://0.0.0.0:{{ .Values.servicePort }}
+          {{- end }}
           - name: KAFKA_REST_BOOTSTRAP_SERVERS
             value: {{ template "cp-kafka-rest.kafka.bootstrapServers" . }}
           - name: KAFKA_REST_SCHEMA_REGISTRY_URL
@@ -104,6 +115,15 @@ spec:
             value: "admin,developer"
           - name: KAFKA_REST_AUTHENTICATION_REALM
             value: "LSDMESPRealm"
+          {{- end }}
+          {{- if .Values.restSecurity.tls.enabled }}
+          - name: KAFKA_REST_SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION
+            value: "/opt/kafka/basicauth/truststore.p12"
+          - name: KAFKA_REST_SCHEMA_REGISTRY_SSL_TRUSTSTORE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp-tls
+                key: password
           {{- end }}
           - name: KAFKAREST_HEAP_OPTS
             value: "{{ .Values.heapOptions }}"
@@ -129,6 +149,27 @@ spec:
               secretKeyRef:
                 name: lsdmesp
                 key: user.password
+          {{- end }}
+          {{- if .Values.restSecurity.tls.enabled }}
+          - name: KAFKA_REST_SSL_TRUSTSTORE_LOCATION
+            value: "/opt/kafka/basicauth/truststore.p12"
+          - name: KAFKA_REST_SSL_TRUSTSTORE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp-tls
+                key: password
+          - name: KAFKA_REST_SSL_KEYSTORE_LOCATION
+            value: "/opt/kafka/basicauth/keystore.p12"
+          - name: KAFKA_REST_SSL_KEYSTORE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp-tls
+                key: password
+          - name: KAFKA_REST_SSL_KEY_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp-tls
+                key: password
           {{- end }}
           {{- range $key, $value := .Values.configurationOverrides }}
           - name: {{ printf "KAFKA_REST_%s" $key | replace "." "_" | upper | quote }}
@@ -171,6 +212,12 @@ spec:
         secret:
           defaultMode: 292
           secretName: lsdmesp-cluster-ca-cert
+      {{- end }}
+      {{- if .Values.restSecurity.tls.enabled }}
+      - name: lsdmesp-tls
+        secret:
+          defaultMode: 292
+          secretName: lsdmesp-tls
       {{- end }}
       {{- if .Values.prometheus.jmx.enabled }}
       - name: jmx-config

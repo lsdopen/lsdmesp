@@ -11,9 +11,11 @@ spec:
     config.storage.topic: connect-cluster-configs
     group.id: connect-cluster
     heartbeat.interval.ms: 3000
-    key.converter.schema.registry.url: http://lsdmesp-cp-schema-registry:8081
+    key.converter.schema.registry.url: https://lsdmesp-cp-schema-registry:8081
     key.converter.basic.auth.credentials.source: USER_INFO
     key.converter.schema.registry.basic.auth.user.info: bob:bob-secret
+    key.converter.schema.registry.ssl.truststore.location: /opt/kafka/external-configuration/basicauth/truststore.jks
+    key.converter.schema.registry.ssl.truststore.password: 112233
     offset.flush.interval.ms: 60000
     offset.flush.timeout.ms: 5000
     offset.storage.topic: connect-cluster-offsets
@@ -21,13 +23,20 @@ spec:
     request.timeout.ms: 40000
     session.timeout.ms: 10000
     status.storage.topic: connect-cluster-status
-    value.converter.schema.registry.url: http://lsdmesp-cp-schema-registry:8081
+    value.converter.schema.registry.url: https://lsdmesp-cp-schema-registry:8081
     value.converter.basic.auth.credentials.source: USER_INFO
     value.converter.schema.registry.basic.auth.user.info: bob:bob-secret
+    value.converter.schema.registry.ssl.truststore.location: /opt/kafka/external-configuration/basicauth/truststore.jks
+    value.converter.schema.registry.ssl.truststore.password: 112233
     worker.sync.timeout.ms: 3000
     config.storage.replication.factor: -1
     offset.storage.replication.factor: -1
-    status.storage.replication.factor: -1    
+    status.storage.replication.factor: -1
+  externalConfiguration:
+    volumes:
+      - name: basicauth
+        secret:
+          secretName: lsdmesp-tls
   jvmOptions:
     -Xms: 512m
     -Xmx: 512m

@@ -88,13 +88,22 @@ spec:
             - name: lsdmesp-cluster-ca-cert
               mountPath: /opt/kafka/certs-cluster-ca
           {{- end }}
+          {{- if .Values.restSecurity.tls.enabled }}
+            - name: lsdmesp-tls
+              mountPath: /opt/kafka/basicauth
+          {{- end }}
           env:
           - name: SCHEMA_REGISTRY_HOST_NAME
             valueFrom:
               fieldRef:
                 fieldPath: status.podIP
+          {{- if .Values.restSecurity.tls.enabled }}
+          - name: SCHEMA_REGISTRY_LISTENERS
+            value: https://0.0.0.0:{{ .Values.servicePort }}
+          {{- else }}
           - name: SCHEMA_REGISTRY_LISTENERS
             value: http://0.0.0.0:{{ .Values.servicePort }}
+          {{- end }}
           - name: SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS
             value: {{ template "cp-schema-registry.kafka.bootstrapServers" . }}
           - name: SCHEMA_REGISTRY_KAFKASTORE_GROUP_ID
@@ -133,6 +142,29 @@ spec:
               secretKeyRef:
                 name: lsdmesp
                 key: user.password
+          {{- end }}
+          {{- if .Values.restSecurity.tls.enabled }}
+          - name: SCHEMA_REGISTRY_INTER_INSTANCE_PROTOCOL
+            value: "https"
+          - name: SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION
+            value: "/opt/kafka/basicauth/truststore.p12"
+          - name: SCHEMA_REGISTRY_SSL_TRUSTSTORE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp-tls
+                key: password
+          - name: SCHEMA_REGISTRY_SSL_KEYSTORE_LOCATION
+            value: "/opt/kafka/basicauth/keystore.p12"
+          - name: SCHEMA_REGISTRY_SSL_KEYSTORE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp-tls
+                key: password
+          - name: SCHEMA_REGISTRY_SSL_KEY_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp-tls
+                key: password
           {{- end }}
           {{ range $configName, $configValue := .Values.configurationOverrides }}
           - name: SCHEMA_REGISTRY_{{ $configName | replace "." "_" | upper }}
@@ -175,6 +207,12 @@ spec:
         secret:
           defaultMode: 292
           secretName: lsdmesp-cluster-ca-cert
+      {{- end }}
+      {{- if .Values.restSecurity.tls.enabled }}
+      - name: lsdmesp-tls
+        secret:
+          defaultMode: 292
+          secretName: lsdmesp-tls
       {{- end }}
       {{- if .Values.prometheus.jmx.enabled }}
       - name: jmx-config

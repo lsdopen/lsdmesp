@@ -145,6 +145,11 @@ cp-helm:
     enabled: true
     internalSecurity:
       authentication: mtls
+    restSecurity:
+      tls:
+        enabled: true
+      basic:
+        enabled: true
     replicaCount: 2
     image: confluentinc/cp-schema-registry
     imageTag: "7.6.1"
@@ -166,6 +171,11 @@ cp-helm:
     enabled: true
     internalSecurity:
       authentication: mtls
+    restSecurity:
+      tls:
+        enabled: true
+      basic:
+        enabled: true
     replicaCount: 1
     image: confluentinc/cp-kafka-rest
     imageTag: "7.6.1"
@@ -174,7 +184,7 @@ cp-helm:
     cp-kafka:
       bootstrapServers: "SSL://lsdmesp-kafka-bootstrap:9093"
     cp-schema-registry:
-      url: "http://lsdmesp-cp-schema-registry:8081"
+      url: "https://lsdmesp-cp-schema-registry:8081"
     resources:
       limits:
         memory: 2Gi
@@ -189,6 +199,11 @@ cp-helm:
     enabled: true
     internalSecurity:
       authentication: mtls
+    restSecurity:
+      tls:
+        enabled: true
+      basic:
+        enabled: true
     replicaCount: 1
     image: confluentinc/cp-ksqldb-server
     imageTag: "7.6.1"
@@ -211,7 +226,7 @@ cp-helm:
     kafka:
       bootstrapServers: "SSL://lsdmesp-kafka-bootstrap:9093"
     cp-schema-registry:
-      url: "http://lsdmesp-cp-schema-registry:8081"
+      url: "https://lsdmesp-cp-schema-registry:8081"
     resources:
       requests:
         cpu: 10m
@@ -394,6 +409,13 @@ kafka-ui:
         secretKeyRef:
           name: lsdmesp-cluster-ca-cert
           key: ca.password
+    - name: KAFKA_CLUSTERS_0_SSL_TRUSTSTORELOCATION
+      value: "/opt/kafka/basicauth/truststore.p12"
+    - name: KAFKA_CLUSTERS_0_SSL_TRUSTSTOREPASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: lsdmesp-tls
+          key: password
     - name: KAFKA_CLUSTERS_0_PROPERTIES_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM
       value: ""
     - name: KAFKA_CLUSTERS_0_KSQLDBSERVER
@@ -407,7 +429,7 @@ kafka-ui:
     - name: KAFKA_CLUSTERS_0_READONLY
       value: "false"
     - name: KAFKA_CLUSTERS_0_SCHEMAREGISTRY
-      value: "http://lsdmesp-cp-schema-registry:8081"
+      value: "https://lsdmesp-cp-schema-registry:8081"
     - name: KAFKA_CLUSTERS_0_SCHEMAREGISTRYAUTH_USERNAME
       value: "bob"
     - name: KAFKA_CLUSTERS_0_SCHEMAREGISTRYAUTH_PASSWORD
@@ -421,31 +443,21 @@ kafka-ui:
       mountPath: /opt/kafka/certs-lsdmesp
     - name: lsdmesp-cluster-ca-cert
       mountPath: /opt/kafka/certs-cluster-ca
+    - name: lsdmesp-tls
+      mountPath: /opt/kafka/basicauth
   volumes:
-    - name: lsdmesp-cluster-ca-cert
-      secret:
-        defaultMode: 292
-        secretName: lsdmesp-cluster-ca-cert
     - name: lsdmesp
       secret:
         defaultMode: 292
         secretName: lsdmesp
-  yamlApplicationConfig:
-    kafka:
-      clusters:
-        - name: lsdmesp
-          bootstrapServers: lsdmesp-kafka-bootstrap:9092
-          schemaRegistry: http://lsdmesp-cp-schema-registry:8081
-          readOnly: false
-          kafkaConnect:
-            - name: connect-1
-              address: http://lsdmesp-connect-api:8083
-    auth:
-      type: disabled
-    management:
-      health:
-        ldap:
-          enabled: false          
+    - name: lsdmesp-cluster-ca-cert
+      secret:
+        defaultMode: 292
+        secretName: lsdmesp-cluster-ca-cert
+    - name: lsdmesp-tls
+      secret:
+        defaultMode: 292
+        secretName: lsdmesp-tls
   ingress:
     annotations:
       nginx.ingress.kubernetes.io/auth-type: basic
