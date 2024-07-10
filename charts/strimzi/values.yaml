@@ -119,25 +119,45 @@ cp-helm:
       enabled: true
 
   ## ------------------------------------------------------
-  ## Zookeeper
-  ## ------------------------------------------------------
-  cp-zookeeper:
-    enabled: false
-  ## ------------------------------------------------------
-  ## Kafka Brokers
-  ## ------------------------------------------------------
-  cp-kafka:
-    enabled: false
-  ## ------------------------------------------------------
   ## Connect
   ## ------------------------------------------------------
   cp-kafka-connect:
-    enabled: false
-  ## ------------------------------------------------------
-  ## Control Center (Commercial Feature)
-  ## ------------------------------------------------------
-  cp-control-center:
-    enabled: false
+    enabled: true
+    internalSecurity:
+      authentication: mtls
+    restSecurity:
+      tls:
+        enabled: true
+      basic:
+        enabled: true
+    replicaCount: 1
+    image: lsdtrip/cp-kafka-connect
+    imageTag: "7.6.1"
+    servicePort: 8083
+    configurationOverrides:
+      "plugin.path": "/usr/share/java,/usr/share/confluent-hub-components"
+      "key.converter": "io.confluent.connect.avro.AvroConverter"
+      "value.converter": "io.confluent.connect.avro.AvroConverter"
+      "key.converter.schemas.enable": "false"
+      "value.converter.schemas.enable": "false"
+      "internal.key.converter": "org.apache.kafka.connect.json.JsonConverter"
+      "internal.value.converter": "org.apache.kafka.connect.json.JsonConverter"
+      "config.storage.replication.factor": "3"
+      "offset.storage.replication.factor": "3"
+      "status.storage.replication.factor": "3"
+    heapOptions: "-Xms512M -Xmx512M"
+    kafkaConnectOpts: "-Djava.security.auth.login.config=/opt/kafka/jaas-config/jaas_connect.conf"
+    kafka:
+      bootstrapServers: "SSL://lsdmesp-kafka-bootstrap:9093"
+    cp-schema-registry:
+      url: "https://lsdmesp-cp-schema-registry:8081"
+    resources:
+      limits:
+        memory: 2Gi
+        cpu: 1
+      requests:
+        memory: 768Mi
+        cpu: 10m
   ## ------------------------------------------------------
   ## Schema Registry
   ## ------------------------------------------------------
@@ -437,7 +457,7 @@ kafka-ui:
     - name: KAFKA_CLUSTERS_0_KAFKACONNECT_0_NAME
       value: "connect-1"
     - name: KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS
-      value: "http://lsdmesp-connect-api:8083"
+      value: "http://lsdmesp-cp-kafka-connect:8083"
   volumeMounts:
     - name: lsdmesp
       mountPath: /opt/kafka/certs-lsdmesp

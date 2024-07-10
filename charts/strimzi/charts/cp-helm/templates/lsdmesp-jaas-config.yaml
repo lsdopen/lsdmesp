@@ -10,4 +10,9 @@ data:
     file="/opt/kafka/lsdmesp-passwords/passwords.txt"
     debug="false";
     };
+  jaas_connect.conf: |+
+    KafkaConnect {
+    org.apache.kafka.connect.rest.basic.auth.extension.PropertyFileLoginModule required
+    file="/opt/kafka/lsdmesp-passwords/connect_passwords.txt";
+    };
 {{- end }}

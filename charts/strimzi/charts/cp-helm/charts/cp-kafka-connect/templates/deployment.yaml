@@ -90,6 +90,37 @@ spec:
               value: {{ template "cp-kafka-connect.cp-schema-registry.service-name" .}}
             - name: KAFKA_HEAP_OPTS
               value: "{{ .Values.heapOptions }}"
+            {{- if .Values.kafkaConnectOpts }}
+            - name: KAFKA_OPTS
+              value: "{{ .Values.kafkaConnectOpts }}"
+            {{- end }}
+            {{- if .Values.restSecurity.basic.enabled }}
+            - name: CONNECT_REST_EXTENSION_CLASSES
+              value: "org.apache.kafka.connect.rest.basic.auth.extension.BasicAuthSecurityRestExtension"
+            {{- end }}
+            {{- if eq .Values.internalSecurity.authentication "mtls" }}
+            - name: CONNECT_SECURITY_PROTOCOL
+              value: "SSL"
+            - name: CONNECT_SSL_TRUSTSTORE_LOCATION
+              value: "/opt/kafka/certs-cluster-ca/ca.p12"
+            - name: CONNECT_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lsdmesp-cluster-ca-cert
+                  key: ca.password
+            - name: CONNECT_SSL_KEYSTORE_LOCATION
+              value: "/opt/kafka/certs-lsdmesp/user.p12"
+            - name: CONNECT_SSL_KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lsdmesp
+                  key: user.password
+            - name: CONNECT_SSL_KEY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lsdmesp
+                  key: user.password
+            {{- end }}
             {{- range $key, $value := .Values.configurationOverrides }}
             - name: {{ printf "CONNECT_%s" $key | replace "." "_" | upper | quote }}
               value: {{ $value | quote }}
@@ -115,8 +146,26 @@ spec:
 {{ toYaml .Values.livenessProbe | trim | indent 12 }}
           {{- end }}
         {{- end }}
-          {{- if .Values.volumeMounts }}
           volumeMounts:
+          {{- if .Values.restSecurity.basic.enabled }}
+            - name: lsdmesp-jaas-config
+              mountPath: /opt/kafka/jaas-config
+            - name: lsdmesp-passwords
+              mountPath: /opt/kafka/lsdmesp-passwords
+          {{- end }}
+          {{- if eq .Values.internalSecurity.authentication "mtls" }}
+            - name: lsdmesp
+              mountPath: /opt/kafka/certs-lsdmesp
+          {{- end }}
+          {{- if or (eq .Values.internalSecurity.authentication "mtls") (.Values.restSecurity.tls.enabled) }}
+            - name: lsdmesp-cluster-ca-cert
+              mountPath: /opt/kafka/certs-cluster-ca
+          {{- end }}
+          {{- if .Values.restSecurity.tls.enabled }}
+            - name: lsdmesp-tls
+              mountPath: /opt/kafka/basicauth
+          {{- end }}
+          {{- if .Values.volumeMounts }}
 {{ toYaml .Values.volumeMounts | indent 10 }}
           {{- end}}
       {{- if .Values.imagePullSecrets }}
@@ -124,6 +173,33 @@ spec:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}
       {{- end }}
       volumes:
+      {{- if .Values.restSecurity.basic.enabled }}
+      - name: lsdmesp-jaas-config
+        configMap:
+          name: lsdmesp-jaas-config
+      - secret:
+          defaultMode: 420
+          secretName: lsdmesp-passwords
+        name: lsdmesp-passwords
+      {{- end }}
+      {{- if eq .Values.internalSecurity.authentication "mtls" }}
+      - name: lsdmesp
+        secret:
+          defaultMode: 292
+          secretName: lsdmesp
+      {{- end }}
+      {{- if or (eq .Values.internalSecurity.authentication "mtls") (.Values.restSecurity.tls.enabled) }}
+      - name: lsdmesp-cluster-ca-cert
+        secret:
+          defaultMode: 292
+          secretName: lsdmesp-cluster-ca-cert
+      {{- end }}
+      {{- if .Values.restSecurity.tls.enabled }}
+      - name: lsdmesp-tls
+        secret:
+          defaultMode: 292
+          secretName: lsdmesp-tls
+      {{- end }}
       {{- if .Values.volumes }}
 {{ toYaml .Values.volumes | trim | indent 6 }}
       {{- end}}
