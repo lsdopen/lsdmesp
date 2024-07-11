@@ -154,6 +154,48 @@ spec:
                 secretKeyRef:
                   name: lsdmesp
                   key: user.password
+            - name: CONNECT_CONSUMER_SECURITY_PROTOCOL
+              value: "SSL"
+            - name: CONNECT_CONSUMER_SSL_TRUSTSTORE_LOCATION
+              value: "/opt/kafka/certs-cluster-ca/ca.p12"
+            - name: CONNECT_CONSUMER_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lsdmesp-cluster-ca-cert
+                  key: ca.password
+            - name: CONNECT_CONSUMER_SSL_KEYSTORE_LOCATION
+              value: "/opt/kafka/certs-lsdmesp/user.p12"
+            - name: CONNECT_CONSUMER_SSL_KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lsdmesp
+                  key: user.password
+            - name: CONNECT_CONSUMER_SSL_KEY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lsdmesp
+                  key: user.password
+            - name: CONNECT_PRODUCER_SECURITY_PROTOCOL
+              value: "SSL"
+            - name: CONNECT_PRODUCER_SSL_TRUSTSTORE_LOCATION
+              value: "/opt/kafka/certs-cluster-ca/ca.p12"
+            - name: CONNECT_PRODUCER_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lsdmesp-cluster-ca-cert
+                  key: ca.password
+            - name: CONNECT_PRODUCER_SSL_KEYSTORE_LOCATION
+              value: "/opt/kafka/certs-lsdmesp/user.p12"
+            - name: CONNECT_PRODUCER_SSL_KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lsdmesp
+                  key: user.password
+            - name: CONNECT_PRODUCER_SSL_KEY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lsdmesp
+                  key: user.password
             {{- end }}
             {{- if .Values.restSecurity.tls.enabled }}
             - name: CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION
