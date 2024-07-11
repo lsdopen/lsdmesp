@@ -11,7 +11,7 @@ replicaCount: 1
 
 ## Internal security
 internalSecurity:
-  authentication: mtls
+  enabled: true
 # REST API security
 restSecurity:
   tls:

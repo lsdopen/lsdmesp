@@ -123,8 +123,8 @@ spec:
     authorization:
       superUsers:
       - CN=lsdadmin
-      {{- if eq .Values.lsdmesp.internalSecurity.authentication "mtls" }}
-      - CN=lsdmesp
+      {{- if .Values.lsdmesp.internalSecurity.enabled }}
+      - lsdmesp
       {{- else }}
       - ANONYMOUS
       {{- end }}
@@ -143,18 +143,25 @@ spec:
       log.cleanup.policy: delete
       log.retention.ms: 604800000
     listeners:
+      {{- if .Values.lsdmesp.internalSecurity.enabled }}
+      - name: sasl
+        port: 9092
+        type: internal
+        tls: true
+        authentication:
+          type: scram-sha-512
+      {{- else }}
       - name: plain
         port: 9092
         type: internal
         tls: false
+      {{- end }}
       - name: tls
         port: 9093
         type: internal
         tls: true
-        {{- if eq .Values.lsdmesp.internalSecurity.authentication "mtls" }}
         authentication:
           type: tls
-        {{- end }}
       - name: external
         port: 9094
         type: nodeport

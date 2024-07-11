@@ -76,11 +76,11 @@ spec:
           - name: lsdmesp-passwords
             mountPath: /opt/kafka/lsdmesp-passwords
           {{- end }}
-          {{- if eq .Values.internalSecurity.authentication "mtls" }}
+          {{- if .Values.internalSecurity.enabled }}
           - name: lsdmesp
             mountPath: /opt/kafka/certs-lsdmesp
           {{- end }}
-          {{- if or (eq .Values.internalSecurity.authentication "mtls") (.Values.restSecurity.tls.enabled) }}
+          {{- if .Values.internalSecurity.enabled }}
           - name: lsdmesp-cluster-ca-cert
             mountPath: /opt/kafka/certs-cluster-ca
           {{- end }}
@@ -126,12 +126,24 @@ spec:
           - name: KSQL_KSQL_QUERIES_FILE
             value: /etc/ksql/queries/queries.sql
           {{- else }}
+          {{- if .Values.restSecurity.tls.enabled }}
+          - name: KSQL_LISTENERS
+            value: https://0.0.0.0:{{ .Values.servicePort }}
+          {{- else }}
           - name: KSQL_LISTENERS
             value: http://0.0.0.0:{{ .Values.servicePort }}
           {{- end }}
-          {{- if eq .Values.internalSecurity.authentication "mtls" }}
+          {{- end }}
+          {{- if .Values.internalSecurity.enabled }}
           - name: KSQL_SECURITY_PROTOCOL
-            value: "SSL"
+            value: "SASL_SSL"
+          - name: KSQL_SASL_MECHANISM
+            value: "SCRAM-SHA-512"
+          - name: KSQL_SASL_JAAS_CONFIG
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp
+                key: sasl.jaas.config
           - name: KSQL_SSL_TRUSTSTORE_LOCATION
             value: "/opt/kafka/certs-cluster-ca/ca.p12"
           - name: KSQL_SSL_TRUSTSTORE_PASSWORD
@@ -139,18 +151,6 @@ spec:
               secretKeyRef:
                 name: lsdmesp-cluster-ca-cert
                 key: ca.password
-          - name: KSQL_SSL_KEYSTORE_LOCATION
-            value: "/opt/kafka/certs-lsdmesp/user.p12"
-          - name: KSQL_SSL_KEYSTORE_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: lsdmesp
-                key: user.password
-          - name: KSQL_SSL_KEY_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: lsdmesp
-                key: user.password
           - name: KSQL_KSQL_STREAMS_SSL_TRUSTSTORE_LOCATION
             value: "/opt/kafka/certs-cluster-ca/ca.p12"
           - name: KSQL_KSQL_STREAMS_SSL_TRUSTSTORE_PASSWORD
@@ -158,40 +158,21 @@ spec:
               secretKeyRef:
                 name: lsdmesp-cluster-ca-cert
                 key: ca.password
-          - name: KSQL_KSQL_STREAMS_SSL_KEYSTORE_LOCATION
-            value: "/opt/kafka/certs-lsdmesp/user.p12"
-          - name: KSQL_KSQL_STREAMS_SSL_KEYSTORE_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: lsdmesp
-                key: user.password
-          - name: KSQL_KSQL_STREAMS_SSL_KEY_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: lsdmesp
-                key: user.password
           {{- end }}
-          # {{- if .Values.restSecurity.tls.enabled }}
-          # - name: KSQL_SSL_TRUSTSTORE_LOCATION
-          #   value: "/opt/kafka/basicauth/truststore.p12"
-          # - name: KSQL_SSL_TRUSTSTORE_PASSWORD
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: lsdmesp-tls
-          #       key: password
-          # - name: KSQL_SSL_KEYSTORE_LOCATION
-          #   value: "/opt/kafka/basicauth/keystore.p12"
-          # - name: KSQL_SSL_KEYSTORE_PASSWORD
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: lsdmesp-tls
-          #       key: password
-          # - name: KSQL_SSL_KEY_PASSWORD
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: lsdmesp-tls
-          #       key: password
-          # {{- end }}
+          {{- if .Values.restSecurity.tls.enabled }}
+          - name: KSQL_SSL_KEYSTORE_LOCATION
+            value: "/opt/kafka/basicauth/keystore.p12"
+          - name: KSQL_SSL_KEYSTORE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp-tls
+                key: password
+          - name: KSQL_SSL_KEY_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp-tls
+                key: password
+          {{- end }}
           {{- range $key, $value := .Values.configurationOverrides }}
           - name: {{ printf "KSQL_%s" $key | replace "." "_" | upper | quote }}
             value: {{ $value | quote }}
@@ -218,13 +199,13 @@ spec:
           secretName: lsdmesp-passwords
         name: lsdmesp-passwords
       {{- end }}
-      {{- if eq .Values.internalSecurity.authentication "mtls" }}
+      {{- if .Values.internalSecurity.enabled }}
       - name: lsdmesp
         secret:
           defaultMode: 292
           secretName: lsdmesp
       {{- end }}
-      {{- if or (eq .Values.internalSecurity.authentication "mtls") (.Values.restSecurity.tls.enabled) }}
+      {{- if .Values.internalSecurity.enabled }}
       - name: lsdmesp-cluster-ca-cert
         secret:
           defaultMode: 292

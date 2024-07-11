@@ -19,7 +19,7 @@ lsdmesp:
     enableMetrics: false
 
   internalSecurity:
-    authentication: mtls
+    enabled: true
 
   strimzi:
     clusterName: lsdmesp
@@ -124,7 +124,7 @@ cp-helm:
   cp-kafka-connect:
     enabled: true
     internalSecurity:
-      authentication: mtls
+      enabled: true
     restSecurity:
       tls:
         enabled: true
@@ -148,7 +148,7 @@ cp-helm:
     heapOptions: "-Xms512M -Xmx512M"
     kafkaConnectOpts: "-Djava.security.auth.login.config=/opt/kafka/jaas-config/jaas_connect.conf"
     kafka:
-      bootstrapServers: "SSL://lsdmesp-kafka-bootstrap:9093"
+      bootstrapServers: "lsdmesp-kafka-bootstrap:9092"
     cp-schema-registry:
       url: "https://lsdmesp-cp-schema-registry:8081"
     resources:
@@ -164,7 +164,7 @@ cp-helm:
   cp-schema-registry:
     enabled: true
     internalSecurity:
-      authentication: mtls
+      enabled: true
     restSecurity:
       tls:
         enabled: true
@@ -176,7 +176,7 @@ cp-helm:
     heapOptions: "-Xms512m -Xmx512m"
     schemaRegistryOpts: "-Djava.security.auth.login.config=/opt/kafka/jaas-config/jaas_config.conf"
     kafka:
-      bootstrapServers: "SSL://lsdmesp-kafka-bootstrap:9093"
+      bootstrapServers: "lsdmesp-kafka-bootstrap:9092"
     resources:
       limits:
         memory: 2Gi
@@ -190,7 +190,7 @@ cp-helm:
   cp-kafka-rest:
     enabled: true
     internalSecurity:
-      authentication: mtls
+      enabled: true
     restSecurity:
       tls:
         enabled: true
@@ -202,7 +202,7 @@ cp-helm:
     heapOptions: "-Xms512m -Xmx512m"
     kafkaRestOpts: "-Djava.security.auth.login.config=/opt/kafka/jaas-config/jaas_config.conf"
     cp-kafka:
-      bootstrapServers: "SSL://lsdmesp-kafka-bootstrap:9093"
+      bootstrapServers: "lsdmesp-kafka-bootstrap:9092"
     cp-schema-registry:
       url: "https://lsdmesp-cp-schema-registry:8081"
     resources:
@@ -218,7 +218,7 @@ cp-helm:
   cp-ksql-server:
     enabled: true
     internalSecurity:
-      authentication: mtls
+      enabled: true
     restSecurity:
       tls:
         enabled: true
@@ -244,7 +244,7 @@ cp-helm:
       ksql.streams.consumer.max.poll.interval.ms: "86400000"
       ksql.streams.consumer.request.timeout.ms: 60000
     kafka:
-      bootstrapServers: "SSL://lsdmesp-kafka-bootstrap:9093"
+      bootstrapServers: "lsdmesp-kafka-bootstrap:9092"
     cp-schema-registry:
       url: "https://lsdmesp-cp-schema-registry:8081"
     resources:
@@ -412,16 +412,16 @@ strimzi-kafka-operator:
 kafka-ui:
   env:
     - name: KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL
-      value: "SSL"
+      value: "SASL_SSL"
+    - name: KAFKA_CLUSTERS_0_PROPERTIES_SASL_MECHANISM
+      value: "SCRAM-SHA-512"
     - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
-      value: "SSL://lsdmesp-kafka-bootstrap:9093"
-    - name: KAFKA_CLUSTERS_0_PROPERTIES_SSL_KEYSTORE_LOCATION
-      value: "/opt/kafka/certs-lsdmesp/user.p12"
-    - name: KAFKA_CLUSTERS_0_PROPERTIES_SSL_KEYSTORE_PASSWORD
+      value: "lsdmesp-kafka-bootstrap:9092"
+    - name: KAFKA_CLUSTERS_0_PROPERTIES_SASL_JAAS_CONFIG
       valueFrom:
         secretKeyRef:
           name: lsdmesp
-          key: user.password
+          key: sasl.jaas.config
     - name: KAFKA_CLUSTERS_0_PROPERTIES_SSL_TRUSTSTORE_LOCATION
       value: "/opt/kafka/certs-cluster-ca/ca.p12"
     - name: KAFKA_CLUSTERS_0_PROPERTIES_SSL_TRUSTSTORE_PASSWORD
@@ -439,7 +439,7 @@ kafka-ui:
     - name: KAFKA_CLUSTERS_0_PROPERTIES_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM
       value: ""
     - name: KAFKA_CLUSTERS_0_KSQLDBSERVER
-      value: "http://lsdmesp-cp-ksql-server:8088"
+      value: "https://lsdmesp-cp-ksql-server:8088"
     - name: KAFKA_CLUSTERS_0_KSQLDBSERVERAUTH_USERNAME
       value: "bob"
     - name: KAFKA_CLUSTERS_0_KSQLDBSERVERAUTH_PASSWORD

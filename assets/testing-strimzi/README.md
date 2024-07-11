@@ -64,7 +64,7 @@ curl -k -u "bob:bob-secret" -X POST \
 ### List streams:
 
 ```
-curl -u "bob:bob-secret" -X "POST" "http://lsdmesp-cp-ksql-server:8088/ksql" \
+curl -k -u "bob:bob-secret" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
 -H "Accept: application/vnd.ksql.v1+json" \
 -d $'{
 "ksql": "LIST STREAMS;",
@@ -75,7 +75,7 @@ curl -u "bob:bob-secret" -X "POST" "http://lsdmesp-cp-ksql-server:8088/ksql" \
 Show topics:
 
 ```
-curl -u "bob:bob-secret" -X "POST" "http://lsdmesp-cp-ksql-server:8088/ksql" \
+curl -k -u "bob:bob-secret" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
 -H "Accept: application/vnd.ksql.v1+json" \
 -d $'{
 "ksql": "show topics;",
@@ -86,7 +86,7 @@ curl -u "bob:bob-secret" -X "POST" "http://lsdmesp-cp-ksql-server:8088/ksql" \
 ### Create streams:
 
 ```
-curl -u "bob:bob-secret" -X "POST" "http://lsdmesp-cp-ksql-server:8088/ksql" \
+curl -k -u "bob:bob-secret" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
 -H "Accept: application/vnd.ksql.v1+json" \
 -H "Content-Type: application/vnd.ksql.v1+json" \
 -d $'{
@@ -100,7 +100,7 @@ curl -u "bob:bob-secret" -X "POST" "http://lsdmesp-cp-ksql-server:8088/ksql" \
 And the copy stream:
 
 ```
-curl -u "bob:bob-secret" -X "POST" "http://lsdmesp-cp-ksql-server:8088/ksql" \
+curl -k -u "bob:bob-secret" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
 -H "Accept: application/vnd.ksql.v1+json" \
 -H "Content-Type: application/vnd.ksql.v1+json" \
 -d $'{
@@ -114,7 +114,7 @@ curl -u "bob:bob-secret" -X "POST" "http://lsdmesp-cp-ksql-server:8088/ksql" \
 ### Describe Stream
 
 ```
-curl -u "bob:bob-secret" -X "POST" "http://lsdmesp-cp-ksql-server:8088/ksql" \
+curl -k -u "bob:bob-secret" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
 -H "Accept: application/vnd.ksql.v1+json" \
 -d $'{
 "ksql": "describe prod_teamblue_datagen_stream_copy;",

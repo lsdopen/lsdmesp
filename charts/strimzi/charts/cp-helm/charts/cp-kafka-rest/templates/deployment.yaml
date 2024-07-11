@@ -76,11 +76,11 @@ spec:
             - name: lsdmesp-passwords
               mountPath: /opt/kafka/lsdmesp-passwords
           {{- end }}
-          {{- if eq .Values.internalSecurity.authentication "mtls" }}
+          {{- if .Values.internalSecurity.enabled }}
             - name: lsdmesp
               mountPath: /opt/kafka/certs-lsdmesp
           {{- end }}
-          {{- if or (eq .Values.internalSecurity.authentication "mtls") (.Values.restSecurity.tls.enabled) }}
+          {{- if .Values.internalSecurity.enabled }}
             - name: lsdmesp-cluster-ca-cert
               mountPath: /opt/kafka/certs-cluster-ca
           {{- end }}
@@ -127,9 +127,16 @@ spec:
           {{- end }}
           - name: KAFKAREST_HEAP_OPTS
             value: "{{ .Values.heapOptions }}"
-          {{- if eq .Values.internalSecurity.authentication "mtls" }}
+          {{- if .Values.internalSecurity.enabled }}
           - name: KAFKA_REST_CLIENT_SECURITY_PROTOCOL
-            value: "SSL"
+            value: "SASL_SSL"
+          - name: KAFKA_REST_CLIENT_SASL_MECHANISM
+            value: "SCRAM-SHA-512"
+          - name: KAFKA_REST_CLIENT_SASL_JAAS_CONFIG
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp
+                key: sasl.jaas.config
           - name: KAFKA_REST_CLIENT_SSL_TRUSTSTORE_LOCATION
             value: "/opt/kafka/certs-cluster-ca/ca.p12"
           - name: KAFKA_REST_CLIENT_SSL_TRUSTSTORE_PASSWORD
@@ -137,18 +144,6 @@ spec:
               secretKeyRef:
                 name: lsdmesp-cluster-ca-cert
                 key: ca.password
-          - name: KAFKA_REST_CLIENT_SSL_KEYSTORE_LOCATION
-            value: "/opt/kafka/certs-lsdmesp/user.p12"
-          - name: KAFKA_REST_CLIENT_SSL_KEYSTORE_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: lsdmesp
-                key: user.password
-          - name: KAFKA_REST_CLIENT_SSL_KEY_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: lsdmesp
-                key: user.password
           {{- end }}
           {{- if .Values.restSecurity.tls.enabled }}
           - name: KAFKA_REST_SSL_TRUSTSTORE_LOCATION
@@ -201,13 +196,13 @@ spec:
           secretName: lsdmesp-passwords
         name: lsdmesp-passwords
       {{- end }}
-      {{- if eq .Values.internalSecurity.authentication "mtls" }}
+      {{- if .Values.internalSecurity.enabled }}
       - name: lsdmesp
         secret:
           defaultMode: 292
           secretName: lsdmesp
       {{- end }}
-      {{- if or (eq .Values.internalSecurity.authentication "mtls") (.Values.restSecurity.tls.enabled) }}
+      {{- if .Values.internalSecurity.enabled }}
       - name: lsdmesp-cluster-ca-cert
         secret:
           defaultMode: 292

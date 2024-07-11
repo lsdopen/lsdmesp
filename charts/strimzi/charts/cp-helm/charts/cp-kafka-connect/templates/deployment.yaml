@@ -132,9 +132,16 @@ spec:
             - name: CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
               value: "bob:bob-secret"
             {{- end }}
-            {{- if eq .Values.internalSecurity.authentication "mtls" }}
+            {{- if .Values.internalSecurity.enabled }}
             - name: CONNECT_SECURITY_PROTOCOL
-              value: "SSL"
+              value: "SASL_SSL"
+            - name: CONNECT_SASL_MECHANISM
+              value: "SCRAM-SHA-512"
+            - name: CONNECT_SASL_JAAS_CONFIG
+              valueFrom:
+                secretKeyRef:
+                  name: lsdmesp
+                  key: sasl.jaas.config
             - name: CONNECT_SSL_TRUSTSTORE_LOCATION
               value: "/opt/kafka/certs-cluster-ca/ca.p12"
             - name: CONNECT_SSL_TRUSTSTORE_PASSWORD
@@ -142,20 +149,15 @@ spec:
                 secretKeyRef:
                   name: lsdmesp-cluster-ca-cert
                   key: ca.password
-            - name: CONNECT_SSL_KEYSTORE_LOCATION
-              value: "/opt/kafka/certs-lsdmesp/user.p12"
-            - name: CONNECT_SSL_KEYSTORE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: lsdmesp
-                  key: user.password
-            - name: CONNECT_SSL_KEY_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: lsdmesp
-                  key: user.password
             - name: CONNECT_CONSUMER_SECURITY_PROTOCOL
-              value: "SSL"
+              value: "SASL_SSL"
+            - name: CONNECT_CONSUMER_SASL_MECHANISM
+              value: "SCRAM-SHA-512"
+            - name: CONNECT_CONSUMER_SASL_JAAS_CONFIG
+              valueFrom:
+                secretKeyRef:
+                  name: lsdmesp
+                  key: sasl.jaas.config
             - name: CONNECT_CONSUMER_SSL_TRUSTSTORE_LOCATION
               value: "/opt/kafka/certs-cluster-ca/ca.p12"
             - name: CONNECT_CONSUMER_SSL_TRUSTSTORE_PASSWORD
@@ -163,20 +165,15 @@ spec:
                 secretKeyRef:
                   name: lsdmesp-cluster-ca-cert
                   key: ca.password
-            - name: CONNECT_CONSUMER_SSL_KEYSTORE_LOCATION
-              value: "/opt/kafka/certs-lsdmesp/user.p12"
-            - name: CONNECT_CONSUMER_SSL_KEYSTORE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: lsdmesp
-                  key: user.password
-            - name: CONNECT_CONSUMER_SSL_KEY_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: lsdmesp
-                  key: user.password
             - name: CONNECT_PRODUCER_SECURITY_PROTOCOL
-              value: "SSL"
+              value: "SASL_SSL"
+            - name: CONNECT_PRODUCER_SASL_MECHANISM
+              value: "SCRAM-SHA-512"
+            - name: CONNECT_PRODUCER_SASL_JAAS_CONFIG
+              valueFrom:
+                secretKeyRef:
+                  name: lsdmesp
+                  key: sasl.jaas.config
             - name: CONNECT_PRODUCER_SSL_TRUSTSTORE_LOCATION
               value: "/opt/kafka/certs-cluster-ca/ca.p12"
             - name: CONNECT_PRODUCER_SSL_TRUSTSTORE_PASSWORD
@@ -184,18 +181,6 @@ spec:
                 secretKeyRef:
                   name: lsdmesp-cluster-ca-cert
                   key: ca.password
-            - name: CONNECT_PRODUCER_SSL_KEYSTORE_LOCATION
-              value: "/opt/kafka/certs-lsdmesp/user.p12"
-            - name: CONNECT_PRODUCER_SSL_KEYSTORE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: lsdmesp
-                  key: user.password
-            - name: CONNECT_PRODUCER_SSL_KEY_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: lsdmesp
-                  key: user.password
             {{- end }}
             {{- if .Values.restSecurity.tls.enabled }}
             - name: CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION
@@ -245,11 +230,11 @@ spec:
             - name: lsdmesp-passwords
               mountPath: /opt/kafka/lsdmesp-passwords
           {{- end }}
-          {{- if eq .Values.internalSecurity.authentication "mtls" }}
+          {{- if .Values.internalSecurity.enabled }}
             - name: lsdmesp
               mountPath: /opt/kafka/certs-lsdmesp
           {{- end }}
-          {{- if or (eq .Values.internalSecurity.authentication "mtls") (.Values.restSecurity.tls.enabled) }}
+          {{- if .Values.internalSecurity.enabled }}
             - name: lsdmesp-cluster-ca-cert
               mountPath: /opt/kafka/certs-cluster-ca
           {{- end }}
@@ -274,13 +259,13 @@ spec:
           secretName: lsdmesp-passwords
         name: lsdmesp-passwords
       {{- end }}
-      {{- if eq .Values.internalSecurity.authentication "mtls" }}
+      {{- if .Values.internalSecurity.enabled }}
       - name: lsdmesp
         secret:
           defaultMode: 292
           secretName: lsdmesp
       {{- end }}
-      {{- if or (eq .Values.internalSecurity.authentication "mtls") (.Values.restSecurity.tls.enabled) }}
+      {{- if .Values.internalSecurity.enabled }}
       - name: lsdmesp-cluster-ca-cert
         secret:
           defaultMode: 292
