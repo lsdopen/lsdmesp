@@ -70,11 +70,23 @@ spec:
           resources:
 {{ toYaml .Values.resources | indent 12 }}
           volumeMounts:
-          {{- if eq .Values.internalSecurity.authentication "mtls" }}
+          {{- if .Values.restSecurity.basic.enabled }}
+          - name: lsdmesp-jaas-config
+            mountPath: /opt/kafka/jaas-config
+          - name: lsdmesp-passwords
+            mountPath: /opt/kafka/lsdmesp-passwords
+          {{- end }}
+          {{- if .Values.internalSecurity.enabled }}
           - name: lsdmesp
             mountPath: /opt/kafka/certs-lsdmesp
+          {{- end }}
+          {{- if .Values.internalSecurity.enabled }}
           - name: lsdmesp-cluster-ca-cert
             mountPath: /opt/kafka/certs-cluster-ca
+          {{- end }}
+          {{- if .Values.restSecurity.tls.enabled }}
+          - name: lsdmesp-tls
+            mountPath: /opt/kafka/basicauth
           {{- end }}
           {{- if .Values.ksql.headless }}
           - name: ksql-queries
@@ -87,18 +99,54 @@ spec:
             value: {{ template "cp-ksql-server.serviceId" . }}
           - name: KSQL_KSQL_SCHEMA_REGISTRY_URL
             value: {{ template "cp-ksql-server.cp-schema-registry.service-name" . }}
+          {{- if .Values.restSecurity.basic.enabled }}
+          - name: KSQL_KSQL_SCHEMA_REGISTRY_BASIC_AUTH_CREDENTIALS_SOURCE
+            value: "USER_INFO"
+          - name: KSQL_KSQL_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp-api
+                key: user-info
+          - name: KSQL_AUTHENTICATION_METHOD
+            value: "BASIC"
+          - name: KSQL_AUTHENTICATION_ROLES
+            value: "admin,developer"
+          - name: KSQL_AUTHENTICATION_REALM
+            value: "LSDMESPRealm"
+          {{- end }}
+          {{- if .Values.restSecurity.tls.enabled }}
+          - name: KSQL_KSQL_SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION
+            value: "/opt/kafka/basicauth/truststore.p12"
+          - name: KSQL_KSQL_SCHEMA_REGISTRY_SSL_TRUSTSTORE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp-tls
+                key: password
+          {{- end }}
           - name: KSQL_HEAP_OPTS
             value: "{{ .Values.heapOptions }}"
           {{- if .Values.ksql.headless }}
           - name: KSQL_KSQL_QUERIES_FILE
             value: /etc/ksql/queries/queries.sql
           {{- else }}
+          {{- if .Values.restSecurity.tls.enabled }}
           - name: KSQL_LISTENERS
-            value: http://0.0.0.0:8088
+            value: https://0.0.0.0:{{ .Values.servicePort }}
+          {{- else }}
+          - name: KSQL_LISTENERS
+            value: http://0.0.0.0:{{ .Values.servicePort }}
           {{- end }}
-          {{- if eq .Values.internalSecurity.authentication "mtls" }}
+          {{- end }}
+          {{- if .Values.internalSecurity.enabled }}
           - name: KSQL_SECURITY_PROTOCOL
-            value: "SSL"
+            value: "SASL_SSL"
+          - name: KSQL_SASL_MECHANISM
+            value: "SCRAM-SHA-512"
+          - name: KSQL_SASL_JAAS_CONFIG
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp
+                key: sasl.jaas.config
           - name: KSQL_SSL_TRUSTSTORE_LOCATION
             value: "/opt/kafka/certs-cluster-ca/ca.p12"
           - name: KSQL_SSL_TRUSTSTORE_PASSWORD
@@ -106,22 +154,35 @@ spec:
               secretKeyRef:
                 name: lsdmesp-cluster-ca-cert
                 key: ca.password
+          - name: KSQL_KSQL_STREAMS_SSL_TRUSTSTORE_LOCATION
+            value: "/opt/kafka/certs-cluster-ca/ca.p12"
+          - name: KSQL_KSQL_STREAMS_SSL_TRUSTSTORE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp-cluster-ca-cert
+                key: ca.password
+          {{- end }}
+          {{- if .Values.restSecurity.tls.enabled }}
           - name: KSQL_SSL_KEYSTORE_LOCATION
-            value: "/opt/kafka/certs-lsdmesp/user.p12"
+            value: "/opt/kafka/basicauth/keystore.p12"
           - name: KSQL_SSL_KEYSTORE_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: lsdmesp
-                key: user.password
+                name: lsdmesp-tls
+                key: password
           - name: KSQL_SSL_KEY_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: lsdmesp
-                key: user.password
+                name: lsdmesp-tls
+                key: password
           {{- end }}
           {{- range $key, $value := .Values.configurationOverrides }}
           - name: {{ printf "KSQL_%s" $key | replace "." "_" | upper | quote }}
             value: {{ $value | quote }}
+          {{- end }}
+          {{- if .Values.ksqlOpts }}
+          - name: KSQL_OPTS
+            value: "{{ .Values.ksqlOpts }}"
           {{- end }}
           {{- if .Values.jmx.port }}
           - name: JMX_PORT
@@ -132,15 +193,32 @@ spec:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}
       {{- end }}
       volumes:
-      {{- if eq .Values.internalSecurity.authentication "mtls" }}
-      - name: lsdmesp-cluster-ca-cert
-        secret:
-          defaultMode: 292
-          secretName: lsdmesp-cluster-ca-cert
+      {{- if .Values.restSecurity.basic.enabled }}
+      - name: lsdmesp-jaas-config
+        configMap:
+          name: lsdmesp-jaas-config
+      - secret:
+          defaultMode: 420
+          secretName: lsdmesp-passwords
+        name: lsdmesp-passwords
+      {{- end }}
+      {{- if .Values.internalSecurity.enabled }}
       - name: lsdmesp
         secret:
           defaultMode: 292
           secretName: lsdmesp
+      {{- end }}
+      {{- if .Values.internalSecurity.enabled }}
+      - name: lsdmesp-cluster-ca-cert
+        secret:
+          defaultMode: 292
+          secretName: lsdmesp-cluster-ca-cert
+      {{- end }}
+      {{- if .Values.restSecurity.tls.enabled }}
+      - name: lsdmesp-tls
+        secret:
+          defaultMode: 292
+          secretName: lsdmesp-tls
       {{- end }}
       {{- if .Values.prometheus.jmx.enabled }}
       - name: jmx-config

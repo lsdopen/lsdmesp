@@ -1,3 +1,14 @@
+# REST API security
+restSecurity:
+  basic:
+    enabled: false
+    apiUser: lsdmesp-api
+    apiPassword: ""
+    clientUsers: []
+#      "client1": "client1-secret"
+#      "client2": "client2-secret"
+#      "client3": "client3-secret"
+
 ## ------------------------------------------------------
 ## Schema Registry
 ## ------------------------------------------------------
@@ -14,4 +25,10 @@ cp-kafka-rest:
 ## KSQL Server
 ## ------------------------------------------------------
 cp-ksql-server:
+  enabled: false
+
+## ------------------------------------------------------
+## Kafka Connect
+## ------------------------------------------------------
+cp-kafka-connect:
   enabled: false

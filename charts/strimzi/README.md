@@ -15,7 +15,7 @@ kubectl create ns lsdmesp
 
 Create a secret for the ca cert to be used by the Kafka nodeports
 ```
-kubectl get secret ingress-default-cert --namespace=ingress-nginx -o yaml | sed 's/name: .*/name: lsdmesp-external-ca-cert/' | sed 's/namespace: .*/namespace: lsdmesp/' | kubectl apply -f -
+kubectl get secret ingress-default-cert --namespace=ingress-nginx -o yaml | sed 's/name: .*/name: lsdmesp-tls/' | sed 's/namespace: .*/namespace: lsdmesp/' | kubectl apply -f -
 ```
 
 Deploy:
