@@ -2,6 +2,12 @@
 restSecurity:
   basic:
     enabled: false
+    apiUser: lsdmesp-api
+    apiPassword: ""
+    clientUsers: []
+#      "client1": "client1-secret"
+#      "client2": "client2-secret"
+#      "client3": "client3-secret"
 
 ## ------------------------------------------------------
 ## Schema Registry

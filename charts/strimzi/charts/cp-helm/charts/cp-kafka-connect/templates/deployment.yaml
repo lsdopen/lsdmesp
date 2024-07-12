@@ -126,11 +126,17 @@ spec:
             - name: CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_BASIC_AUTH_CREDENTIALS_SOURCE
               value: "USER_INFO"
             - name: CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
-              value: "bob:bob-secret"
+              valueFrom:
+                secretKeyRef:
+                  name: lsdmesp-api
+                  key: user-info
             - name: CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_BASIC_AUTH_CREDENTIALS_SOURCE
               value: "USER_INFO"
             - name: CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
-              value: "bob:bob-secret"
+              valueFrom:
+                secretKeyRef:
+                  name: lsdmesp-api
+                  key: user-info
             {{- end }}
             {{- if .Values.internalSecurity.enabled }}
             - name: CONNECT_SECURITY_PROTOCOL

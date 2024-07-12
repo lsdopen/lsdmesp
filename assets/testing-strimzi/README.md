@@ -38,10 +38,10 @@ Finally connect to the nodeport port for any of the brokers:
 
 ### Create connector
 
-> curl -k -u "bob:bob-secret" -X DELETE https://lsdmesp-cp-kafka-connect:8083/connectors/prod.teamblue.datagen.conn
+> curl -k -u "lsdpmesp-api:oYR3tYgsUAabgaA" -X DELETE https://lsdmesp-cp-kafka-connect:8083/connectors/prod.teamblue.datagen.conn
 
 ```
-curl -k -u "bob:bob-secret" -X POST \
+curl -k -u "lsdpmesp-api:oYR3tYgsUAabgaA" -X POST \
   https://lsdmesp-cp-kafka-connect:8083/connectors \
   -H 'Content-Type: application/json' \
   -d '{
@@ -51,7 +51,7 @@ curl -k -u "bob:bob-secret" -X POST \
     "value.converter.schema.registry.ssl.truststore.location": "/opt/kafka/basicauth/truststore.p12",
     "value.converter.schema.registry.ssl.truststore.password": "112233",
     "value.converter.basic.auth.credentials.source": "USER_INFO",
-    "value.converter.schema.registry.basic.auth.user.info": "bob:bob-secret",
+    "value.converter.schema.registry.basic.auth.user.info": "lsdpmesp-api:oYR3tYgsUAabgaA",
     "name": "prod.teamblue.datagen.conn",
     "connector.class": "io.confluent.kafka.connect.datagen.DatagenConnector",
     "value.converter": "io.confluent.connect.avro.AvroConverter",
@@ -64,7 +64,7 @@ curl -k -u "bob:bob-secret" -X POST \
 ### List streams:
 
 ```
-curl -k -u "bob:bob-secret" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
+curl -k -u "lsdpmesp-api:oYR3tYgsUAabgaA" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
 -H "Accept: application/vnd.ksql.v1+json" \
 -d $'{
 "ksql": "LIST STREAMS;",
@@ -75,7 +75,7 @@ curl -k -u "bob:bob-secret" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql"
 Show topics:
 
 ```
-curl -k -u "bob:bob-secret" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
+curl -k -u "lsdpmesp-api:oYR3tYgsUAabgaA" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
 -H "Accept: application/vnd.ksql.v1+json" \
 -d $'{
 "ksql": "show topics;",
@@ -86,7 +86,7 @@ curl -k -u "bob:bob-secret" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql"
 ### Create streams:
 
 ```
-curl -k -u "bob:bob-secret" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
+curl -k -u "lsdpmesp-api:oYR3tYgsUAabgaA" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
 -H "Accept: application/vnd.ksql.v1+json" \
 -H "Content-Type: application/vnd.ksql.v1+json" \
 -d $'{
@@ -100,7 +100,7 @@ curl -k -u "bob:bob-secret" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql"
 And the copy stream:
 
 ```
-curl -k -u "bob:bob-secret" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
+curl -k -u "lsdpmesp-api:oYR3tYgsUAabgaA" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
 -H "Accept: application/vnd.ksql.v1+json" \
 -H "Content-Type: application/vnd.ksql.v1+json" \
 -d $'{
@@ -114,7 +114,7 @@ curl -k -u "bob:bob-secret" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql"
 ### Describe Stream
 
 ```
-curl -k -u "bob:bob-secret" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
+curl -k -u "lsdpmesp-api:oYR3tYgsUAabgaA" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
 -H "Accept: application/vnd.ksql.v1+json" \
 -d $'{
 "ksql": "describe prod_teamblue_datagen_stream_copy;",
@@ -126,5 +126,5 @@ curl -k -u "bob:bob-secret" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql"
 ### Kafka Rest Proxy Test with Avro Schema
 
 ```
-curl -k -u "bob:bob-secret" -X POST -H "Content-Type: application/vnd.kafka.avro.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data '{"value_schema": "{\"type\": \"record\", \"name\": \"User\", \"fields\": [{\"name\": \"name\", \"type\": \"string\"}]}", "records": [{"value": {"name": "testUser"}}]}' "https://lsdmesp-cp-kafka-rest:8082/topics/avrotest"
+curl -k -u "lsdpmesp-api:oYR3tYgsUAabgaA" -X POST -H "Content-Type: application/vnd.kafka.avro.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data '{"value_schema": "{\"type\": \"record\", \"name\": \"User\", \"fields\": [{\"name\": \"name\", \"type\": \"string\"}]}", "records": [{"value": {"name": "testUser"}}]}' "https://lsdmesp-cp-kafka-rest:8082/topics/avrotest"
 ```

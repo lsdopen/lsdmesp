@@ -108,7 +108,10 @@ spec:
           - name: KAFKA_REST_SCHEMA_REGISTRY_BASIC_AUTH_CREDENTIALS_SOURCE
             value: "USER_INFO"
           - name: KAFKA_REST_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
-            value: "bob:bob-secret"
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp-api
+                key: user-info
           - name: KAFKA_REST_AUTHENTICATION_METHOD
             value: "BASIC"
           - name: KAFKA_REST_AUTHENTICATION_ROLES
