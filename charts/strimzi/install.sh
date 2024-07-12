@@ -19,7 +19,7 @@ kubectl label node kind-worker3 accept-pod=lsdmesp-broker-2
 helm dependency update .
 kubectl create ns lsdmesp
 kubectl config set-context --current --namespace lsdmesp
-kubectl create secret generic lsdmesp-tls --from-file=ca.crt=ca.crt --from-file=tls.crt=lsdmesp.crt --from-file=tls.key=lsdmesp.key --from-file=keystore.p12=keystore.p12 --from-file=truststore.p12=truststore.p12 --from-literal=password=112233
+kubectl create secret generic lsdmesp-tls --from-file=ca.crt=ca.crt --from-file=tls.crt=lsdmesp.crt --from-file=tls.key=lsdmesp.key --from-file=keystore.p12=keystore.p12 --from-file=truststore.p12=truststore.p12 --from-literal=password=112233 --from-literal=jksPassword.txt=jksPassword=112233
 helm install lsdmesp . -f ../../values-strimzi.yaml -n lsdmesp
 
 rm ./lsdmesp.crt

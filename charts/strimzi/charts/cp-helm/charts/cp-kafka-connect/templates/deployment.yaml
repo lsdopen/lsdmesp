@@ -120,6 +120,12 @@ spec:
             - name: KAFKA_OPTS
               value: "{{ .Values.kafkaConnectOpts }}"
             {{- end }}
+            - name: CONNECT_CONFIG_PROVIDERS_FILE_CLASS
+              value: "org.apache.kafka.common.config.provider.FileConfigProvider"
+            - name: CONNECT_CONFIG_PROVIDERS
+              value: "file"
+            - name: CONNECT_CONNECTOR_CLIENT_CONFIG_OVERRIDE_POLICY
+              value: "All"
             {{- if .Values.restSecurity.basic.enabled }}
             - name: CONNECT_REST_EXTENSION_CLASSES
               value: "org.apache.kafka.connect.rest.basic.auth.extension.BasicAuthSecurityRestExtension"

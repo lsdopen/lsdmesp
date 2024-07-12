@@ -38,10 +38,10 @@ Finally connect to the nodeport port for any of the brokers:
 
 ### Create connector
 
-> curl -k -u "lsdpmesp-api:oYR3tYgsUAabgaA" -X DELETE https://lsdmesp-cp-kafka-connect:8083/connectors/prod.teamblue.datagen.conn
+> curl -k -u "lsdmesp-api:oYR3tYgsUAabgaA" -X DELETE https://lsdmesp-cp-kafka-connect:8083/connectors/prod.teamblue.datagen.conn
 
 ```
-curl -k -u "lsdpmesp-api:oYR3tYgsUAabgaA" -X POST \
+curl -k -u "lsdmesp-api:oYR3tYgsUAabgaA" -X POST \
   https://lsdmesp-cp-kafka-connect:8083/connectors \
   -H 'Content-Type: application/json' \
   -d '{
@@ -49,9 +49,9 @@ curl -k -u "lsdpmesp-api:oYR3tYgsUAabgaA" -X POST \
   "config": {
     "value.converter.schema.registry.url": "https://lsdmesp-cp-schema-registry:8081",
     "value.converter.schema.registry.ssl.truststore.location": "/opt/kafka/basicauth/truststore.p12",
-    "value.converter.schema.registry.ssl.truststore.password": "112233",
+    "value.converter.schema.registry.ssl.truststore.password": "${file:/opt/kafka/basicauth/jksPassword.txt:jksPassword}",
     "value.converter.basic.auth.credentials.source": "USER_INFO",
-    "value.converter.schema.registry.basic.auth.user.info": "lsdpmesp-api:oYR3tYgsUAabgaA",
+    "value.converter.schema.registry.basic.auth.user.info": "lsdmesp-api:oYR3tYgsUAabgaA",
     "name": "prod.teamblue.datagen.conn",
     "connector.class": "io.confluent.kafka.connect.datagen.DatagenConnector",
     "value.converter": "io.confluent.connect.avro.AvroConverter",
@@ -64,7 +64,7 @@ curl -k -u "lsdpmesp-api:oYR3tYgsUAabgaA" -X POST \
 ### List streams:
 
 ```
-curl -k -u "lsdpmesp-api:oYR3tYgsUAabgaA" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
+curl -k -u "lsdmesp-api:oYR3tYgsUAabgaA" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
 -H "Accept: application/vnd.ksql.v1+json" \
 -d $'{
 "ksql": "LIST STREAMS;",
@@ -75,7 +75,7 @@ curl -k -u "lsdpmesp-api:oYR3tYgsUAabgaA" -X "POST" "https://lsdmesp-cp-ksql-ser
 Show topics:
 
 ```
-curl -k -u "lsdpmesp-api:oYR3tYgsUAabgaA" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
+curl -k -u "lsdmesp-api:oYR3tYgsUAabgaA" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
 -H "Accept: application/vnd.ksql.v1+json" \
 -d $'{
 "ksql": "show topics;",
@@ -86,7 +86,7 @@ curl -k -u "lsdpmesp-api:oYR3tYgsUAabgaA" -X "POST" "https://lsdmesp-cp-ksql-ser
 ### Create streams:
 
 ```
-curl -k -u "lsdpmesp-api:oYR3tYgsUAabgaA" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
+curl -k -u "lsdmesp-api:oYR3tYgsUAabgaA" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
 -H "Accept: application/vnd.ksql.v1+json" \
 -H "Content-Type: application/vnd.ksql.v1+json" \
 -d $'{
@@ -100,7 +100,7 @@ curl -k -u "lsdpmesp-api:oYR3tYgsUAabgaA" -X "POST" "https://lsdmesp-cp-ksql-ser
 And the copy stream:
 
 ```
-curl -k -u "lsdpmesp-api:oYR3tYgsUAabgaA" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
+curl -k -u "lsdmesp-api:oYR3tYgsUAabgaA" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
 -H "Accept: application/vnd.ksql.v1+json" \
 -H "Content-Type: application/vnd.ksql.v1+json" \
 -d $'{
@@ -114,7 +114,7 @@ curl -k -u "lsdpmesp-api:oYR3tYgsUAabgaA" -X "POST" "https://lsdmesp-cp-ksql-ser
 ### Describe Stream
 
 ```
-curl -k -u "lsdpmesp-api:oYR3tYgsUAabgaA" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
+curl -k -u "lsdmesp-api:oYR3tYgsUAabgaA" -X "POST" "https://lsdmesp-cp-ksql-server:8088/ksql" \
 -H "Accept: application/vnd.ksql.v1+json" \
 -d $'{
 "ksql": "describe prod_teamblue_datagen_stream_copy;",
@@ -126,5 +126,5 @@ curl -k -u "lsdpmesp-api:oYR3tYgsUAabgaA" -X "POST" "https://lsdmesp-cp-ksql-ser
 ### Kafka Rest Proxy Test with Avro Schema
 
 ```
-curl -k -u "lsdpmesp-api:oYR3tYgsUAabgaA" -X POST -H "Content-Type: application/vnd.kafka.avro.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data '{"value_schema": "{\"type\": \"record\", \"name\": \"User\", \"fields\": [{\"name\": \"name\", \"type\": \"string\"}]}", "records": [{"value": {"name": "testUser"}}]}' "https://lsdmesp-cp-kafka-rest:8082/topics/avrotest"
+curl -k -u "lsdmesp-api:oYR3tYgsUAabgaA" -X POST -H "Content-Type: application/vnd.kafka.avro.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data '{"value_schema": "{\"type\": \"record\", \"name\": \"User\", \"fields\": [{\"name\": \"name\", \"type\": \"string\"}]}", "records": [{"value": {"name": "testUser"}}]}' "https://lsdmesp-cp-kafka-rest:8082/topics/avrotest"
 ```
