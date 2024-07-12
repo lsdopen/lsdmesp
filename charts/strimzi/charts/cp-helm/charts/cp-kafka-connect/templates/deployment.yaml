@@ -241,12 +241,12 @@ spec:
               mountPath: /opt/kafka/jaas-config
             - name: lsdmesp-passwords
               mountPath: /opt/kafka/lsdmesp-passwords
+            - name: lsdmesp-api
+              mountPath: /opt/kafka/lsdmesp-api
           {{- end }}
           {{- if .Values.internalSecurity.enabled }}
             - name: lsdmesp
               mountPath: /opt/kafka/certs-lsdmesp
-          {{- end }}
-          {{- if .Values.internalSecurity.enabled }}
             - name: lsdmesp-cluster-ca-cert
               mountPath: /opt/kafka/certs-cluster-ca
           {{- end }}
@@ -270,14 +270,16 @@ spec:
           defaultMode: 420
           secretName: lsdmesp-passwords
         name: lsdmesp-passwords
+      - secret:
+          defaultMode: 420
+          secretName: lsdmesp-api
+        name: lsdmesp-api
       {{- end }}
       {{- if .Values.internalSecurity.enabled }}
       - name: lsdmesp
         secret:
           defaultMode: 292
           secretName: lsdmesp
-      {{- end }}
-      {{- if .Values.internalSecurity.enabled }}
       - name: lsdmesp-cluster-ca-cert
         secret:
           defaultMode: 292

@@ -7,4 +7,5 @@ data:
   user: {{ .Values.restSecurity.basic.apiUser | b64enc | quote }}
   password: {{ .Values.restSecurity.basic.apiPassword | b64enc | quote }}
   user-info: {{ printf "%s:%s" .Values.restSecurity.basic.apiUser .Values.restSecurity.basic.apiPassword  | b64enc | quote }}
+  api-password: {{ printf "apiPassword=%s" .Values.restSecurity.basic.apiPassword  | b64enc | quote }}
 {{- end }}
