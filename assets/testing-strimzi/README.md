@@ -51,7 +51,7 @@ curl -k -u "lsdmesp-api:oYR3tYgsUAabgaA" -X POST \
     "value.converter.schema.registry.ssl.truststore.location": "/opt/kafka/basicauth/truststore.p12",
     "value.converter.schema.registry.ssl.truststore.password": "${file:/opt/kafka/basicauth/jksPassword.txt:jksPassword}",
     "value.converter.basic.auth.credentials.source": "USER_INFO",
-    "value.converter.schema.registry.basic.auth.user.info": "lsdmesp-api:oYR3tYgsUAabgaA",
+    "value.converter.schema.registry.basic.auth.user.info": "lsdmesp-api:${file:/opt/kafka/lsdmesp-api/api-password:apiPassword}",
     "name": "prod.teamblue.datagen.conn",
     "connector.class": "io.confluent.kafka.connect.datagen.DatagenConnector",
     "value.converter": "io.confluent.connect.avro.AvroConverter",
