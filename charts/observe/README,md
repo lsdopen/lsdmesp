@@ -1,15 +1,20 @@
 `kubectl create ns openshift-user-workload-monitoring`
-
-```
-kubectl label ns lsdmesp openshift.io/user-monitoring=true
-kubectl label ns openshift-user-workload-monitoring openshift.io/user-monitoring=true
-```
+`kubectl label ns openshift-user-workload-monitoring openshift.io/user-monitoring=true`
 
 
 `helm install -f ./values-lsdmesp.yaml lsdmesp-monitoring prometheus-community/kube-prometheus-stack -n openshift-user-workload-monitoring`
 
+# If need to upgrade
+
 `helm upgrade -f ./values-lsdmesp.yaml lsdmesp-monitoring prometheus-community/kube-prometheus-stack -n openshift-user-workload-monitoring`
 
+
+# Run LSDMESP Strimzi install
+
+`kubectl label ns lsdmesp openshift.io/user-monitoring=true`
+
+
+# Do this in LSDMESP namespace
 
 `kubectl create configmap dashboard-strimzi-cruise-control --from-file=./dashboards/strimzi-cruise-control.json --dry-run=client -oyaml >./templates/cm.dashboard-strimzi-cruise-control.yaml`
 `kubectl create configmap dashboard-strimzi-kafka-exporter --from-file=./dashboards/strimzi-kafka-exporter.json --dry-run=client -oyaml >./templates/cm.dashboard-strimzi-kafka-exporter.yaml`
