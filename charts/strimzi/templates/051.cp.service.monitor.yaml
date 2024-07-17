@@ -1,0 +1,16 @@
+{{- if .Values.lsdmesp.prometheus.enableMetrics -}}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: cp-metrics
+  labels:
+    release: lsdmesp-monitoring
+spec:
+  selector:
+    matchLabels:
+      release: lsdmesp
+  endpoints:
+  - honorLabels: true
+    port: metrics
+{{- end -}}

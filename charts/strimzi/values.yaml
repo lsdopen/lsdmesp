@@ -16,7 +16,7 @@ lsdmesp:
 
   prometheus:
     # Requires podmonitors.monitoring.coreos.com CRD
-    enableMetrics: false
+    enableMetrics: true
 
   internalSecurity:
     enabled: true
