@@ -8,31 +8,25 @@ import click
 lowercase = list(string.ascii_lowercase)
 uppercase = list(string.ascii_uppercase)
 digits = list(string.digits)
-punctuation = list(string.punctuation)
 
-NUMBER_OF_CHARACTERS = 12
+NUMBER_OF_CHARACTERS = 15
 
 random.shuffle(lowercase)
 random.shuffle(uppercase)
 random.shuffle(digits)
-random.shuffle(punctuation)
 
-
-part_one = round(NUMBER_OF_CHARACTERS * (30 / 100))
+part_one = round(NUMBER_OF_CHARACTERS * (40 / 100))
 part_two = round(NUMBER_OF_CHARACTERS * (20 / 100))
 
 
 result = []
 
 for x in range(part_one):
-
     result.append(lowercase[x])
     result.append(uppercase[x])
 
 for x in range(part_two):
-
     result.append(digits[x])
-    result.append(punctuation[x])
 
 
 def generate_password():
