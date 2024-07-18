@@ -12,14 +12,30 @@ data:
   jmx-kafka-rest-prometheus.yml: |+
     jmxUrl: service:jmx:rmi:///jndi/rmi://localhost:{{ .Values.jmx.port }}/jmxrmi
     lowercaseOutputName: true
-    lowercaseOutputLabelNames: true
+    lowercaseOutputLabelNames: false
     ssl: false
-    whitelistObjectNames:
-    - kafka.rest:type=jetty-metrics
-    - kafka.rest:type=jersey-metrics
     rules:
-    - pattern : 'kafka.rest<type=jetty-metrics>([^:]+):'
-      name: "cp_kafka_rest_jetty_metrics_$1"
-    - pattern : 'kafka.rest<type=jersey-metrics>([^:]+):'
-      name: "cp_kafka_rest_jersey_metrics_$1"
+      # "kafka.rest:type=jetty-metrics"
+      - pattern: "kafka.rest<type=jetty-metrics>([^:]+):"
+        name: "kafka_rest_jetty_metrics_$1"
+      # "kafka.rest:type=jersey-metrics"
+      - pattern: "kafka.rest<type=jersey-metrics>([^:]+):"
+        name: "kafka_rest_jersey_metrics_$1"
+      # "kafka.rest:type=consumer-node-metrics,client-id=*,node-id=*,"
+      # "kafka.rest:type=producer-node-metrics,client-id=*,node-id=*,"
+      - pattern: "kafka.rest<type=(.+), client-id=(.+), node-id=node-(.+)><>(.+): (.+)"
+        name: "kafka_rest_$1_$4"
+        type: GAUGE
+        cache: true
+        labels:
+          client_id: $2
+          node_id: $3
+      # "kafka.rest:type=consumer-metrics,client-id=*"
+      # "kafka.rest:type=producer-metrics,client-id=*"
+      - pattern: "kafka.rest<type=(.+), client-id=(.+)><>(.+): (.+)"
+        name: "kafka_rest_$1_$3"
+        type: GAUGE
+        cache: true
+        labels:
+          client_id: $2
 {{- end }}
