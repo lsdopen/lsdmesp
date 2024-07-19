@@ -5,6 +5,7 @@ lsdmesp:
   clusterType: "kind"
   cpVersion: "7.6.1"
   storageClass: standard
+  environment: dev
   defaultReplicationFactor: 3
   defaultMinInSyncReplicas: 2
   defaultNumPartitions: 6

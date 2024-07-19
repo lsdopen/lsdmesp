@@ -1,16 +1,67 @@
 {{- if .Values.lsdmesp.prometheus.enableMetrics -}}
 ---
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
 metadata:
-  name: cp-metrics
+  name: lsdmesp-cp-kafka-connect-metrics
   labels:
     release: lsdmesp-monitoring
 spec:
-  selector:
-    matchLabels:
-      release: lsdmesp
-  endpoints:
-  - honorLabels: true
-    port: metrics
+  jobName: "lsdmesp-cp-kafka-connect"
+  honorLabels: true
+  staticConfigs:
+    - targets:
+        - "lsdmesp-cp-kafka-connect.lsdmesp.svc.cluster.local:5556"
+      labels:
+        env: {{ .Values.lsdmesp.environment  }}
+        namespace: {{ .Release.Namespace }}
+        kafka_connect_cluster_id: {{ .Release.Name }}
+---
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: lsdmesp-cp-schema-registry-metrics
+  labels:
+    release: lsdmesp-monitoring
+spec:
+  jobName: "lsdmesp-cp-schema-registry"
+  honorLabels: true
+  staticConfigs:
+    - targets:
+        - "lsdmesp-cp-schema-registry.lsdmesp.svc.cluster.local:5556"
+      labels:
+        env: {{ .Values.lsdmesp.environment  }}
+        namespace: {{ .Release.Namespace }}
+---
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: lsdmesp-cp-ksql-server-metrics
+  labels:
+    release: lsdmesp-monitoring
+spec:
+  jobName: "lsdmesp-cp-ksql-server"
+  honorLabels: true
+  staticConfigs:
+    - targets:
+        - "lsdmesp-cp-ksql-server.lsdmesp.svc.cluster.local:5556"
+      labels:
+        env: {{ .Values.lsdmesp.environment  }}
+        namespace: {{ .Release.Namespace }}
+---
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: lsdmesp-cp-kafka-rest-metrics
+  labels:
+    release: lsdmesp-monitoring
+spec:
+  jobName: "lsdmesp-cp-kafka-rest"
+  honorLabels: true
+  staticConfigs:
+    - targets:
+        - "lsdmesp-cp-kafka-rest.lsdmesp.svc.cluster.local:5556"
+      labels:
+        env: {{ .Values.lsdmesp.environment  }}
+        namespace: {{ .Release.Namespace }}
 {{- end -}}
