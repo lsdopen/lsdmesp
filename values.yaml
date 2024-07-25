@@ -111,3 +111,6 @@ lsdmesp:
         cgsOoD7nEeAefu5jKgbfb8j+dT8xf3Fxi67Ps6X6JHXf+wYp9FELpga91wVKGTQQ
         oQIDAQAB
         -----END PUBLIC KEY-----
+
+confluent-for-kubernetes:
+  imagePullSecretRef: ""

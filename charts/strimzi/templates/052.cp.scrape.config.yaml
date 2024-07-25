@@ -1,0 +1,16 @@
+{{- if .Values.lsdmesp.prometheus.enableMetricsA -}}
+---
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: cp-connect-metrics
+  labels:
+    release: lsdmesp-monitoring
+spec:
+  staticConfigs:
+    - targets:
+        - "lsdmesp-cp-kafka-connect.lsdmesp.svc.cluster.local:5556"
+      labels:
+        env: "dev"
+        kafka_connect_cluster_id: "cluster1"
+{{- end -}}

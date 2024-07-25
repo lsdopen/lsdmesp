@@ -1,0 +1,56 @@
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: internal-ksqldb-0
+  namespace: {{ .Release.Namespace }}
+spec:
+  clustersScopeByIds:
+    ksqlClusterId: lsdmesp-confluent.ksqldb_
+  principal:
+    name: cf_ksqldb
+    type: user
+  resourcePatterns:
+  - name: ksql-cluster
+    patternType: LITERAL
+    resourceType: KsqlCluster
+  role: ResourceOwner
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: internal-ksqldb-1
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: cf_ksqldb
+    type: user
+  resourcePatterns:
+  - name: _confluent-ksql-lsdmesp-confluent.ksqldb__command_topic
+    patternType: LITERAL
+    resourceType: Topic
+  - name: lsdmesp-confluent.ksqldb_ksql_processing_log
+    patternType: LITERAL
+    resourceType: Topic
+  - name: _confluent-ksql-lsdmesp-confluent.ksqldb_
+    patternType: PREFIXED
+    resourceType: Group
+  role: ResourceOwner
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: internal-ksqldb-2
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: cf_ksqldb
+    type: user
+  resourcePatterns:
+  - name: kafka-cluster
+    patternType: LITERAL
+    resourceType: Cluster
+  - name: lsdmesp-confluent.ksqldb_
+    patternType: PREFIXED
+    resourceType: TransactionalId
+  role: DeveloperWrite

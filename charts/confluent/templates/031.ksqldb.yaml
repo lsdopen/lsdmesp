@@ -5,6 +5,8 @@ kind: KsqlDB
 metadata:
   name: ksqldb
   namespace: {{ .Release.Namespace }}
+  annotations:
+    platform.confluent.io/disable-internal-rolebindings-creation: "true"  
 spec:
   authorization:
     type: rbac
@@ -26,11 +28,11 @@ spec:
     mds:
       endpoint: https://kafka.{{ .Release.Namespace }}.svc.cluster.local:8090
       tokenKeyPair:
-        secretRef: mds-token
+        directoryPathInContainer: /vault/secrets
       authentication:
         type: bearer
         bearer:
-          secretRef: ksqldb-login
+          directoryPathInContainer: /vault/secrets
       tls:
         enabled: true
     schemaRegistry:
@@ -52,6 +54,24 @@ spec:
   {{- end }}
   oneReplicaPerNode: true
   podTemplate:
+    serviceAccountName: default
+    annotations:
+      vault.hashicorp.com/agent-inject: "true"
+      vault.hashicorp.com/agent-inject-status: update
+      vault.hashicorp.com/preserve-secret-case: "true"
+      vault.hashicorp.com/agent-run-as-user: "0"
+      vault.hashicorp.com/agent-run-as-group: "1000"
+      vault.hashicorp.com/agent-inject-secret-ksqldb-bearer: secret/lsdmesp-confluent/ksqldb/bearer.txt
+      vault.hashicorp.com/agent-inject-file-ksqldb-bearer: bearer.txt
+      vault.hashicorp.com/agent-inject-template-ksqldb-bearer: |
+        {{`{{- with secret "secret/lsdmesp-confluent/ksqldb/bearer.txt" -}}
+        {{ .Data.data.bearer | base64Decode }}{{- end -}}`}}
+      vault.hashicorp.com/agent-inject-secret-mds-publickey: secret/lsdmesp-confluent/mds/mdsPublicKey.pem
+      vault.hashicorp.com/agent-inject-file-mds-publickey: mdsPublicKey.pem
+      vault.hashicorp.com/agent-inject-template-mds-publickey: |
+        {{`{{- with secret "secret/lsdmesp-confluent/mds/mdsPublicKey.pem" -}}
+        {{ .Data.data.mdspublickey | base64Decode }}{{- end -}}`}}
+      vault.hashicorp.com/role: confluent-operator
     podSecurityContext:
       fsGroup: 1000
       runAsUser: 1000

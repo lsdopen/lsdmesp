@@ -1,0 +1,46 @@
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: internal-connect-0
+  namespace: {{ .Release.Namespace }}
+spec:
+  clustersScopeByIds:
+    connectClusterId: lsdmesp-confluent.connect
+  principal:
+    name: cf_connect
+    type: user
+  role: SecurityAdmin
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: internal-connect-1
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: cf_connect
+    type: user
+  resourcePatterns:
+  - name: lsdmesp-confluent.connect
+    patternType: LITERAL
+    resourceType: Group
+  - name: lsdmesp-confluent.connect-
+    patternType: PREFIXED
+    resourceType: Topic
+  role: ResourceOwner
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: internal-connect-2
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: cf_connect
+    type: user
+  resourcePatterns:
+  - name: _confluent-monitoring
+    patternType: PREFIXED
+    resourceType: Topic
+  role: DeveloperWrite

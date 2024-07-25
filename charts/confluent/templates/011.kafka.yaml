@@ -41,7 +41,7 @@ spec:
       authentication:
         type: bearer
         bearer:
-          secretRef: kafka-login
+          directoryPathInContainer: /vault/secrets
     kRaftController:
       clusterRef:
         name: kraftcontroller
@@ -97,6 +97,34 @@ spec:
       enabled: true
   oneReplicaPerNode: true
   podTemplate:
+    serviceAccountName: default
+    annotations:
+      vault.hashicorp.com/agent-inject: "true"
+      vault.hashicorp.com/agent-inject-status: update
+      vault.hashicorp.com/preserve-secret-case: "true"
+      vault.hashicorp.com/agent-run-as-user: "0"
+      vault.hashicorp.com/agent-run-as-group: "1000"
+      vault.hashicorp.com/agent-inject-secret-kafka-bearer: secret/lsdmesp-confluent/kafka/bearer.txt
+      vault.hashicorp.com/agent-inject-file-kafka-bearer: bearer.txt
+      vault.hashicorp.com/agent-inject-template-kafka-bearer: |
+        {{`{{- with secret "secret/lsdmesp-confluent/kafka/bearer.txt" -}}
+        {{ .Data.data.bearer | base64Decode }}{{- end -}}`}}
+      vault.hashicorp.com/agent-inject-secret-mds-publickey: secret/lsdmesp-confluent/mds/mdsPublicKey.pem
+      vault.hashicorp.com/agent-inject-file-mds-publickey: mdsPublicKey.pem
+      vault.hashicorp.com/agent-inject-template-mds-publickey: |
+        {{`{{- with secret "secret/lsdmesp-confluent/mds/mdsPublicKey.pem" -}}
+        {{ .Data.data.mdspublickey | base64Decode }}{{- end -}}`}}
+      vault.hashicorp.com/agent-inject-secret-mds-tokenkeypair: secret/lsdmesp-confluent/mds/mdsTokenKeyPair.pem
+      vault.hashicorp.com/agent-inject-file-mds-tokenkeypair: mdsTokenKeyPair.pem
+      vault.hashicorp.com/agent-inject-template-mds-tokenkeypair: |
+        {{`{{- with secret "secret/lsdmesp-confluent/mds/mdsTokenKeyPair.pem" -}}
+        {{ .Data.data.mdstokenkeypair | base64Decode }}{{- end -}}`}}
+      vault.hashicorp.com/agent-inject-secret-ldap-simple: secret/lsdmesp-confluent/mds/ldap.txt
+      vault.hashicorp.com/agent-inject-file-ldap-simple: ldap.txt
+      vault.hashicorp.com/agent-inject-template-ldap-simple: |
+        {{`{{- with secret "secret/lsdmesp-confluent/mds/ldap.txt" -}}
+        {{ .Data.data.ldapsimple | base64Decode }}{{- end -}}`}}
+      vault.hashicorp.com/role: confluent-operator
     podSecurityContext:
       fsGroup: 1000
       runAsUser: 1000
@@ -112,7 +140,7 @@ spec:
       tls:
         enabled: true
       tokenKeyPair:
-        secretRef: mds-token
+        directoryPathInContainer: /vault/secrets
       provider:
         type: ldap
         ldap:
@@ -120,7 +148,7 @@ spec:
           authentication:
             type: simple
             simple:
-              secretRef: mds-login
+              directoryPathInContainer: /vault/secrets
           configurations:
             groupNameAttribute: cn
             groupObjectClass: groupOfNames

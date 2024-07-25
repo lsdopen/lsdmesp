@@ -1,0 +1,11 @@
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: internal-controlcenter-0
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: cf_controlcenter
+    type: user
+  role: SystemAdmin

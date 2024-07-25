@@ -1,0 +1,33 @@
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: internal-kafkarestproxy-0
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: cf_restproxy
+    type: user
+  resourcePatterns:
+  - name: _confluent-monitoring
+    patternType: PREFIXED
+    resourceType: Topic
+  role: DeveloperWrite
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: internal-kafkarestproxy-1
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: cf_restproxy
+    type: user
+  resourcePatterns:
+  - name: _confluent-license
+    patternType: LITERAL
+    resourceType: Topic
+  - name: _confluent-command
+    patternType: LITERAL
+    resourceType: Topic
+  role: ResourceOwner
