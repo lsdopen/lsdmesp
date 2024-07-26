@@ -70,7 +70,7 @@ vault write auth/demo-auth-mount/role/role1 \
 exit
 ```
 
-### Helm install vault secrets operator and create VaultAuth object
+### Helm install vault secrets operator
 
 ```
 helm install vault-secrets-operator hashicorp/vault-secrets-operator -n vault-secrets-operator-system --create-namespace --values vault-operator-values.yaml
