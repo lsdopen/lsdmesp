@@ -97,6 +97,30 @@ spec:
       enabled: true
   metrics:
     prometheus:
+      blacklist:
+        - "kafka.consumer:type=*,id=*"
+        - "kafka.consumer:type=*,client-id=*"
+        - "kafka.consumer:type=*,client-id=*,node-id=*"
+        - "kafka.producer:type=*,id=*"
+        - "kafka.producer:type=*,client-id=*"
+        - "kafka.producer:type=*,client-id=*,node-id=*"
+        - "kafka.*:type=kafka-metrics-count,*"
+        # This will ignore the admin client metrics from Kafka Brokers and will blacklist certain metrics
+        # that do not make sense for ingestion.
+        # "kafka.admin.client:type=*, node-id=*, client-id=*"
+        # "kafka.admin.client:type=*, client-id=*"
+        # "kafka.admin.client:type=*, id=*"
+        - "kafka.admin.client:*"
+        - "kafka.server:type=*,cipher=*,protocol=*,listener=*,networkProcessor=*"
+        #- "kafka.server:type=*"
+        - "kafka.server:type=app-info,id=*"
+        - "kafka.rest:*"
+        - "rest.utils:*"
+        - "io.confluent.common.security.jetty:*"
+        - "io.confluent.rest:*"
+        - "confluent.metadata.service:type=app-info,id=*"
+        - "confluent.metadata.service:type=app-info,client-id=*"
+        - "confluent.metadata:type=kafkaauthstore,*"
       rules:
         # This rule is more specific than the next rule; it has to come before it otherwise it will never be hit
         # "kafka.server:type=*,name=*, client-id=*, topic=*, partition=*"
