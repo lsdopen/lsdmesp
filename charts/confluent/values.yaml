@@ -28,6 +28,11 @@ lsdmesp:
     image: lsdopen/kafka-army-knife:latest
     replicas: 0
 
+  kafkaLagExporter:
+    enabled: false
+    image: lsdtrip/kafka-lag-exporter:latest
+    replicas: 1
+
   confluentCli:
     enabled: true
     replicas: 0

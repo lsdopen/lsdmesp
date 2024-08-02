@@ -5,6 +5,7 @@ metadata:
     release: lsdmesp-monitoring
     monitoring: confluent
   name: pm-confluent
+  namespace: {{ .Release.Namespace }}
 spec:
   jobLabel: platform.confluent.io/type
   podMetricsEndpoints:

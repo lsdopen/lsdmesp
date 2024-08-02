@@ -1,0 +1,118 @@
+{{- if .Values.lsdmesp.kafkaLagExporter.enabled -}}
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: sc-kafka-lag-exporter
+  namespace: {{ .Release.Namespace }}
+  labels:
+    release: lsdmesp-monitoring
+    monitoring: confluent
+spec:
+  jobName: "kafka-lag-exporter"
+  honorLabels: true
+  staticConfigs:
+    - targets:
+        - "kafka-lag-exporter.{{ .Release.Namespace }}.svc.cluster.local:9999"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-lag-exporter
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: kafka-lag-exporter
+spec:
+  ports:
+    - name: prometheus
+      port: 9999
+  selector:
+    app: kafka-lag-exporter
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kafka-lag-exporter-application-conf
+  namespace: {{ .Release.Namespace }}
+stringData:
+  application.conf: |-
+    kafka-lag-exporter {
+      reporters {
+        prometheus {
+          port = 9999
+        }
+      }
+
+      client-group-id = "kafkaLagExporter"
+      lookup-table-size = 120
+
+      clusters = [
+        {
+          name = "lsdmesp-cluster"
+          bootstrap-brokers = "kafka.{{ .Release.Namespace }}.svc.cluster.local:9092"
+
+          admin-client-properties = {
+            client.id = "admin-client-id"
+            security.protocol = "SASL_SSL"
+            sasl.mechanism = "PLAIN"
+            sasl.jaas.config = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"{{ .Values.lsdmesp.confluent.kafka.username }}\" password=\"{{ .Values.lsdmesp.confluent.kafka.password }}\";"
+            ssl.truststore.location = "/root/lsdmesp.truststore.jks"
+            ssl.truststore.password = "112233"
+          }
+
+          consumer-properties = {
+            client.id = "consumer-client-id"
+            security.protocol = "SASL_SSL"
+            sasl.mechanism = "PLAIN"
+            sasl.jaas.config = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"{{ .Values.lsdmesp.confluent.kafka.username }}\" password=\"{{ .Values.lsdmesp.confluent.kafka.password }}\";"
+            ssl.truststore.location = "/root/lsdmesp.truststore.jks"
+            ssl.truststore.password = "112233"
+          }
+        }
+      ]
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-lag-exporter
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: kafka-lag-exporter
+spec:
+  replicas: {{ .Values.lsdmesp.kafkaLagExporter.replicas }}
+  selector:
+    matchLabels:
+      app: kafka-lag-exporter
+  template:
+    metadata:
+      labels:
+        app: kafka-lag-exporter
+    spec:
+      containers:
+        - image: {{ .Values.lsdmesp.kafkaLagExporter.image }}
+          imagePullPolicy: IfNotPresent
+          name: kafka-lag-exporter
+          lifecycle:
+            postStart:
+              exec:
+                command: [ 'sh', '-c', "keytool -keystore /root/lsdmesp.truststore.jks -alias CARoot -importcert -file /root/certs/ca.pem -storepass 112233 -noprompt" ]
+          volumeMounts:
+            - mountPath: /root/etc
+              name: kafka-lag-exporter-application-conf
+            - mountPath: /root/certs
+              name: ca-pair-sslcerts-tls-crt
+          securityContext:
+            runAsUser: 0
+      volumes:
+        - secret:
+            defaultMode: 420
+            secretName: kafka-lag-exporter-application-conf
+          name: kafka-lag-exporter-application-conf
+        - secret:
+            defaultMode: 420
+            secretName: ca-pair-sslcerts
+            items:
+              - key: tls.crt
+                path: ca.pem
+          name: ca-pair-sslcerts-tls-crt
+{{- end -}}
