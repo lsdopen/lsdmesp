@@ -7,7 +7,7 @@ setup(
     version="0.0.1",
     packages=find_packages(),
     include_package_data=True,
-    package_data={"src": ["app/values.json", "app/scripts/*.sh"]},
+    package_data={"src": ["app/data/*.json", "app/scripts/*.sh"]},
     install_requires=[
         "click",
         "pem",

@@ -1,4 +1,5 @@
 import click
+from src.app.create_text_files import create_txt_files, users_template
 from src.app.create_tls_artifact import generate_tls_artifacts
 from src.app.create_values_yaml import write_yaml
 from src.app.settings import VALUES, VALUES_YAML_PATH
@@ -28,9 +29,18 @@ def create_values_yaml():
 
 
 @cli.command()
+def create_txt_credentials():
+    """
+    Create text credential files to use with Vault
+    """
+    create_txt_files(users_template)
+
+
+@cli.command()
 def create_all_artifacts():
     """
     Creates all authentication artifacts.
     """
     generate_tls_artifacts()
     write_yaml(VALUES_YAML_PATH, VALUES)
+    create_txt_files(users_template)

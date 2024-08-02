@@ -35,3 +35,7 @@ venv/
 
 # Additional
 tmp/
+
+# Credentials
+*.pem
+*.txt

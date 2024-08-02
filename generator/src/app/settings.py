@@ -13,11 +13,17 @@ if os.environ.get("PROJECT_HOME"):
 else:
     click.echo("Please set the PROJECT_HOME directory: export PROJECT_HOME=$PWD")
 
+CA = CREDENTIALS_PATH / "ca.pem"
+CA_KEY = CREDENTIALS_PATH / "ca-key.pem"
+MDS_PUBLIC_KEY = CREDENTIALS_PATH / "mds-publickey.pem"
+MDS_TOKEN_KEY_PAIR = CREDENTIALS_PATH / "mds-tokenkeypair.pem"
+
 TLS_SCRIPT = BASE_DIR / "app" / "scripts" / "tls_artifact.sh"
 
-VALUES_JSON = BASE_DIR / "app" / "values.json"
+VALUES_JSON = BASE_DIR / "app" / "data" / "values.json"
 with open(VALUES_JSON, "r") as file:
     VALUES = json.load(file)
+
 
 if __name__ == "__main__":
     pass

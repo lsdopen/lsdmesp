@@ -1,0 +1,26 @@
+{
+    "connect": {
+        "username": "cf_connect",
+        "password": "placeholder"
+    },
+    "controlcenter": {
+        "username": "cf_controlcenter",
+        "password": "placeholder"
+    },
+    "kafka": {
+        "username": "cf_kafka",
+        "password": "placeholder"
+    },
+    "kafkarestproxy": {
+        "username": "cf_restproxy",
+        "password": "placeholder"
+    },
+    "ksqldb": {
+        "username": "cf_ksqldb",
+        "password": "placeholder"
+    },
+    "schemaregistry": {
+        "username": "cf_schemaregistry",
+        "password": "placeholder"
+    }
+}
