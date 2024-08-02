@@ -13,6 +13,30 @@ data:
     jmxUrl: service:jmx:rmi:///jndi/rmi://localhost:{{ .Values.jmx.port }}/jmxrmi
     lowercaseOutputName: true
     lowercaseOutputLabelNames: false
+    whitelistObjectNames:
+      - "io.confluent.ksql.metrics:*"
+      # The two lines below are used to pull the Kafka Client Producer & consumer metrics from KSQL Client.
+      # If you care about Producer/Consumer metrics for KSQL, please uncomment 2 lines below.
+      # Please note that this increases the scrape duration to about 1 second as it needs to parse a lot of data.
+      - "kafka.consumer:*"
+      - "kafka.producer:*"
+      - "kafka.streams:*"
+    blacklistObjectNames:
+      - "io.confluent.ksql.metrics:name=*"
+      - kafka.streams:type=kafka-metrics-count
+      # This will ignore the admin client metrics from KSQL server and will blacklist certain metrics
+      # that do not make sense for ingestion.
+      - "kafka.admin.client:*"
+      - "kafka.consumer:type=*,id=*"
+      - "kafka.consumer:type=*,client-id=*"
+      - "kafka.consumer:type=*,client-id=*,node-id=*"
+      - "kafka.producer:type=*,id=*"
+      - "kafka.producer:type=*,client-id=*"
+      - "kafka.producer:type=*,client-id=*,node-id=*"
+      - "kafka.streams:type=stream-processor-node-metrics,thread-id=*,task-id=*,processor-node-id=*"
+      - "kafka.*:type=kafka-metrics-count,*"
+      - "io.confluent.ksql.metrics:type=_confluent-ksql-rest-app-command-runner,*"
+      - "io.confluent.ksql.metrics:type=ksql-queries,query-id=*,*"
     ssl: false
     rules:
       # "io.confluent.ksql.metrics:type=producer-metrics,key=*,id=*"
