@@ -55,7 +55,7 @@ stringData:
             security.protocol = "SASL_SSL"
             sasl.mechanism = "PLAIN"
             sasl.jaas.config = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"{{ .Values.lsdmesp.confluent.kafka.username }}\" password=\"{{ .Values.lsdmesp.confluent.kafka.password }}\";"
-            ssl.truststore.location = "/root/lsdmesp.truststore.jks"
+            ssl.truststore.location = "/home/kafka/lsdmesp.truststore.jks"
             ssl.truststore.password = "112233"
           }
 
@@ -64,7 +64,7 @@ stringData:
             security.protocol = "SASL_SSL"
             sasl.mechanism = "PLAIN"
             sasl.jaas.config = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"{{ .Values.lsdmesp.confluent.kafka.username }}\" password=\"{{ .Values.lsdmesp.confluent.kafka.password }}\";"
-            ssl.truststore.location = "/root/lsdmesp.truststore.jks"
+            ssl.truststore.location = "/home/kafka/lsdmesp.truststore.jks"
             ssl.truststore.password = "112233"
           }
         }
@@ -95,14 +95,12 @@ spec:
           lifecycle:
             postStart:
               exec:
-                command: [ 'sh', '-c', "keytool -keystore /root/lsdmesp.truststore.jks -alias CARoot -importcert -file /root/certs/ca.pem -storepass 112233 -noprompt" ]
+                command: [ 'sh', '-c', "keytool -keystore /home/kafka/lsdmesp.truststore.jks -alias CARoot -importcert -file /opt/certs/ca.pem -storepass 112233 -noprompt" ]
           volumeMounts:
-            - mountPath: /root/etc
+            - mountPath: /opt/etc
               name: kafka-lag-exporter-application-conf
-            - mountPath: /root/certs
+            - mountPath: /opt/certs
               name: ca-pair-sslcerts-tls-crt
-          securityContext:
-            runAsUser: 0
       volumes:
         - secret:
             defaultMode: 420

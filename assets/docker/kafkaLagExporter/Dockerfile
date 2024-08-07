@@ -14,6 +14,7 @@ RUN cd /tmp && \
 
 WORKDIR /opt
 VOLUME /opt/etc
+VOLUME /opt/certs
 
 ADD logback.xml logback.xml
 ADD container_entry.sh container_entry.sh
