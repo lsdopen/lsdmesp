@@ -8,7 +8,7 @@ lsdmesp:
   defaultNumPartitions: 6
 
   security:
-    enabledDemo: false
+    enabledDemo: true
     vault:
       enabled: false
       type: kv-v2
@@ -26,7 +26,7 @@ lsdmesp:
   armyKnife:
     enabled: true
     image: lsdopen/kafka-army-knife:latest
-    replicas: 0
+    replicas: 1
 
   confluentCli:
     enabled: true
@@ -60,52 +60,52 @@ lsdmesp:
     env: {}
 
     # Add additional ldifs to the core confluent ones
-    extra_ldifs: {}
-#      07_cf_support.ldif: |-
-#        dn: cn=bob,ou=users,{{ LDAP_BASE_DN }}
-#        userPassword: bob-secret
-#        description: Example user
-#        objectClass: simpleSecurityObject
-#        objectClass: organizationalRole
-#        cn: bob
-#
-#        dn: cn=dave,ou=users,{{ LDAP_BASE_DN }}
-#        userPassword: dave-secret
-#        description: Example user
-#        objectClass: simpleSecurityObject
-#        objectClass: organizationalRole
-#        cn: dave
-#
-#        dn: cn=peter,ou=users,{{ LDAP_BASE_DN }}
-#        userPassword: peter-secret
-#        description: Example user
-#        objectClass: simpleSecurityObject
-#        objectClass: organizationalRole
-#        cn: peter
-#
-#        dn: cn=jane,ou=users,{{ LDAP_BASE_DN }}
-#        userPassword: jane-secret
-#        description: Example user
-#        objectClass: simpleSecurityObject
-#        objectClass: organizationalRole
-#        cn: jane
-#
-#        dn: cn=TeamBlueRead,ou=groups,{{ LDAP_BASE_DN }}
-#        cn: TeamBlueRead
-#        objectClass: groupOfNames
-#        member: cn=bob,ou=users,{{ LDAP_BASE_DN }}
-#        member: cn=jane,ou=users,{{ LDAP_BASE_DN }}
-#
-#        dn: cn=TeamBlueWrite,ou=groups,{{ LDAP_BASE_DN }}
-#        cn: TeamBlueWrite
-#        objectClass: groupOfNames
-#        member: cn=bob,ou=users,{{ LDAP_BASE_DN }}
-#        member: cn=dave,ou=users,{{ LDAP_BASE_DN }}
-#
-#        dn: cn=TeamBlueAdmin,ou=groups,{{ LDAP_BASE_DN }}
-#        cn: TeamBlueAdmin
-#        objectClass: groupOfNames
-#        member: cn=peter,ou=users,{{ LDAP_BASE_DN }}
+    extra_ldifs: 
+      07_cf_support.ldif: |-
+        dn: cn=bob,ou=users,{{ LDAP_BASE_DN }}
+        userPassword: bob-secret
+        description: Example user
+        objectClass: simpleSecurityObject
+        objectClass: organizationalRole
+        cn: bob
+
+        dn: cn=dave,ou=users,{{ LDAP_BASE_DN }}
+        userPassword: dave-secret
+        description: Example user
+        objectClass: simpleSecurityObject
+        objectClass: organizationalRole
+        cn: dave
+
+        dn: cn=peter,ou=users,{{ LDAP_BASE_DN }}
+        userPassword: peter-secret
+        description: Example user
+        objectClass: simpleSecurityObject
+        objectClass: organizationalRole
+        cn: peter
+
+        dn: cn=jane,ou=users,{{ LDAP_BASE_DN }}
+        userPassword: jane-secret
+        description: Example user
+        objectClass: simpleSecurityObject
+        objectClass: organizationalRole
+        cn: jane
+
+        dn: cn=TeamBlueRead,ou=groups,{{ LDAP_BASE_DN }}
+        cn: TeamBlueRead
+        objectClass: groupOfNames
+        member: cn=bob,ou=users,{{ LDAP_BASE_DN }}
+        member: cn=jane,ou=users,{{ LDAP_BASE_DN }}
+
+        dn: cn=TeamBlueWrite,ou=groups,{{ LDAP_BASE_DN }}
+        cn: TeamBlueWrite
+        objectClass: groupOfNames
+        member: cn=bob,ou=users,{{ LDAP_BASE_DN }}
+        member: cn=dave,ou=users,{{ LDAP_BASE_DN }}
+
+        dn: cn=TeamBlueAdmin,ou=groups,{{ LDAP_BASE_DN }}
+        cn: TeamBlueAdmin
+        objectClass: groupOfNames
+        member: cn=peter,ou=users,{{ LDAP_BASE_DN }}
 
   confluent:
     kraftcontroller:
@@ -317,7 +317,7 @@ lsdmesp:
         # -- Annotations for the Control Center ingress
         annotations: {}
         # -- Base domain configuration for the Control Center ingress
-        baseDomain: "example.com"
+        baseDomain: "apps.mesp.lsdopen.io"
         # -- TLS host configuration will be dynamically built based on the base domain. You can change the secret name here.
         tls:
           secretName: controlcenter-tls

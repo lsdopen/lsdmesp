@@ -33,6 +33,9 @@ spec:
         - name: debezium-connector-mysql
           owner: debezium
           version: 2.2.1
+        - name: debezium-connector-postgresql
+          owner: debezium
+          version: 2.5.4
         - name: kafka-connect-elasticsearch-source
           owner: dariobalinzo
           version: 1.5.5
