@@ -1,0 +1,4 @@
+cp-helm:
+  restSecurity:
+    basic:
+      apiPassword: oYR3tYgsUAabgaA

@@ -1,0 +1,2 @@
+openssl req -new -key ca-key.pem -x509 -days 3650 -out ca.pem -subj "/C=US/ST=CA/L=MountainView/O=Confluent/OU=Operator/CN=LocalCA" -config sans.conf -extensions 'v3_req'
+openssl x509 -in ca.pem -noout -text

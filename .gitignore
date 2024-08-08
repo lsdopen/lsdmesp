@@ -32,3 +32,10 @@ MANIFEST
 .venv
 env/
 venv/
+
+# Additional
+tmp/
+
+# Credentials
+*.pem
+*.txt

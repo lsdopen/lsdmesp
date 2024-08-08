@@ -1,0 +1,47 @@
+alertmanager:
+  enabled: true
+  ingress:
+    enabled: true
+    hosts:
+      - alertmanager.apps.mesp.lsdopen.io
+    paths:
+      - /
+    tls:
+      - hosts:
+        - alertmanager.apps.mesp.lsdopen.io
+
+grafana:
+  enabled: true
+  ingress:
+    enabled: true
+    hosts:
+      - grafana.apps.mesp.lsdopen.io
+    path: /
+    tls:
+      - hosts:
+        - grafana.apps.mesp.lsdopen.io
+
+prometheus:
+  enabled: true
+  ingress:
+    enabled: true
+    hosts:
+      - prometheus.apps.mesp.lsdopen.io
+    paths:
+      - /
+    tls: 
+      - hosts:
+        - prometheus.apps.mesp.lsdopen.io
+  prometheusSpec:
+    podMonitorSelectorNilUsesHelmValues: true
+    podMonitorNamespaceSelector: {}
+    podMonitorSelector: {}
+    probeSelectorNilUsesHelmValues: true
+    probeNamespaceSelector: {}
+    probeSelector: {}
+    ruleSelectorNilUsesHelmValues: true
+    ruleNamespaceSelector: {}
+    ruleSelector: {}
+    serviceMonitorSelectorNilUsesHelmValues: true
+    serviceMonitorNamespaceSelector: {}
+    serviceMonitorSelector: {}

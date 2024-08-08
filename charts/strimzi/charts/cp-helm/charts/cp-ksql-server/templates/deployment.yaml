@@ -1,0 +1,244 @@
+{{- if .Capabilities.APIVersions.Has "apps/v1" }}
+apiVersion: apps/v1
+{{- else }}
+apiVersion: apps/v1beta2
+{{- end }}
+kind: Deployment
+metadata:
+  name: {{ template "cp-ksql-server.fullname" . }}
+  labels:
+    app: {{ template "cp-ksql-server.name" . }}
+    chart: {{ template "cp-ksql-server.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "cp-ksql-server.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "cp-ksql-server.name" . }}
+        release: {{ .Release.Name }}
+      {{- if or .Values.podAnnotations .Values.prometheus.jmx.enabled }}
+      annotations:
+      {{- range $key, $value := .Values.podAnnotations }}
+        {{ $key }}: {{ $value | quote }}
+      {{- end }}
+      {{- if .Values.prometheus.jmx.enabled }}
+        prometheus.io/scrape: "true"
+        prometheus.io/port: {{ .Values.prometheus.jmx.port | quote }}
+      {{- end }}
+      {{- end }}
+    spec:
+      containers:
+        {{- if .Values.prometheus.jmx.enabled }}
+        - name: prometheus-jmx-exporter
+          image: "{{ .Values.prometheus.jmx.image }}:{{ .Values.prometheus.jmx.imageTag }}"
+          imagePullPolicy: "{{ .Values.prometheus.jmx.imagePullPolicy }}"
+          command:
+          - java
+          - -XX:+UnlockExperimentalVMOptions
+          - -XX:+UseCGroupMemoryLimitForHeap
+          - -XX:MaxRAMFraction=1
+          - -XshowSettings:vm
+          - -jar
+          - jmx_prometheus_httpserver.jar
+          - {{ .Values.prometheus.jmx.port | quote }}
+          - /etc/jmx-ksql-server/jmx-ksql-server-prometheus.yml
+          ports:
+          - containerPort: {{ .Values.prometheus.jmx.port }}
+          resources:
+{{ toYaml .Values.prometheus.jmx.resources | indent 12 }}
+          volumeMounts:
+          - name: jmx-config
+            mountPath: /etc/jmx-ksql-server
+        {{- end }}
+        - name: {{ template "cp-ksql-server.name" . }}
+          image: "{{ .Values.image }}:{{ .Values.imageTag }}"
+          imagePullPolicy: "{{ .Values.imagePullPolicy }}"
+          ports:
+            - name: server
+              containerPort: {{ .Values.servicePort}}
+              protocol: TCP
+            {{- if .Values.prometheus.jmx.enabled }}
+            - containerPort: {{ .Values.jmx.port }}
+              name: jmx
+            {{- end }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          volumeMounts:
+          {{- if .Values.restSecurity.basic.enabled }}
+          - name: lsdmesp-jaas-config
+            mountPath: /opt/kafka/jaas-config
+          - name: lsdmesp-passwords
+            mountPath: /opt/kafka/lsdmesp-passwords
+          {{- end }}
+          {{- if .Values.internalSecurity.enabled }}
+          - name: lsdmesp
+            mountPath: /opt/kafka/certs-lsdmesp
+          {{- end }}
+          {{- if .Values.internalSecurity.enabled }}
+          - name: lsdmesp-cluster-ca-cert
+            mountPath: /opt/kafka/certs-cluster-ca
+          {{- end }}
+          {{- if .Values.restSecurity.tls.enabled }}
+          - name: lsdmesp-tls
+            mountPath: /opt/kafka/basicauth
+          {{- end }}
+          {{- if .Values.ksql.headless }}
+          - name: ksql-queries
+            mountPath: /etc/ksql/queries
+          {{- end }}
+          env:
+          - name: KSQL_BOOTSTRAP_SERVERS
+            value: {{ template "cp-ksql-server.kafka.bootstrapServers" . }}
+          - name: KSQL_KSQL_SERVICE_ID
+            value: {{ template "cp-ksql-server.serviceId" . }}
+          - name: KSQL_KSQL_SCHEMA_REGISTRY_URL
+            value: {{ template "cp-ksql-server.cp-schema-registry.service-name" . }}
+          {{- if .Values.restSecurity.basic.enabled }}
+          - name: KSQL_KSQL_SCHEMA_REGISTRY_BASIC_AUTH_CREDENTIALS_SOURCE
+            value: "USER_INFO"
+          - name: KSQL_KSQL_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp-api
+                key: user-info
+          - name: KSQL_AUTHENTICATION_METHOD
+            value: "BASIC"
+          - name: KSQL_AUTHENTICATION_ROLES
+            value: "admin,developer"
+          - name: KSQL_AUTHENTICATION_REALM
+            value: "LSDMESPRealm"
+          {{- end }}
+          {{- if .Values.restSecurity.tls.enabled }}
+          - name: KSQL_KSQL_SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION
+            value: "/opt/kafka/basicauth/truststore.p12"
+          - name: KSQL_KSQL_SCHEMA_REGISTRY_SSL_TRUSTSTORE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp-tls
+                key: password
+          {{- end }}
+          - name: KSQL_HEAP_OPTS
+            value: "{{ .Values.heapOptions }}"
+          {{- if .Values.ksql.headless }}
+          - name: KSQL_KSQL_QUERIES_FILE
+            value: /etc/ksql/queries/queries.sql
+          {{- else }}
+          {{- if .Values.restSecurity.tls.enabled }}
+          - name: KSQL_LISTENERS
+            value: https://0.0.0.0:{{ .Values.servicePort }}
+          {{- else }}
+          - name: KSQL_LISTENERS
+            value: http://0.0.0.0:{{ .Values.servicePort }}
+          {{- end }}
+          {{- end }}
+          {{- if .Values.internalSecurity.enabled }}
+          - name: KSQL_SECURITY_PROTOCOL
+            value: "SASL_SSL"
+          - name: KSQL_SASL_MECHANISM
+            value: "SCRAM-SHA-512"
+          - name: KSQL_SASL_JAAS_CONFIG
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp
+                key: sasl.jaas.config
+          - name: KSQL_SSL_TRUSTSTORE_LOCATION
+            value: "/opt/kafka/certs-cluster-ca/ca.p12"
+          - name: KSQL_SSL_TRUSTSTORE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp-cluster-ca-cert
+                key: ca.password
+          - name: KSQL_KSQL_STREAMS_SSL_TRUSTSTORE_LOCATION
+            value: "/opt/kafka/certs-cluster-ca/ca.p12"
+          - name: KSQL_KSQL_STREAMS_SSL_TRUSTSTORE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp-cluster-ca-cert
+                key: ca.password
+          {{- end }}
+          {{- if .Values.restSecurity.tls.enabled }}
+          - name: KSQL_SSL_KEYSTORE_LOCATION
+            value: "/opt/kafka/basicauth/keystore.p12"
+          - name: KSQL_SSL_KEYSTORE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp-tls
+                key: password
+          - name: KSQL_SSL_KEY_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: lsdmesp-tls
+                key: password
+          {{- end }}
+          {{- range $key, $value := .Values.configurationOverrides }}
+          - name: {{ printf "KSQL_%s" $key | replace "." "_" | upper | quote }}
+            value: {{ $value | quote }}
+          {{- end }}
+          {{- if .Values.ksqlOpts }}
+          - name: KSQL_OPTS
+            value: "{{ .Values.ksqlOpts }}"
+          {{- end }}
+          {{- if .Values.jmx.port }}
+          - name: JMX_PORT
+            value: "{{ .Values.jmx.port }}"
+          {{- end }}
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.imagePullSecrets | indent 8 }}
+      {{- end }}
+      volumes:
+      {{- if .Values.restSecurity.basic.enabled }}
+      - name: lsdmesp-jaas-config
+        configMap:
+          name: lsdmesp-jaas-config
+      - secret:
+          defaultMode: 420
+          secretName: lsdmesp-passwords
+        name: lsdmesp-passwords
+      {{- end }}
+      {{- if .Values.internalSecurity.enabled }}
+      - name: lsdmesp
+        secret:
+          defaultMode: 292
+          secretName: lsdmesp
+      {{- end }}
+      {{- if .Values.internalSecurity.enabled }}
+      - name: lsdmesp-cluster-ca-cert
+        secret:
+          defaultMode: 292
+          secretName: lsdmesp-cluster-ca-cert
+      {{- end }}
+      {{- if .Values.restSecurity.tls.enabled }}
+      - name: lsdmesp-tls
+        secret:
+          defaultMode: 292
+          secretName: lsdmesp-tls
+      {{- end }}
+      {{- if .Values.prometheus.jmx.enabled }}
+      - name: jmx-config
+        configMap:
+          name: {{ template "cp-ksql-server.fullname" . }}-jmx-configmap
+      {{- end }}
+      {{- if .Values.ksql.headless }}
+      - name: ksql-queries
+        configMap:
+          name: {{ template "cp-ksql-server.fullname" . }}-ksql-queries-configmap
+      {{- end }}
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+      {{- end }}
+      {{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+      {{- end }}
+      {{- if .Values.affinity }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+      {{- end }}

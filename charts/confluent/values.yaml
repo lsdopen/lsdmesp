@@ -9,11 +9,29 @@ lsdmesp:
 
   security:
     enabledDemo: false
+    vault:
+      enabled: false
+      type: kv-v2
+      mount: kvv2
+      subPath: confluent
+      auth:
+        name: static-auth
+        mount: demo-auth-mount
+        kubernetes:
+          role: role1
+          serviceAccount: default
+          audiences:
+            - vault
 
   armyKnife:
     enabled: true
     image: lsdopen/kafka-army-knife:latest
     replicas: 0
+
+  kafkaLagExporter:
+    enabled: false
+    image: lsdtrip/kafka-lag-exporter:latest
+    replicas: 1
 
   confluentCli:
     enabled: true

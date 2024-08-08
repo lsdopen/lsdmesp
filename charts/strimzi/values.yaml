@@ -2,30 +2,92 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 lsdmesp:
-  clusterType: "rancher"
-  cpVersion: &anchorcpVersion "7.6.1"
+  clusterType: "kind"
+  cpVersion: "7.6.1"
+  storageClass: standard
+  environment: dev
+  defaultReplicationFactor: 3
+  defaultMinInSyncReplicas: 2
+  defaultNumPartitions: 6
   confluentKsqldbURL: &anchorconfluentKsqldbURL "ksqldb.apps.mesp.lsdopen.io"
   confluentSchemaRegistryURL: &anchorconfluentSchemaRegistryURL "schema-registry.apps.mesp.lsdopen.io"
   strimziConnectURL: &anchorstrimziConnectURL "connect.apps.mesp.lsdopen.io"
-  kafkaBootstrapURL: &anchorkafkaBootstrapURL "bootstrap.mesp.lsdopen.io:32100"
-  kafkaExternalDomain: &anchorkafkaExternalDomain "mesp.lsdopen.io"
-  kafkaUIURL: &anchorkafkaUIURL "kafka-ui.apps.mesp.lsdopen.io"
-  kafkaConnectUIURL: &anchorkafkaConnectUIURL "connect-ui.apps.mesp.lsdopen.io"
-  kafkaSchemaRegistryUIURL: &anchorkafkaSchemaRegistryUIURL "schema-registry-ui.apps.mesp.lsdopen.io"
   kafkaAllUIUsername: &anchorkafkaAllUIUsername "kafka"
   kafkaAllUIPassword: &anchorkafkaAllUIPassword "secretpassword"
+
   prometheus:
     # Requires podmonitors.monitoring.coreos.com CRD
-    enableMetrics: false
+    enableMetrics: true
+
+  internalSecurity:
+    enabled: true
+
   strimzi:
     clusterName: lsdmesp
+    version: 3.6.1
+
+    kraftcontroller:
+      # java memory sizes
+      jvm:
+        Xms: 384m
+        Xmx: 384m
+      # size of the pv needed
+      dataVolumeCapacity: 1Gi
+      # pod resource limits and request
+      resources:
+        limits:
+          cpu: 500m
+          memory: 1Gi
+        requests:
+          cpu: 20m
+          memory: 512Mi
+      # number of pod replicas
+      replicas: 3
+
     kafka:
-      version: 3.6.1
-      bootstrap: *anchorkafkaBootstrapURL
-      externalDomain: *anchorkafkaExternalDomain
+      bootstrap: "bootstrap.mesp.lsdopen.io:32100"
+      externalDomain: "mesp.lsdopen.io"
+      # java memory sizes
+      jvm:
+        Xms: 1g
+        Xmx: 1g
+      # size of the pv needed
+      dataVolumeCapacity: 20Gi
+      # pod resource limits and request
+      resources:
+        limits:
+          cpu: 1
+          memory: 8Gi
+        requests:
+          cpu: 50m
+          memory: 3Gi
+      # number of pod replicas
+      replicas: 3
+
+    topicOperator:
+      # pod resource limits and request
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 10m
+          memory: 10Mi
+
+    userOperator:
+      # pod resource limits and request
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 10m
+          memory: 10Mi
+
     connect:
       ingress:
         url: *anchorstrimziConnectURL
+
   kafka:
     kafkaguis:
       auth:
@@ -36,7 +98,8 @@ lsdmesp:
     kafkaui:
       enabled: true
       ingress:
-        url: *anchorkafkaUIURL
+        url: "kafka-ui.apps.mesp.lsdopen.io"
+
   confluent:
     ksqldb:
       ingress:
@@ -45,38 +108,76 @@ lsdmesp:
       ingress:
         url: *anchorconfluentSchemaRegistryURL
 
-cp-helm-charts:
-  ## ------------------------------------------------------
-  ## Zookeeper
-  ## ------------------------------------------------------
-  cp-zookeeper:
-    enabled: false
-  ## ------------------------------------------------------
-  ## Kafka Brokers
-  ## ------------------------------------------------------
-  cp-kafka:
-    enabled: false
+  armyKnife:
+    enabled: true
+    image: lsdopen/kafka-army-knife:latest
+    replicas: 1
+
+cp-helm:
+  # REST API security
+  restSecurity:
+    basic:
+      enabled: true
+
   ## ------------------------------------------------------
   ## Connect
   ## ------------------------------------------------------
   cp-kafka-connect:
-    enabled: false
-  ## ------------------------------------------------------
-  ## Control Center (Commercial Feature)
-  ## ------------------------------------------------------
-  cp-control-center:
-    enabled: false
+    enabled: true
+    internalSecurity:
+      enabled: true
+    restSecurity:
+      tls:
+        enabled: true
+      basic:
+        enabled: true
+    replicaCount: 1
+    image: lsdtrip/cp-kafka-connect
+    imageTag: "7.6.1"
+    servicePort: 8083
+    configurationOverrides:
+      "plugin.path": "/usr/share/java,/usr/share/confluent-hub-components"
+      "key.converter": "io.confluent.connect.avro.AvroConverter"
+      "value.converter": "io.confluent.connect.avro.AvroConverter"
+      "key.converter.schemas.enable": "false"
+      "value.converter.schemas.enable": "false"
+      "internal.key.converter": "org.apache.kafka.connect.json.JsonConverter"
+      "internal.value.converter": "org.apache.kafka.connect.json.JsonConverter"
+      "config.storage.replication.factor": "3"
+      "offset.storage.replication.factor": "3"
+      "status.storage.replication.factor": "3"
+    heapOptions: "-Xms512M -Xmx512M"
+    kafkaConnectOpts: "-Djava.security.auth.login.config=/opt/kafka/jaas-config/jaas_connect.conf"
+    kafka:
+      bootstrapServers: "lsdmesp-kafka-bootstrap:9092"
+    cp-schema-registry:
+      url: "https://lsdmesp-cp-schema-registry:8081"
+    resources:
+      limits:
+        memory: 2Gi
+        cpu: 1
+      requests:
+        memory: 768Mi
+        cpu: 10m
   ## ------------------------------------------------------
   ## Schema Registry
   ## ------------------------------------------------------
   cp-schema-registry:
     enabled: true
-    replicaCount: 2
+    internalSecurity:
+      enabled: true
+    restSecurity:
+      tls:
+        enabled: true
+      basic:
+        enabled: true
+    replicaCount: 1
     image: confluentinc/cp-schema-registry
-    imageTag: *anchorcpVersion
+    imageTag: "7.6.1"
     heapOptions: "-Xms512m -Xmx512m"
+    schemaRegistryOpts: "-Djava.security.auth.login.config=/opt/kafka/jaas-config/jaas_config.conf"
     kafka:
-      bootstrapServers: "PLAINTEXT://lsdmesp-kafka-bootstrap:9092"
+      bootstrapServers: "lsdmesp-kafka-bootstrap:9092"
     resources:
       limits:
         memory: 2Gi
@@ -88,15 +189,23 @@ cp-helm-charts:
   ## REST Proxy
   ## ------------------------------------------------------
   cp-kafka-rest:
-    enabled: false
+    enabled: true
+    internalSecurity:
+      enabled: true
+    restSecurity:
+      tls:
+        enabled: true
+      basic:
+        enabled: true
     replicaCount: 1
     image: confluentinc/cp-kafka-rest
-    imageTag: *anchorcpVersion
+    imageTag: "7.6.1"
     heapOptions: "-Xms512m -Xmx512m"
+    kafkaRestOpts: "-Djava.security.auth.login.config=/opt/kafka/jaas-config/jaas_config.conf"
     cp-kafka:
-      bootstrapServers: "PLAINTEXT://lsdmesp-kafka-bootstrap:9092"
+      bootstrapServers: "lsdmesp-kafka-bootstrap:9092"
     cp-schema-registry:
-      url: "http://lsdmesp-cp-schema-registry:8081"
+      url: "https://lsdmesp-cp-schema-registry:8081"
     resources:
       limits:
         memory: 2Gi
@@ -108,20 +217,26 @@ cp-helm-charts:
   ## KSQL Server
   ## ------------------------------------------------------
   cp-ksql-server:
-    enabled: false
-    replicaCount: 0
+    enabled: true
+    internalSecurity:
+      enabled: true
+    restSecurity:
+      tls:
+        enabled: true
+      basic:
+        enabled: true
+    replicaCount: 1
     image: confluentinc/cp-ksqldb-server
-    imageTag: *anchorcpVersion
-    heapOptions: "-Xms512M -Xmx3g"
-    serviceId: lsdmesp-ksql-server
+    imageTag: "7.6.1"
+    heapOptions: "-Xms512M -Xmx1g"
+    ksqlOpts: "-Djava.security.auth.login.config=/opt/kafka/jaas-config/jaas_config.conf"
+    overrideServiceId: lsdmesp-ksql-server
     ksql:
       headless: false
     configurationOverrides:
       ksql.connect.url: "http://lsdmesp-connect-api:8083"
       ksql.extension.dir: /opt/ksqldb-udfs
       ksql.internal.topic.replicas: 3
-      listeners: "http://0.0.0.0:8088"
-      ksql.service.id: lsdmesp-ksql-server
       log4j.root.loglevel: WARN
       confluent.support.metrics.enable: false
       ksql.streams.num.stream.threads: 2
@@ -130,13 +245,13 @@ cp-helm-charts:
       ksql.streams.consumer.max.poll.interval.ms: "86400000"
       ksql.streams.consumer.request.timeout.ms: 60000
     kafka:
-      bootstrapServers: "PLAINTEXT://lsdmesp-kafka-bootstrap:9092"
+      bootstrapServers: "lsdmesp-kafka-bootstrap:9092"
     cp-schema-registry:
-      url: "http://lsdmesp-cp-schema-registry:8081"
+      url: "https://lsdmesp-cp-schema-registry:8081"
     resources:
       requests:
         cpu: 10m
-        memory: 4Gi
+        memory: 2Gi
     affinity:
       podAntiAffinity:
         preferredDuringSchedulingIgnoredDuringExecution:
@@ -296,27 +411,104 @@ strimzi-kafka-operator:
   connectBuildTimeoutMs: 300000
 
 kafka-ui:
-  yamlApplicationConfig:
-    kafka:
-      clusters:
-        - name: lsdmesp
-          bootstrapServers: lsdmesp-kafka-bootstrap:9092
-          schemaRegistry: http://lsdmesp-cp-schema-registry:8081
-          readOnly: true
-          kafkaConnect:
-            - name: connect-1
-              address: http://lsdmesp-connect-api:8083
-    auth:
-      type: disabled
-    management:
-      health:
-        ldap:
-          enabled: false          
+  env:
+    - name: KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL
+      value: "SASL_SSL"
+    - name: KAFKA_CLUSTERS_0_PROPERTIES_SASL_MECHANISM
+      value: "SCRAM-SHA-512"
+    - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
+      value: "lsdmesp-kafka-bootstrap:9092"
+    - name: KAFKA_CLUSTERS_0_PROPERTIES_SASL_JAAS_CONFIG
+      valueFrom:
+        secretKeyRef:
+          name: lsdmesp
+          key: sasl.jaas.config
+    - name: KAFKA_CLUSTERS_0_PROPERTIES_SSL_TRUSTSTORE_LOCATION
+      value: "/opt/kafka/certs-cluster-ca/ca.p12"
+    - name: KAFKA_CLUSTERS_0_PROPERTIES_SSL_TRUSTSTORE_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: lsdmesp-cluster-ca-cert
+          key: ca.password
+    - name: KAFKA_CLUSTERS_0_SSL_TRUSTSTORELOCATION
+      value: "/opt/kafka/basicauth/truststore.p12"
+    - name: KAFKA_CLUSTERS_0_SSL_TRUSTSTOREPASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: lsdmesp-tls
+          key: password
+    - name: KAFKA_CLUSTERS_0_PROPERTIES_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM
+      value: ""
+    - name: KAFKA_CLUSTERS_0_KSQLDBSERVER
+      value: "https://lsdmesp-cp-ksql-server:8088"
+    - name: KAFKA_CLUSTERS_0_KSQLDBSERVERAUTH_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: lsdmesp-api
+          key: user
+    - name: KAFKA_CLUSTERS_0_KSQLDBSERVERAUTH_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: lsdmesp-api
+          key: password
+    - name: KAFKA_CLUSTERS_0_NAME
+      value: "lsdmesp"
+    - name: KAFKA_CLUSTERS_0_READONLY
+      value: "false"
+    - name: KAFKA_CLUSTERS_0_SCHEMAREGISTRY
+      value: "https://lsdmesp-cp-schema-registry:8081"
+    - name: KAFKA_CLUSTERS_0_SCHEMAREGISTRYAUTH_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: lsdmesp-api
+          key: user
+    - name: KAFKA_CLUSTERS_0_SCHEMAREGISTRYAUTH_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: lsdmesp-api
+          key: password
+    - name: KAFKA_CLUSTERS_0_KAFKACONNECT_0_NAME
+      value: "connect-1"
+    - name: KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS
+      value: "https://lsdmesp-cp-kafka-connect:8083"
+    - name: KAFKA_CLUSTERS_0_KAFKACONNECT_0_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: lsdmesp-api
+          key: user
+    - name: KAFKA_CLUSTERS_0_KAFKACONNECT_0_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: lsdmesp-api
+          key: password
+  volumeMounts:
+    - name: lsdmesp
+      mountPath: /opt/kafka/certs-lsdmesp
+    - name: lsdmesp-cluster-ca-cert
+      mountPath: /opt/kafka/certs-cluster-ca
+    - name: lsdmesp-tls
+      mountPath: /opt/kafka/basicauth
+  volumes:
+    - name: lsdmesp
+      secret:
+        defaultMode: 292
+        secretName: lsdmesp
+    - name: lsdmesp-cluster-ca-cert
+      secret:
+        defaultMode: 292
+        secretName: lsdmesp-cluster-ca-cert
+    - name: lsdmesp-tls
+      secret:
+        defaultMode: 292
+        secretName: lsdmesp-tls
   ingress:
-    enabled: false
+    annotations:
+      nginx.ingress.kubernetes.io/auth-type: basic
+      nginx.ingress.kubernetes.io/auth-secret: lsdmesp-guis-basic-auth
+      nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
+    enabled: true
     ingressClassName: nginx
     path: /
-    host: *anchorkafkaUIURL
+    host: "kafka-ui.apps.mesp.lsdopen.io"
     tls:
-      enabled: false
-      secretName: ""
+      enabled: true

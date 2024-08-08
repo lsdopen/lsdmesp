@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels:
+    release: lsdmesp-monitoring
+    monitoring: confluent
+  name: pm-confluent
+  namespace: {{ .Release.Namespace }}
+spec:
+  jobLabel: platform.confluent.io/type
+  podMetricsEndpoints:
+    - port: prometheus
+      interval: 60s
+      scheme: http
+      scrapeTimeout: 30s
+  selector:
+    matchExpressions:
+      - key: confluent-platform
+        operator: Exists

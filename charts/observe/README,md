@@ -1,0 +1,67 @@
+`kubectl create ns openshift-user-workload-monitoring`
+`kubectl label ns openshift-user-workload-monitoring openshift.io/user-monitoring=true`
+
+
+`helm install -f ./values-lsdmesp.yaml lsdmesp-monitoring prometheus-community/kube-prometheus-stack -n openshift-user-workload-monitoring`
+
+# If need to upgrade
+
+`helm upgrade -f ./values-lsdmesp.yaml lsdmesp-monitoring prometheus-community/kube-prometheus-stack -n openshift-user-workload-monitoring`
+
+
+# Run LSDMESP Strimzi install
+
+`kubectl label ns lsdmesp openshift.io/user-monitoring=true`
+
+
+# Do this in LSDMESP namespace
+
+```
+kubectl create configmap dashboard-strimzi-cruise-control --from-file=./dashboards/strimzi-cruise-control.json --dry-run=client -oyaml >./templates/cm.dashboard-strimzi-cruise-control.yaml
+kubectl create configmap dashboard-strimzi-kafka-exporter --from-file=./dashboards/strimzi-kafka-exporter.json --dry-run=client -oyaml >./templates/cm.dashboard-strimzi-kafka-exporter.yaml
+kubectl create configmap dashboard-strimzi-kafka --from-file=./dashboards/strimzi-kafka.json --dry-run=client -oyaml >./templates/cm.dashboard-strimzi-kafka.yaml
+kubectl create configmap dashboard-strimzi-kraft --from-file=./dashboards/strimzi-kraft.json --dry-run=client -oyaml >./templates/cm.dashboard-strimzi-kraft.yaml
+kubectl create configmap dashboard-strimzi-operators --from-file=./dashboards/strimzi-operators.json --dry-run=client -oyaml >./templates/cm.dashboard-strimzi-operators.yaml
+
+kubectl create configmap dashboard-cp-kafka-connect --from-file=./dashboards/cp-kafka-connect.json --dry-run=client -oyaml >./templates/cm.dashboard-cp-kafka-connect.yaml
+kubectl create configmap dashboard-cp-kafka-rest --from-file=./dashboards/cp-kafka-rest.json --dry-run=client -oyaml >./templates/cm.dashboard-cp-kafka-rest.yaml
+kubectl create configmap dashboard-cp-kafka-streams --from-file=./dashboards/cp-kafka-streams.json --dry-run=client -oyaml >./templates/cm.dashboard-cp-kafka-streams.yaml
+kubectl create configmap dashboard-cp-ksql-server --from-file=./dashboards/cp-ksql-server.json --dry-run=client -oyaml >./templates/cm.dashboard-cp-ksql-server.yaml
+kubectl create configmap dashboard-cp-schema-registry --from-file=./dashboards/cp-schema-registry.json --dry-run=client -oyaml >./templates/cm.dashboard-cp-schema-registry.yaml
+```
+
+`kubectl -n lsdmesp apply -f ./templates/`
+
+```
+kubectl -n lsdmesp label configmap dashboard-strimzi-cruise-control grafana_dashboard="1"
+kubectl -n lsdmesp label configmap dashboard-strimzi-kafka-exporter grafana_dashboard="1"
+kubectl -n lsdmesp label configmap dashboard-strimzi-kafka grafana_dashboard="1"
+kubectl -n lsdmesp label configmap dashboard-strimzi-kraft grafana_dashboard="1"
+kubectl -n lsdmesp label configmap dashboard-strimzi-operators grafana_dashboard="1"
+
+kubectl -n lsdmesp label configmap dashboard-cp-kafka-connect grafana_dashboard="1"
+kubectl -n lsdmesp label configmap dashboard-cp-kafka-rest grafana_dashboard="1"
+kubectl -n lsdmesp label configmap dashboard-cp-kafka-streams grafana_dashboard="1"
+kubectl -n lsdmesp label configmap dashboard-cp-ksql-server grafana_dashboard="1"
+kubectl -n lsdmesp label configmap dashboard-cp-schema-registry grafana_dashboard="1"
+```
+
+
+Example for Openshift:
+
+```
+  probeNamespaceSelector:
+    matchExpressions:
+    - key: openshift.io/cluster-monitoring
+      operator: NotIn
+      values:
+      - "true"
+    - key: openshift.io/user-monitoring
+      operator: NotIn
+      values:
+      - "false"
+```
+
+
+For CP Grafana dashboards, manual import from: https://github.com/confluentinc/jmx-monitoring-stacks/tree/main/jmxexporter-prometheus-grafana
+

@@ -2,11 +2,11 @@ dependencies:
 - name: strimzi-kafka-operator
   repository: https://strimzi.io/charts/
   version: 0.41.0
-- name: cp-helm-charts
-  repository: https://confluentinc.github.io/cp-helm-charts/
+- name: cp-helm
+  repository: file://charts/cp-helm
   version: 0.6.1
 - name: kafka-ui
-  repository: https://provectus.github.io/kafka-ui-charts
-  version: 0.7.6
-digest: sha256:d32149ad72aab47d7c225c715a1cc00d71ba5775167944542edecbbfbf333185
-generated: "2024-05-31T15:36:20.809334791+02:00"
+  repository: https://kafbat.github.io/helm-charts
+  version: 1.4.2
+digest: sha256:513fa47de3a3c94f993d54bc081cbfc092b1b2359319fe00056c61f2a41b5a21
+generated: "2024-06-27T15:07:12.213227263+02:00"

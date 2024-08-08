@@ -1,0 +1,11 @@
+{{- if .Values.lsdmesp.internalSecurity.enabled }}
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: lsdmesp
+  labels:
+    strimzi.io/cluster: {{ .Values.lsdmesp.strimzi.clusterName }}
+spec:
+  authentication:
+    type: scram-sha-512
+{{- end }}

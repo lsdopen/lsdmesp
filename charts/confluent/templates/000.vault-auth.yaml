@@ -1,0 +1,12 @@
+{{- if .Values.lsdmesp.security.vault.enabled -}}
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultAuth
+metadata:
+  name: {{ .Values.lsdmesp.security.vault.auth.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  method: kubernetes
+  mount: {{ .Values.lsdmesp.security.vault.auth.mount }}
+  kubernetes:
+    {{- toYaml .Values.lsdmesp.security.vault.auth.kubernetes | nindent 4 }}
+{{- end -}}
