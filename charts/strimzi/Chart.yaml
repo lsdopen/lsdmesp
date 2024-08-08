@@ -1,5 +1,5 @@
 apiVersion: v2
-name: lsdmesp
+name: lsdmesp-strimzi
 version: "1.0.0"
 appVersion: "1.0.0"
 description: 'LSDMESP: LSD Event Streaming Platform'
