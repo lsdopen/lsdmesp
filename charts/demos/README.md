@@ -147,3 +147,63 @@ SELECT * FROM jdbc_bank_transactions EMIT CHANGES;
 ```
 
 # Show data in database
+
+# Demo Notification Service
+
+## Create the advanced streams
+
+From army knife create topics:
+
+```
+kafka-topics --create --topic customers --bootstrap-server $LSDMESP_BOOTSTRAP_SERVERS --partitions 6 --replication-factor 3 --config retention.ms=604800000 --command-config /root/etc/client.properties
+kafka-topics --create --topic accounts --bootstrap-server $LSDMESP_BOOTSTRAP_SERVERS --partitions 6 --replication-factor 3 --config retention.ms=604800000 --command-config /root/etc/client.properties
+kafka-topics --create --topic customers_accounts --bootstrap-server $LSDMESP_BOOTSTRAP_SERVERS --partitions 6 --replication-factor 3 --config retention.ms=604800000 --command-config /root/etc/client.properties
+kafka-topics --create --topic jdbc_bank_transactions_rekeyed --bootstrap-server $LSDMESP_BOOTSTRAP_SERVERS --partitions 6 --replication-factor 3 --config retention.ms=604800000 --command-config /root/etc/client.properties
+kafka-topics --create --topic jdbc_bank_transactions_enriched --bootstrap-server $LSDMESP_BOOTSTRAP_SERVERS --partitions 6 --replication-factor 3 --config retention.ms=604800000 --command-config /root/etc/client.properties
+```
+
+- Copy ./streams/advanced-streams.ksql to the army knife and then run:
+
+`http --verify=false --auth=peter:peter-secret POST https://ksqldb:8088/ksql ksql=@advanced-streams.ksql --check-status`
+
+## Build and Push if there are any new changes to the app
+
+```
+cd apps/notification-service
+mvn clean install -Pdocker
+docker push lsdtrip/demo-notification-service
+```
+
+## Deploy
+
+`kc apply -f kube/demo-notification-service-deployment.yaml`
+
+## Clean-up
+
+Undeploy app:
+
+`kc delete -f kube/demo-notification-service-deployment.yaml`
+
+From ksql drop streams and tables:
+
+`ksql --config-file /root/ksql.client.properties https://ksqldb:8088 -u peter -p peter-secret`
+
+```
+drop stream jdbc_bank_transactions_enriched;
+drop stream jdbc_bank_transactions_rekeyed;
+drop table customers_accounts;
+drop table accounts;
+drop table customers;
+drop stream accounts_stream;
+drop stream customers_stream;
+```
+
+From army knife delete topics:
+
+```
+kafka-topics --delete --topic customers --bootstrap-server $LSDMESP_BOOTSTRAP_SERVERS --command-config /root/etc/client.properties
+kafka-topics --delete --topic accounts --bootstrap-server $LSDMESP_BOOTSTRAP_SERVERS --command-config /root/etc/client.properties
+kafka-topics --delete --topic customers_accounts --bootstrap-server $LSDMESP_BOOTSTRAP_SERVERS --command-config /root/etc/client.properties
+kafka-topics --delete --topic jdbc_bank_transactions_rekeyed --bootstrap-server $LSDMESP_BOOTSTRAP_SERVERS --command-config /root/etc/client.properties
+kafka-topics --delete --topic jdbc_bank_transactions_enriched --bootstrap-server $LSDMESP_BOOTSTRAP_SERVERS --command-config /root/etc/client.properties
+```
