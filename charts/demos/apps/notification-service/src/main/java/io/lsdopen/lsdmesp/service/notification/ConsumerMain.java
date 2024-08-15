@@ -103,7 +103,7 @@ public class ConsumerMain {
         consumerProps.put(KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG, "false");
         consumerProps.put(KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
 
-        try (Consumer<String, GenericRecord> consumer = new KafkaConsumer<>(consumerProps)) {
+        try (Consumer<GenericRecord, GenericRecord> consumer = new KafkaConsumer<>(consumerProps)) {
             //
             // Continue from committed offsets
             //
@@ -113,7 +113,7 @@ public class ConsumerMain {
             int counter = 0;
             Long firstIdleTimeMillis = null;
             while (runConsumerLoop.get()) {
-                ConsumerRecords<String, GenericRecord> records = consumer.poll(Duration.ofMillis(100));
+                ConsumerRecords<GenericRecord, GenericRecord> records = consumer.poll(Duration.ofMillis(100));
 
                 if (!records.isEmpty()) {
                     if (firstIdleTimeMillis != null) {
@@ -123,7 +123,7 @@ public class ConsumerMain {
                     }
 
                     // Process all records
-                    for (ConsumerRecord<String, GenericRecord> record : records) {
+                    for (ConsumerRecord<GenericRecord, GenericRecord> record : records) {
                         log.debug("Processing record with key '{}', timestamp '{}' and value '{}'", record.key(), DateUtility.toStringDateTimeSAST(new Date(record.timestamp())), record.value());
 
                         counter++;

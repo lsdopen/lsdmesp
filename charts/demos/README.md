@@ -197,3 +197,16 @@ kafka-topics --delete --topic customers_accounts --bootstrap-server $LSDMESP_BOO
 kafka-topics --delete --topic jdbc_bank_transactions_rekeyed --bootstrap-server $LSDMESP_BOOTSTRAP_SERVERS --command-config /root/etc/client.properties
 kafka-topics --delete --topic jdbc_bank_transactions_enriched --bootstrap-server $LSDMESP_BOOTSTRAP_SERVERS --command-config /root/etc/client.properties
 ```
+
+```
+http --verify=false --auth=peter:peter-secret DELETE https://schemaregistry:8081/subjects/customers-key
+http --verify=false --auth=peter:peter-secret DELETE https://schemaregistry:8081/subjects/customers-value
+http --verify=false --auth=peter:peter-secret DELETE https://schemaregistry:8081/subjects/accounts-key
+http --verify=false --auth=peter:peter-secret DELETE https://schemaregistry:8081/subjects/accounts-value
+http --verify=false --auth=peter:peter-secret DELETE https://schemaregistry:8081/subjects/customers_accounts-key
+http --verify=false --auth=peter:peter-secret DELETE https://schemaregistry:8081/subjects/customers_accounts-value
+http --verify=false --auth=peter:peter-secret DELETE https://schemaregistry:8081/subjects/jdbc_bank_transactions_rekeyed-key
+http --verify=false --auth=peter:peter-secret DELETE https://schemaregistry:8081/subjects/jdbc_bank_transactions_rekeyed-value
+http --verify=false --auth=peter:peter-secret DELETE https://schemaregistry:8081/subjects/jdbc_bank_transactions_enriched-key
+http --verify=false --auth=peter:peter-secret DELETE https://schemaregistry:8081/subjects/jdbc_bank_transactions_enriched-value
+```

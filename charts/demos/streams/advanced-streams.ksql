@@ -48,5 +48,5 @@ CREATE STREAM jdbc_bank_transactions_enriched WITH (KAFKA_TOPIC = 'jdbc_bank_tra
      C.PHONE_NUMBER,
      C.EMAIL_ADDRESS
  FROM jdbc_bank_transactions_rekeyed T
- INNER JOIN customers_accounts C
+ LEFT JOIN customers_accounts C
  ON C.CARD_NUMBER = T.CARD_NUMBER;
