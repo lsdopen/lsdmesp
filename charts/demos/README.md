@@ -152,16 +152,6 @@ SELECT * FROM jdbc_bank_transactions EMIT CHANGES;
 
 ## Create the advanced streams
 
-From army knife create topics:
-
-```
-kafka-topics --create --topic customers --bootstrap-server $LSDMESP_BOOTSTRAP_SERVERS --partitions 6 --replication-factor 3 --config retention.ms=604800000 --command-config /root/etc/client.properties
-kafka-topics --create --topic accounts --bootstrap-server $LSDMESP_BOOTSTRAP_SERVERS --partitions 6 --replication-factor 3 --config retention.ms=604800000 --command-config /root/etc/client.properties
-kafka-topics --create --topic customers_accounts --bootstrap-server $LSDMESP_BOOTSTRAP_SERVERS --partitions 6 --replication-factor 3 --config retention.ms=604800000 --command-config /root/etc/client.properties
-kafka-topics --create --topic jdbc_bank_transactions_rekeyed --bootstrap-server $LSDMESP_BOOTSTRAP_SERVERS --partitions 6 --replication-factor 3 --config retention.ms=604800000 --command-config /root/etc/client.properties
-kafka-topics --create --topic jdbc_bank_transactions_enriched --bootstrap-server $LSDMESP_BOOTSTRAP_SERVERS --partitions 6 --replication-factor 3 --config retention.ms=604800000 --command-config /root/etc/client.properties
-```
-
 - Copy ./streams/advanced-streams.ksql to the army knife and then run:
 
 `http --verify=false --auth=peter:peter-secret POST https://ksqldb:8088/ksql ksql=@advanced-streams.ksql --check-status`
