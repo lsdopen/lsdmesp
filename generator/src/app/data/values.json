@@ -3,7 +3,9 @@
         "ldap": {
             "readOnlyUser": {
                 "password": "placeholder"
-            }
+            },
+            "admin_password": "confluentrox", 
+            "config_password": "confluentconfigrox"
         },
         "confluent": {
             "connect": {
@@ -13,9 +15,6 @@
                 "password": "placeholder"
             },
             "kafka": {
-                "password": "placeholder"
-            },
-            "kafkarestclass": {
                 "password": "placeholder"
             },
             "kafkarestproxy": {
