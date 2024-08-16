@@ -45,6 +45,15 @@ postgres.bank.customers
 express.bank.transactions
 ```
 
+Or from army knife:
+
+```
+kafka-topics --create --topic postgres.bank.transactions --bootstrap-server $LSDMESP_BOOTSTRAP_SERVERS --partitions 6 --replication-factor 3 --command-config /root/etc/client.properties
+kafka-topics --create --topic postgres.bank.accounts --bootstrap-server $LSDMESP_BOOTSTRAP_SERVERS --partitions 6 --replication-factor 3 --command-config /root/etc/client.properties
+kafka-topics --create --topic postgres.bank.customers --bootstrap-server $LSDMESP_BOOTSTRAP_SERVERS --partitions 6 --replication-factor 3 --command-config /root/etc/client.properties
+kafka-topics --create --topic express.bank.transactions --bootstrap-server $LSDMESP_BOOTSTRAP_SERVERS --partitions 6 --replication-factor 3 --command-config /root/etc/client.properties
+```
+
 # Add transactions
 Navigate to http://webapp.apps.mesp.lsdopen.io
 

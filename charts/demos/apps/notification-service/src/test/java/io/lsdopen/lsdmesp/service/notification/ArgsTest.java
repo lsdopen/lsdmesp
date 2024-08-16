@@ -44,7 +44,8 @@ public class ArgsTest {
                 "--bootstrap-servers", "localhost:9092",
                 "--schema-registry-url", "http://localhost:8081",
                 "--source-topic", "fun-data",
-                "--max-idle-millis", "10000"
+                "--mail-config", "mail-config",
+                "--max-idle-millis", "10000",
         };
         JCommander.newBuilder()
                 .addObject(args)
@@ -65,7 +66,8 @@ public class ArgsTest {
         String[] argv = {
                 "--bootstrap-servers", "localhost:9092",
                 "--schema-registry-url", "http://localhost:8081",
-                "--source-topic", "fun-data"
+                "--source-topic", "fun-data",
+                "--mail-config", "mail-config"
         };
         JCommander.newBuilder()
                 .addObject(args)

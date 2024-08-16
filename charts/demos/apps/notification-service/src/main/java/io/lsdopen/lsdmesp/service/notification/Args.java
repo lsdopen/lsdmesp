@@ -37,6 +37,13 @@ public class Args {
     private String commandConfig;
 
     @Parameter(
+            names = "--mail-config",
+            description = "A property file with mail config",
+            required = true
+    )
+    private String mailConfig;
+
+    @Parameter(
             names = "--help",
             description = "Shows the description for all parameters",
             help = true)
@@ -82,6 +89,14 @@ public class Args {
         this.commandConfig = commandConfig;
     }
 
+    public String getMailConfig() {
+        return mailConfig;
+    }
+
+    public void setMailConfig(String mailConfig) {
+        this.mailConfig = mailConfig;
+    }
+
     public boolean isHelp() {
         return help;
     }
@@ -98,6 +113,7 @@ public class Args {
                 ", sourceTopic='" + sourceTopic + '\'' +
                 ", maxIdleTimeMillis=" + maxIdleTimeMillis +
                 ", commandConfig='" + commandConfig + '\'' +
+                ", mailConfig='" + mailConfig + '\'' +
                 ", help=" + help +
                 '}';
     }

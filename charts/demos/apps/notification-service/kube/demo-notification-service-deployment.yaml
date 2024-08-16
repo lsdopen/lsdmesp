@@ -13,6 +13,13 @@ stringData:
     basic.auth.user.info=peter:peter-secret
     schema.registry.ssl.truststore.location=/home/kafka/lsdmesp.truststore.jks
     schema.registry.ssl.truststore.password=112233
+  mail.properties: |-
+    smtp.host=smtp.sendgrid.net
+    smtp.port=587
+    smtp.username=apikey
+    smtp.password=<apipassword>
+    smtp.from.email=rainer@lsdopen.io
+    smtp.to.email=rainer@lsdopen.io
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -49,6 +56,8 @@ spec:
             - jdbc_bank_transactions_enriched
             - --command-config
             - /opt/etc/client.properties
+            - --mail-config
+            - /opt/etc/mail.properties
           imagePullPolicy: Always
           name: demo-notification-service
           lifecycle:

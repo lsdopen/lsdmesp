@@ -9,12 +9,9 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.util.Utf8;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Date;
@@ -51,6 +48,7 @@ public class ConsumerMain {
         String sourceTopic = inputArgs.getSourceTopic();
         Long maxIdleTimeMillis = inputArgs.getMaxIdleTimeMillis();
         String commandConfig = inputArgs.getCommandConfig();
+        String mailConfig = inputArgs.getMailConfig();
 
         log.info("Consuming events with input arguments: '{}'", inputArgs);
 
@@ -74,7 +72,7 @@ public class ConsumerMain {
 
         try {
             consumeEvents(bootstrapServers, schemaRegistryUrl, sourceTopic,
-                    maxIdleTimeMillis, commandConfig, runConsumerLoop);
+                    maxIdleTimeMillis, commandConfig, mailConfig, runConsumerLoop);
         } catch (Exception ex) {
             log.error("Failed to consume events", ex);
         } finally {
@@ -91,6 +89,7 @@ public class ConsumerMain {
             String sourceTopic,
             Long maxIdleTimeMillis,
             String commandConfig,
+            String mailConfig,
             AtomicBoolean runConsumerLoop) throws IOException {
 
         final Properties consumerProps = getDefaultProps(bootstrapServers, commandConfig);
@@ -102,6 +101,8 @@ public class ConsumerMain {
         consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaAvroDeserializer.class);
         consumerProps.put(KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG, "false");
         consumerProps.put(KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
+
+        MailUtility mailUtility = new MailUtility(mailConfig);
 
         try (Consumer<GenericRecord, GenericRecord> consumer = new KafkaConsumer<>(consumerProps)) {
             //
@@ -125,6 +126,35 @@ public class ConsumerMain {
                     // Process all records
                     for (ConsumerRecord<GenericRecord, GenericRecord> record : records) {
                         log.debug("Processing record with key '{}', timestamp '{}' and value '{}'", record.key(), DateUtility.toStringDateTimeSAST(new Date(record.timestamp())), record.value());
+
+                        try {
+                            Integer trxAmount = (Integer) record.value().get("TRANSACTION_AMOUNT");
+                            Utf8 trxId = (Utf8) record.value().get("TRANSACTION_ID");
+                            Utf8 trxTime = (Utf8) record.value().get("TRANSACTION_TIME");
+                            Utf8 trxFullName = (Utf8) record.value().get("FULL_NAME");
+                            Utf8 trxEmail = (Utf8) record.value().get("EMAIL_ADDRESS");
+
+                            if (trxFullName == null || trxEmail == null) {
+                                log.warn("Skipping record with missing client details");
+                            } else {
+                                log.info("Sending email with trxAmount [" + trxAmount
+                                        + "] trxTime [" + trxTime
+                                        + "] trxFullName [" + trxFullName
+                                        + "] trxEmail [" + trxEmail + "]");
+
+                                String msg = "New transaction for " + trxFullName + " (" + trxEmail
+                                        + ")<br/><br/>Amount: " + trxAmount
+                                        + "<br/>Email: " + trxEmail
+                                        + "<br/>Received: " + trxTime
+                                        + "<br/>TransactionId: " + trxId;
+
+                                String subject = "New transaction for " + trxFullName + " and amount " + trxAmount;
+
+                                mailUtility.sendMail(msg, subject, null);
+                            }
+                        } catch (Exception ex) {
+                            log.error("Failed to process record with key '{}'", record.key(), ex);
+                        }
 
                         counter++;
                     }
@@ -152,24 +182,8 @@ public class ConsumerMain {
     }
 
     private static Properties getDefaultProps(String bootstrapServers, String commandConfig) throws IOException {
-        Properties properties = loadProperties(commandConfig);
+        Properties properties = ConfigUtility.loadProperties(commandConfig);
         properties.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        return properties;
-    }
-
-    private static Properties loadProperties(String commandConfig) throws IOException {
-        if (commandConfig == null) {
-            return new Properties();
-        }
-
-        if (!Files.exists(Paths.get(commandConfig))) {
-            throw new IOException(commandConfig + " not found.");
-        }
-
-        Properties properties = new Properties();
-        try (InputStream is = new FileInputStream(commandConfig)) {
-            properties.load(is);
-        }
         return properties;
     }
 }
