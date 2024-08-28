@@ -1,4 +1,4 @@
-{{- if .Values.lsdmesp.kafkaLagExporter.enabled -}}
+{{- if and .Values.lsdmesp.monitoring.enabled .Values.lsdmesp.monitoring.kafkaLagExporter.enabled -}}
 apiVersion: monitoring.coreos.com/v1alpha1
 kind: ScrapeConfig
 metadata:
@@ -79,7 +79,7 @@ metadata:
   labels:
     app: kafka-lag-exporter
 spec:
-  replicas: {{ .Values.lsdmesp.kafkaLagExporter.replicas }}
+  replicas: {{ .Values.lsdmesp.monitoring.kafkaLagExporter.replicas }}
   selector:
     matchLabels:
       app: kafka-lag-exporter
@@ -89,7 +89,7 @@ spec:
         app: kafka-lag-exporter
     spec:
       containers:
-        - image: {{ .Values.lsdmesp.kafkaLagExporter.image }}
+        - image: {{ .Values.lsdmesp.monitoring.kafkaLagExporter.image }}
           imagePullPolicy: IfNotPresent
           name: kafka-lag-exporter
           lifecycle:
