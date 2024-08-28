@@ -70,6 +70,39 @@ entries:
     - https://github.com/lsdopen/lsdmesp/releases/download/lsdmesp-confluent-1.0.0/lsdmesp-confluent-1.0.0.tgz
     version: 1.0.0
   - apiVersion: v2
+    appVersion: 0.6.0
+    created: "2024-08-28T15:23:27.83702128Z"
+    dependencies:
+    - name: confluent-for-kubernetes
+      repository: https://packages.confluent.io/helm
+      version: 0.921.2
+    description: 'LSDMESP CFK: LSD Event Streaming Platform with Confluent Operator'
+    digest: fade491191df98b60c11820019b25bf69a165588e8dd8de0f5bf3aca660caa51
+    home: https://github.com/lsdopen/lsdmesp.cfk
+    keywords:
+    - lsdmesp
+    - confluent
+    - confluent operator
+    - confluent platform
+    - cfk
+    - operator
+    - event
+    - stream
+    - kubernetes
+    - kafka
+    - messaging
+    - topic
+    maintainers:
+    - email: support@lsdopen.io
+      name: LSD
+      url: https://lsdopen.io
+    name: lsdmesp-confluent
+    sources:
+    - https://github.com/lsdopen/lsdmesp.cfk
+    urls:
+    - https://github.com/lsdopen/lsdmesp/releases/download/lsdmesp-confluent-0.6.0/lsdmesp-confluent-0.6.0.tgz
+    version: 0.6.0
+  - apiVersion: v2
     appVersion: 0.5.9
     created: "2024-05-23T10:25:20.835960975Z"
     dependencies:
@@ -729,4 +762,39 @@ entries:
     urls:
     - https://github.com/lsdopen/lsdmesp/releases/download/lsdmesp-confluent-0.2.0/lsdmesp-confluent-0.2.0.tgz
     version: 0.2.0
-generated: "2024-05-31T14:09:53.028017446Z"
+  lsdmesp-strimzi:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2024-08-28T15:23:28.00626483Z"
+    dependencies:
+    - name: strimzi-kafka-operator
+      repository: https://strimzi.io/charts/
+      version: 0.41.0
+    - name: cp-helm
+      repository: file://charts/cp-helm
+      version: 0.6.1
+    - name: kafka-ui
+      repository: https://kafbat.github.io/helm-charts
+      version: 1.4.2
+    description: 'LSDMESP: LSD Event Streaming Platform'
+    digest: 295e9daad2e3a33288a77c9b686c4937374d78e3ab7ee3684e841c8e65d7c6f2
+    home: https://github.com/lsdopen/lsdmesp
+    keywords:
+    - lsdmesp
+    - event
+    - stream
+    - kubernetes
+    - kafka
+    - messaging
+    - topic
+    maintainers:
+    - email: support@lsdopen.io
+      name: LSD
+      url: https://lsdopen.io
+    name: lsdmesp-strimzi
+    sources:
+    - https://github.com/lsdopen/lsdmesp
+    urls:
+    - https://github.com/lsdopen/lsdmesp/releases/download/lsdmesp-strimzi-1.0.0/lsdmesp-strimzi-1.0.0.tgz
+    version: 1.0.0
+generated: "2024-08-28T15:23:28.006403999Z"
