@@ -33,7 +33,7 @@ jobs:
           helm repo add confluentinc https://packages.confluent.io/helm
           helm repo add strimzi-kafka-operator https://strimzi.io/charts/
           helm repo add cp-helm-charts https://confluentinc.github.io/cp-helm-charts/
-          helm repo add kafka-ui https://provectus.github.io/kafka-ui-charts
+          helm repo add kafka-ui https://kafbat.github.io/helm-charts
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.5.0
