@@ -1,0 +1,40 @@
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-demo-0
+  namespace: lsdmesp-confluent
+spec:
+  principal:
+    name: TeamBlueAdmin
+    type: group
+  role: SystemAdmin
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-demo-1
+  namespace: lsdmesp-confluent
+spec:
+  clustersScopeByIds:
+    connectClusterId: lsdmesp-confluent.connect
+  principal:
+    name: TeamBlueAdmin
+    type: group
+  role: SystemAdmin
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-demo-2
+  namespace: lsdmesp-confluent
+spec:
+  clustersScopeByIds:
+    schemaRegistryClusterId: id_schemaregistry_lsdmesp-confluent
+  principal:
+    name: TeamBlueAdmin
+    type: group
+  resourcePatterns:
+  - name: "*"
+    patternType: LITERAL
+    resourceType: Subject
+  role: ResourceOwner
