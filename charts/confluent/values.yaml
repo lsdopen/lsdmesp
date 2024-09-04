@@ -276,7 +276,7 @@ lsdmesp:
         # -- Annotations for the Control Center ingress
         annotations: {}
         # -- Base domain configuration for the Control Center ingress
-        baseDomain: "example.com"
+        baseDomain: "apps.mesp.lsdopen.io"
         # -- TLS host configuration will be dynamically built based on the base domain. You can change the secret name here.
         tls:
           secretName: controlcenter-tls
