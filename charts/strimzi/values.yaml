@@ -104,9 +104,17 @@ lsdmesp:
     ksqldb:
       ingress:
         url: *anchorconfluentKsqldbURL
+        ingressClassName: "nginx"
+        annotations: {}
+        tls:
+          secretName: ksqldb-tls
     schemaRegistry:
       ingress:
         url: *anchorconfluentSchemaRegistryURL
+        ingressClassName: "nginx"
+        annotations: {}
+        tls:
+          secretName: schemaregistry-tls
 
   armyKnife:
     enabled: true
@@ -512,3 +520,4 @@ kafka-ui:
     host: "kafka-ui.apps.mesp.lsdopen.io"
     tls:
       enabled: true
+      secretName: kafka-ui-tls
