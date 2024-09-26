@@ -4,12 +4,10 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+{{- with .Values.lsdmesp.confluent.ksqldb.ingress.annotations }}
   annotations:
-    meta.helm.sh/release-name: {{ .Release.Name }}
-    meta.helm.sh/release-namespace: {{ .Release.Namespace }}
-    {{- with .Values.lsdmesp.confluent.ksqldb.ingress.annotations }}
-    {{ toYaml . | indent 4 }}
-    {{- end }}
+{{ toYaml . | indent 4 }}
+{{- end }}
   labels:
     app: cp-ksql-server
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"

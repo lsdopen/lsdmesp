@@ -162,6 +162,27 @@ spec:
         tls: true
         authentication:
           type: tls
+      {{- if $kafka.ingress.enabled }}
+      - name: external
+        port: 9094
+        type: ingress
+        tls: true
+        authentication:
+          type: tls
+        configuration:
+          class: {{ $kafka.ingress.ingressClassName }}
+          bootstrap:
+            host: bootstrap.{{ $kafka.externalDomain }}
+          brokerCertChainAndKey:
+            certificate: tls.crt
+            key: tls.key
+            secretName: {{ $kafka.ingress.tls.secretName }}
+          brokers:
+      {{- range $i := until ($kafka.replicas | int) }}
+            - broker: {{ $i }}
+              host: broker{{ $i }}.{{ $kafka.externalDomain }}
+      {{- end }}
+      {{- else -}}
       - name: external
         port: 9094
         type: nodeport
@@ -185,6 +206,7 @@ spec:
           - broker: 2
             advertisedHost: broker2.{{ $kafka.externalDomain }}
             nodePort: 32002
+      {{- end }}
     readinessProbe:
       initialDelaySeconds: 15
       timeoutSeconds: 5

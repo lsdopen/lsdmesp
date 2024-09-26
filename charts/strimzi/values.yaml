@@ -63,6 +63,12 @@ lsdmesp:
           memory: 3Gi
       # number of pod replicas
       replicas: 3
+      ingress:
+        enabled: false
+        ingressClassName: "nginx"
+        annotations: {}
+        tls:
+          secretName: kafka-tls
 
     topicOperator:
       # pod resource limits and request
