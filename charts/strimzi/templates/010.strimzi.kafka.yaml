@@ -24,6 +24,18 @@ spec:
         kraftMetadata: shared
         size: {{ $kraftcontroller.dataVolumeCapacity }}
         type: persistent-claim
+  template:
+    pod:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: strimzi.io/pool-name
+                    operator: In
+                    values:
+                      - controller
+              topologyKey: kubernetes.io/hostname
 ---
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaNodePool
@@ -52,6 +64,7 @@ spec:
   template:
     pod:
       affinity:
+{{- if not $kafka.ingress.enabled }}
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
           - preference:
@@ -75,6 +88,7 @@ spec:
                 values:
                 - lsdmesp-broker-2
             weight: 20
+{{- end }}
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
@@ -182,7 +196,7 @@ spec:
             - broker: {{ $i }}
               host: broker{{ $i }}.{{ $kafka.externalDomain }}
       {{- end }}
-      {{- else -}}
+      {{- else }}
       - name: external
         port: 9094
         type: nodeport
