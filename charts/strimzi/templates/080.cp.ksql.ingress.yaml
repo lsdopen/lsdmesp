@@ -7,12 +7,15 @@ metadata:
   annotations:
     meta.helm.sh/release-name: {{ .Release.Name }}
     meta.helm.sh/release-namespace: {{ .Release.Namespace }}
+    {{- with .Values.lsdmesp.confluent.ksqldb.ingress.annotations }}
+    {{ toYaml . | indent 4 }}
+    {{- end }}
   labels:
     app: cp-ksql-server
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
   name: lsdmesp-cp-ksql-server-external
 spec:
-  ingressClassName: nginx
+  ingressClassName: {{ .Values.lsdmesp.confluent.ksqldb.ingress.ingressClassName }}
   rules:
   - host: {{ .Values.lsdmesp.confluent.ksqldb.ingress.url }}
     http:
@@ -27,5 +30,6 @@ spec:
   tls:
   - hosts:
     - {{ .Values.lsdmesp.confluent.ksqldb.ingress.url }}
+    secretName: {{ .Values.lsdmesp.confluent.ksqldb.ingress.tls.secretName }}
 ---
 {{- end }}
