@@ -68,7 +68,7 @@ lsdmesp:
         ingressClassName: "nginx"
         annotations: {}
         tls:
-          secretName: kafka-tls
+          secretName: lsdmesp-tls
 
     topicOperator:
       # pod resource limits and request
