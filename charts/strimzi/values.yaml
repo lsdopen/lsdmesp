@@ -111,15 +111,19 @@ lsdmesp:
       ingress:
         url: *anchorconfluentKsqldbURL
         ingressClassName: "nginx"
-        annotations: {}
+        annotations:
+          nginx.ingress.kubernetes.io/backend-protocol: HTTPS
         tls:
+          useCustomCert: false
           secretName: ksqldb-tls
     schemaRegistry:
       ingress:
         url: *anchorconfluentSchemaRegistryURL
         ingressClassName: "nginx"
-        annotations: {}
+        annotations:
+          nginx.ingress.kubernetes.io/backend-protocol: HTTPS
         tls:
+          useCustomCert: false
           secretName: schemaregistry-tls
 
   armyKnife:
@@ -517,6 +521,8 @@ kafka-ui:
         secretName: lsdmesp-tls
   ingress:
     annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/backend-protocol: HTTP
       nginx.ingress.kubernetes.io/auth-type: basic
       nginx.ingress.kubernetes.io/auth-secret: lsdmesp-guis-basic-auth
       nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'

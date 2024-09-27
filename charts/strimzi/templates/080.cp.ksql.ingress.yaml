@@ -28,6 +28,8 @@ spec:
   tls:
   - hosts:
     - {{ .Values.lsdmesp.confluent.ksqldb.ingress.url }}
+    {{- if .Values.lsdmesp.confluent.ksqldb.ingress.tls.useCustomCert }}
     secretName: {{ .Values.lsdmesp.confluent.ksqldb.ingress.tls.secretName }}
+    {{- end }}
 ---
 {{- end }}
