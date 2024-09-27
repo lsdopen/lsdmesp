@@ -28,6 +28,8 @@ spec:
   tls:
   - hosts:
     - {{ .Values.lsdmesp.confluent.schemaRegistry.ingress.url }}
+    {{- if .Values.lsdmesp.confluent.schemaRegistry.ingress.tls.useCustomCert }}
     secretName: {{ .Values.lsdmesp.confluent.schemaRegistry.ingress.tls.secretName }}
+    {{- end }}
 ---
 {{- end }}
