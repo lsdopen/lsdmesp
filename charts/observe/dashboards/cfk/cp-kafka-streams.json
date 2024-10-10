@@ -82,7 +82,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -132,7 +132,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "sum(kafka_streams_stream_metrics{namespace=\"$namespace\"})",
@@ -148,7 +148,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "",
       "fieldConfig": {
@@ -199,7 +199,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "exemplar": false,
@@ -230,7 +230,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "",
       "fieldConfig": {
@@ -281,7 +281,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "exemplar": false,
@@ -312,7 +312,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "",
       "fieldConfig": {
@@ -363,7 +363,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "exemplar": false,
@@ -394,7 +394,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The total number of records dropped for all tasks.",
       "fieldConfig": {
@@ -445,7 +445,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "exemplar": false,
@@ -476,7 +476,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The average processing time in ms for the average of all threads and tasks",
       "fieldConfig": {
@@ -527,7 +527,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "exemplar": false,
@@ -571,7 +571,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -627,7 +627,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "exemplar": false,
@@ -662,7 +662,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -769,7 +769,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "exemplar": false,
@@ -784,7 +784,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "exemplar": false,
@@ -873,7 +873,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The average execution time in ms, for the respective operation, across all running tasks of this thread.\n",
       "fieldConfig": {
@@ -953,7 +953,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "kafka_streams_stream_thread_metrics_poll_latency_avg{namespace=\"$namespace\"}",
@@ -969,7 +969,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The average execution time in ms, for commit, across all running tasks of this thread.\n",
       "fieldConfig": {
@@ -1049,7 +1049,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "kafka_streams_stream_thread_metrics_poll_latency_avg",
@@ -1065,7 +1065,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The maximum execution time in ms, for polling, across all running tasks of this thread.\n",
       "fieldConfig": {
@@ -1144,7 +1144,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "kafka_streams_stream_thread_metrics_poll_latency_avg",
@@ -1160,7 +1160,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The maximum execution time in ms, for polling, across all running tasks of this thread.\n",
       "fieldConfig": {
@@ -1239,7 +1239,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "kafka_streams_stream_thread_metrics_poll_latency_max",
@@ -1255,7 +1255,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The maximum execution time in ms, for processing, across all running tasks of this thread.\n",
       "fieldConfig": {
@@ -1334,7 +1334,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "kafka_streams_stream_thread_metrics_process_latency_avg",
@@ -1350,7 +1350,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The maximum execution time in ms, for processing, across all running tasks of this thread.\n",
       "fieldConfig": {
@@ -1429,7 +1429,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "kafka_streams_stream_thread_metrics_process_latency_max",
@@ -1445,7 +1445,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The average number of records processed within an iteration.\n",
       "fieldConfig": {
@@ -1524,7 +1524,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "kafka_streams_stream_thread_metrics_poll_records_avg",
@@ -1540,7 +1540,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The maximum number of records processed within an iteration.\n",
       "fieldConfig": {
@@ -1619,7 +1619,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "kafka_streams_stream_thread_metrics_poll_records_max",
@@ -1635,7 +1635,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The average number of newly-created tasks per second.\n",
       "fieldConfig": {
@@ -1714,7 +1714,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "kafka_streams_stream_thread_metrics_task_created_rate",
@@ -1730,7 +1730,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The total number of newly-created tasks.\n",
       "fieldConfig": {
@@ -1809,7 +1809,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "kafka_streams_stream_thread_metrics_task_created_total",
@@ -1825,7 +1825,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The average number of tasks closed per second.\n",
       "fieldConfig": {
@@ -1904,7 +1904,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "kafka_streams_stream_thread_metrics_task_closed_rate",
@@ -1920,7 +1920,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The total number of tasks closed.\n",
       "fieldConfig": {
@@ -1999,7 +1999,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "kafka_streams_stream_thread_metrics_task_closed_total",
@@ -2028,7 +2028,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The actieve pro",
       "fieldConfig": {
@@ -2107,7 +2107,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "(kafka_streams_stream_task_metrics_dropped_records_rate{namespace=\"$namespace\"})",
@@ -2123,7 +2123,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The total sum of records dropped within this task grouped by thread.\n",
       "fieldConfig": {
@@ -2202,7 +2202,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": " (kafka_streams_stream_task_metrics_dropped_records_total{namespace=\"$namespace\"})",
@@ -2218,7 +2218,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The average active process ratio by thread\n",
       "fieldConfig": {
@@ -2297,7 +2297,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": " (kafka_streams_stream_task_metrics_active_process_ratio{namespace=\"$namespace\"})",
@@ -2313,7 +2313,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -2374,7 +2374,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "exemplar": false,
@@ -2421,7 +2421,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The actieve pro",
       "fieldConfig": {
@@ -2500,7 +2500,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "(kafka_streams_stream_task_metrics_process_latency_avg{namespace=\"$namespace\"}) / 1000000",
@@ -2529,7 +2529,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The average number of records processed per second by a source node\n",
       "fieldConfig": {
@@ -2608,7 +2608,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "kafka_streams_stream_processor_node_metrics_process_rate{namespace=\"$namespace\"}",
@@ -2624,7 +2624,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The total records processed by a source node ",
       "fieldConfig": {
@@ -2703,7 +2703,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "expr": "(kafka_streams_stream_processor_node_metrics_process_total{namespace=\"$namespace\"})",

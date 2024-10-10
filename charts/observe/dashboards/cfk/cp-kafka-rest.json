@@ -70,7 +70,7 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "gridPos": {
         "h": 1,
@@ -84,7 +84,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "refId": "A"
         }
@@ -95,7 +95,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "Total number of active TCP connections",
       "fieldConfig": {
@@ -142,7 +142,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "sum(kafka_rest_jetty_metrics_connections_active{job=\"kafkarestproxy\", namespace=\"$namespace\"})",
@@ -158,7 +158,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "",
       "fieldConfig": {
@@ -205,7 +205,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "sum(kafka_rest_jetty_metrics_busy_thread_count{job=\"kafkarestproxy\", namespace=\"$namespace\"})",
@@ -221,7 +221,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "",
       "fieldConfig": {
@@ -269,7 +269,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "kafka_rest_jetty_metrics_thread_pool_usage{job=\"kafkarestproxy\", namespace=\"$namespace\"}",
@@ -285,7 +285,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "",
       "fieldConfig": {
@@ -368,7 +368,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "kafka_rest_jetty_metrics_request_queue_size{job=\"kafkarestproxy\", namespace=\"$namespace\"}",
@@ -383,7 +383,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The average rate per second of opened TCP connections",
       "fieldConfig": {
@@ -466,7 +466,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "kafka_rest_jetty_metrics_connections_opened_rate{job=\"kafkarestproxy\", namespace=\"$namespace\"}",
@@ -481,7 +481,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The average rate per second of closed TCP connections",
       "fieldConfig": {
@@ -564,7 +564,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "kafka_rest_jetty_metrics_connections_closed_rate{job=\"kafkarestproxy\", namespace=\"$namespace\"}",
@@ -579,7 +579,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The average rate per second of accepted TCP connections",
       "fieldConfig": {
@@ -662,7 +662,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "kafka_rest_jetty_metrics_connections_accepted_rate{job=\"kafkarestproxy\", namespace=\"$namespace\"}",
@@ -678,7 +678,7 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "gridPos": {
         "h": 1,
@@ -692,7 +692,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "refId": "A"
         }
@@ -703,7 +703,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -783,7 +783,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "rate(process_cpu_seconds_total{job=\"kafkarestproxy\",namespace=\"$namespace\"}[5m])",
@@ -798,7 +798,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -878,7 +878,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "sum without(area)(jvm_memory_bytes_used{job=\"kafkarestproxy\",namespace=\"$namespace\"})",
@@ -889,7 +889,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "jvm_memory_bytes_max{job=\"kafkarestproxy\",namespace=\"$namespace\",area=\"heap\"}",
@@ -904,7 +904,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -986,7 +986,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "sum without(gc)(rate(jvm_gc_collection_seconds_sum{job=\"kafkarestproxy\",namespace=\"$namespace\"}[5m]))",

@@ -57,7 +57,7 @@
 			"collapsed": false,
 			"datasource": {
 				"type": "prometheus",
-				"uid": "${Prometheus}"
+				"uid": ""
 			},
 			"gridPos": {
 				"h": 1,
@@ -71,7 +71,7 @@
 				{
 					"datasource": {
 						"type": "prometheus",
-						"uid": "${Prometheus}"
+						"uid": ""
 					},
 					"refId": "A"
 				}
@@ -86,7 +86,7 @@
 			"dashes": false,
 			"datasource": {
 				"type": "prometheus",
-				"uid": "${Prometheus}"
+				"uid": ""
 			},
 			"description": "Max extrapolated lag in seconds for each consumer group.",
 			"fill": 1,
@@ -128,7 +128,7 @@
 				{
 					"datasource": {
 						"type": "prometheus",
-						"uid": "${Prometheus}"
+						"uid": ""
 					},
 					"expr": "topk(50, kafka_consumergroup_group_max_lag_seconds{cluster_name=\"$cluster_name\",group=~\"$consumer_group\"})",
 					"format": "time_series",
@@ -178,7 +178,7 @@
 			"dashes": false,
 			"datasource": {
 				"type": "prometheus",
-				"uid": "${Prometheus}"
+				"uid": ""
 			},
 			"description": "Extrapolated lag in seconds for each partition.",
 			"fill": 1,
@@ -220,7 +220,7 @@
 				{
 					"datasource": {
 						"type": "prometheus",
-						"uid": "${Prometheus}"
+						"uid": ""
 					},
 					"expr": "topk(25, kafka_consumergroup_group_lag_seconds{cluster_name=\"$cluster_name\",group=~\"$consumer_group\"})",
 					"format": "time_series",
@@ -270,7 +270,7 @@
 			"dashes": false,
 			"datasource": {
 				"type": "prometheus",
-				"uid": "${Prometheus}"
+				"uid": ""
 			},
 			"description": "Max offset lag for each consumer group.",
 			"fill": 1,
@@ -313,7 +313,7 @@
 				{
 					"datasource": {
 						"type": "prometheus",
-						"uid": "${Prometheus}"
+						"uid": ""
 					},
 					"expr": "topk(50, kafka_consumergroup_group_max_lag{cluster_name=\"$cluster_name\",group=~\"$consumer_group\"})",
 					"format": "time_series",
@@ -363,7 +363,7 @@
 			"dashes": false,
 			"datasource": {
 				"type": "prometheus",
-				"uid": "${Prometheus}"
+				"uid": ""
 			},
 			"description": "Consumer Group Lag Partition Offsets",
 			"fill": 1,
@@ -405,7 +405,7 @@
 				{
 					"datasource": {
 						"type": "prometheus",
-						"uid": "${Prometheus}"
+						"uid": ""
 					},
 					"expr": "topk(25, kafka_consumergroup_group_lag{cluster_name=\"$cluster_name\",group=~\"$consumer_group\"})",
 					"format": "time_series",
@@ -452,7 +452,7 @@
 			"collapsed": false,
 			"datasource": {
 				"type": "prometheus",
-				"uid": "${Prometheus}"
+				"uid": ""
 			},
 			"gridPos": {
 				"h": 1,
@@ -466,7 +466,7 @@
 				{
 					"datasource": {
 						"type": "prometheus",
-						"uid": "${Prometheus}"
+						"uid": ""
 					},
 					"refId": "A"
 				}
@@ -481,7 +481,7 @@
 			"dashes": false,
 			"datasource": {
 				"type": "prometheus",
-				"uid": "${Prometheus}"
+				"uid": ""
 			},
 			"description": "",
 			"fill": 0,
@@ -533,7 +533,7 @@
 				{
 					"datasource": {
 						"type": "prometheus",
-						"uid": "${Prometheus}"
+						"uid": ""
 					},
 					"expr": "kafka_consumergroup_group_max_lag_seconds{cluster_name=\"$cluster_name\",group=~\"$consumer_group\"}",
 					"format": "time_series",
@@ -545,7 +545,7 @@
 				{
 					"datasource": {
 						"type": "prometheus",
-						"uid": "${Prometheus}"
+						"uid": ""
 					},
 					"expr": "kafka_consumergroup_group_max_lag{cluster_name=\"$cluster_name\",group=~\"$consumer_group\"}",
 					"format": "time_series",
@@ -592,7 +592,7 @@
 			"collapsed": false,
 			"datasource": {
 				"type": "prometheus",
-				"uid": "${Prometheus}"
+				"uid": ""
 			},
 			"gridPos": {
 				"h": 1,
@@ -606,7 +606,7 @@
 				{
 					"datasource": {
 						"type": "prometheus",
-						"uid": "${Prometheus}"
+						"uid": ""
 					},
 					"refId": "A"
 				}
@@ -621,7 +621,7 @@
 			"dashes": false,
 			"datasource": {
 				"type": "prometheus",
-				"uid": "${Prometheus}"
+				"uid": ""
 			},
 			"description": "",
 			"fill": 0,
@@ -674,7 +674,7 @@
 				{
 					"datasource": {
 						"type": "prometheus",
-						"uid": "${Prometheus}"
+						"uid": ""
 					},
 					"expr": "max(kafka_consumergroup_group_lag_seconds{cluster_name=\"$cluster_name\",group=~\"$consumer_group\"}) by (group)",
 					"format": "time_series",
@@ -686,7 +686,7 @@
 				{
 					"datasource": {
 						"type": "prometheus",
-						"uid": "${Prometheus}"
+						"uid": ""
 					},
 					"expr": "sum(kafka_consumergroup_group_offset{cluster_name=\"$cluster_name\",group=~\"$consumer_group\"})",
 					"format": "time_series",
@@ -698,7 +698,7 @@
 				{
 					"datasource": {
 						"type": "prometheus",
-						"uid": "${Prometheus}"
+						"uid": ""
 					},
 					"expr": "sum((kafka_consumergroup_group_offset{cluster_name=\"$cluster_name\",group=~\"$consumer_group\"} * 0)\n+ on(cluster_name,topic,partition) group_left() kafka_partition_latest_offset{cluster_name=\"$cluster_name\"})",
 					"format": "time_series",
@@ -743,7 +743,7 @@
 			"collapsed": false,
 			"datasource": {
 				"type": "prometheus",
-				"uid": "${Prometheus}"
+				"uid": ""
 			},
 			"gridPos": {
 				"h": 1,
@@ -757,7 +757,7 @@
 				{
 					"datasource": {
 						"type": "prometheus",
-						"uid": "${Prometheus}"
+						"uid": ""
 					},
 					"refId": "A"
 				}
@@ -772,7 +772,7 @@
 			"dashes": false,
 			"datasource": {
 				"type": "prometheus",
-				"uid": "${Prometheus}"
+				"uid": ""
 			},
 			"fill": 1,
 			"gridPos": {
@@ -807,7 +807,7 @@
 				{
 					"datasource": {
 						"type": "prometheus",
-						"uid": "${Prometheus}"
+						"uid": ""
 					},
 					"expr": "sum(rate(jvm_memory_bytes_used[5m]))",
 					"format": "time_series",
@@ -852,7 +852,7 @@
 			"dashes": false,
 			"datasource": {
 				"type": "prometheus",
-				"uid": "${Prometheus}"
+				"uid": ""
 			},
 			"fill": 1,
 			"gridPos": {
@@ -887,7 +887,7 @@
 				{
 					"datasource": {
 						"type": "prometheus",
-						"uid": "${Prometheus}"
+						"uid": ""
 					},
 					"expr": "sum(rate(jvm_gc_collection_seconds_sum[5m]))",
 					"format": "time_series",
@@ -932,7 +932,7 @@
 			"dashes": false,
 			"datasource": {
 				"type": "prometheus",
-				"uid": "${Prometheus}"
+				"uid": ""
 			},
 			"fill": 1,
 			"gridPos": {
@@ -967,7 +967,7 @@
 				{
 					"datasource": {
 						"type": "prometheus",
-						"uid": "${Prometheus}"
+						"uid": ""
 					},
 					"expr": "sum(rate(jvm_gc_collection_seconds_count[5m]))",
 					"format": "time_series",
@@ -1015,7 +1015,7 @@
 				"current": {},
 				"datasource": {
 					"type": "prometheus",
-					"uid": "${Prometheus}"
+					"uid": ""
 				},
 				"definition": "",
 				"hide": 0,
@@ -1039,7 +1039,7 @@
 				"current": {},
 				"datasource": {
 					"type": "prometheus",
-					"uid": "${Prometheus}"
+					"uid": ""
 				},
 				"definition": "",
 				"hide": 0,
