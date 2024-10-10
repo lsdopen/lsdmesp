@@ -73,6 +73,10 @@ spec:
     application: confluentinc/cp-server-connect:{{ .Values.lsdmesp.cpVersion }}
     init: confluentinc/confluent-init-container:{{ .Values.lsdmesp.cpOperatorVersion }}
   internalTopicReplicationFactor: {{ .Values.lsdmesp.defaultReplicationFactor }}
+  {{- if not ((index .Values "confluent-for-kubernetes" "licenseKey") | empty) }}
+  license:
+    globalLicense: true
+  {{- end }}
   metrics:
     prometheus:
       blacklist:

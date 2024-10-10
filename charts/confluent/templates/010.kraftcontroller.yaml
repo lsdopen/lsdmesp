@@ -13,6 +13,10 @@ spec:
   image:
     application: docker.io/confluentinc/cp-server:{{ .Values.lsdmesp.cpVersion }}
     init: confluentinc/confluent-init-container:{{ .Values.lsdmesp.cpOperatorVersion }}
+  {{- if not ((index .Values "confluent-for-kubernetes" "licenseKey") | empty) }}
+  license:
+    globalLicense: true
+  {{- end }}
   listeners:
     controller:
       tls:

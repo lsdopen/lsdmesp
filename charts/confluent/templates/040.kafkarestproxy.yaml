@@ -38,6 +38,10 @@ spec:
   image:
     application: confluentinc/cp-kafka-rest:{{ .Values.lsdmesp.cpVersion }}
     init: confluentinc/confluent-init-container:{{ .Values.lsdmesp.cpOperatorVersion }}
+  {{- if not ((index .Values "confluent-for-kubernetes" "licenseKey") | empty) }}
+  license:
+    globalLicense: true
+  {{- end }}
   oneReplicaPerNode: true
   metrics:
     prometheus:

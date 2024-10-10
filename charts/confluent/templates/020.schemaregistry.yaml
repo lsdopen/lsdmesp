@@ -35,6 +35,10 @@ spec:
     application: confluentinc/cp-schema-registry:{{ .Values.lsdmesp.cpVersion }}
     init: confluentinc/confluent-init-container:{{ .Values.lsdmesp.cpOperatorVersion }}
   internalTopicReplicatorFactor: {{ .Values.lsdmesp.defaultReplicationFactor }}
+  {{- if not ((index .Values "confluent-for-kubernetes" "licenseKey") | empty) }}
+  license:
+    globalLicense: true
+  {{- end }}
   {{- if $schemaregistry.externalAccess }}
   listeners:
     external:
