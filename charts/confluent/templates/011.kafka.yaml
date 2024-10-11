@@ -60,6 +60,13 @@ spec:
     globalLicense: true
   {{- end }}
   listeners:
+    custom:
+      - authentication:
+          type: ldap
+        name: local
+        port: 9095
+        tls:
+          enabled: true
     internal:
       authentication:
         principalMappingRules:

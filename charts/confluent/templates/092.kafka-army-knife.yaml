@@ -37,7 +37,7 @@ spec:
         - image: {{ .Values.lsdmesp.armyKnife.image }}
           env:
             - name: LSDMESP_BOOTSTRAP_SERVERS
-              value: "kafka.{{ .Release.Namespace }}.svc.cluster.local:9092"
+              value: "kafka.{{ .Release.Namespace }}.svc.cluster.local:9095"
             - name: LSDMESP_SCHEMA_REGISTRY_URL
               value: "https://schemaregistry.{{ .Release.Namespace }}.svc.cluster.local:8081"
           command:
