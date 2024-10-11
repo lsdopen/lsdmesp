@@ -14,8 +14,8 @@ helm dependency update .
 
 Create the namespaces
 ```
-kubectl create ns lsdmesp-confluent
-kubectl config set-context --current --namespace lsdmesp-confluent
+kubectl create ns lsdmesp
+kubectl config set-context --current --namespace lsdmesp
 ```
 
 Set PROJECT_HOME env var to project directory
@@ -32,18 +32,18 @@ TODO
 `(Optional)` Deploy OpenLDAP for RBAC (if no external LDAP server is available):
 ```
 LDAP_CHART_HOME=$PROJECT_HOME/assets/openldap
-helm upgrade --install ldap-dev $LDAP_CHART_HOME --namespace lsdmesp-confluent
+helm upgrade --install ldap-dev $LDAP_CHART_HOME --namespace lsdmesp
 ```
 
 Test OpenLDAP:
 ```
-kubectl --namespace lsdmesp-confluent exec -it ldap-0 -- bash
-ldapsearch -LLL -x -H ldap://ldap.lsdmesp-confluent.svc.cluster.local:389 -b 'dc=test,dc=com' -D "cn=mds,dc=test,dc=com" -w 'Developer!'
+kubectl --namespace lsdmesp exec -it ldap-0 -- bash
+ldapsearch -LLL -x -H ldap://ldap.lsdmesp.svc.cluster.local:389 -b 'dc=test,dc=com' -D "cn=mds,dc=test,dc=com" -w 'Developer!'
 ```
 
 ### Deploy LSDMESP:
 ```
-helm install lsdmesp-confluent . -f values.yaml -n lsdmesp-confluent
+helm install lsdmesp . -f values.yaml -n lsdmesp
 ```
 
 ## Uninstall LSDMESP
@@ -65,7 +65,7 @@ kubectl delete kafkarestclasses.platform.confluent.io --all
 Uninstall the chart
 
 ```shell
-helm uninstall lsdmesp-confluent -n lsdmesp-confluent
+helm uninstall lsdmesp -n lsdmesp
 for crd in $(kubectl get crd --no-headers -ojsonpath='{.items[*].metadata.name}' | grep confluent); do kubectl delete crd $crd; done
-kubectl delete ns lsdmesp-confluent
+kubectl delete ns lsdmesp
 ```

@@ -14,7 +14,7 @@ function patchFinalizers() {
 }
 
 patchFinalizers
-helm uninstall lsdmesp-confluent
+helm uninstall lsdmesp
 sleep 5
 patchFinalizers
 
