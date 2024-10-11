@@ -20,3 +20,5 @@ patchFinalizers
 
 kubectl get pvc | awk '{print $1}' | grep -v NAME | xargs -I {} kubectl delete pvc {}
 kubectl get pv | awk '{print $1}' | grep -v NAME | xargs -I {} kubectl delete pv {}
+
+# aws ec2 describe-volumes --filter "Name=tag:Name,Values=EBS-CSI-lsdmesp-*" --query "Volumes[*].{ID:VolumeId,VolName:Tags[?Key=='Name']|[0].Value}" | jq -r ".[].ID" | xargs -I {} aws ec2 delete-volume --volume-id {}
