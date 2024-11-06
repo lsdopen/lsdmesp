@@ -1,7 +1,7 @@
 apiVersion: v2
 name: lsdmesp-confluent
-version: "0.6.3"
-appVersion: "0.6.3"
+version: "0.6.4"
+appVersion: "0.6.4"
 description: 'LSDMESP CFK: LSD Event Streaming Platform with Confluent Operator'
 keywords:
   - lsdmesp
@@ -26,5 +26,5 @@ maintainers:
 deprecated: false
 dependencies:
   - name: confluent-for-kubernetes
-    version: "0.921.2"
+    version: "0.1033.33"
     repository: https://packages.confluent.io/helm

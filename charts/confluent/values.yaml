@@ -1,7 +1,7 @@
 lsdmesp:
   clusterType: "kind"
-  cpVersion: "7.6.0"
-  cpOperatorVersion: "2.8.0"
+  cpVersion: "7.7.1"
+  cpOperatorVersion: "2.9.3"
   storageClass: standard
   defaultReplicationFactor: 3
   defaultMinInSyncReplicas: 2
@@ -300,7 +300,7 @@ confluent-for-kubernetes:
     registry: docker.io
     repository: confluentinc/confluent-operator
     pullPolicy: IfNotPresent
-    tag: "0.921.2"
+    tag: "0.1033.33"
   priorityClassName: ""
   replicas: 1
   namespaced: true
