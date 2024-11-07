@@ -11,7 +11,7 @@
 And then copy the whole of kafka-blueprints to the army knife /root.
 
 ```
-> kubectl cp kafka-blueprints kafka-army-knife-xxx-yyy:/root
+> kubectl cp kafka-blueprints `kubectl get pods | grep army | awk '{print $1}'`:/root
 ```
 
 Further, **inside** the army knife make a **copy** of the read-only mounted client.properties file:
