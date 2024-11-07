@@ -1,7 +1,7 @@
 apiVersion: v2
 name: lsdmesp-confluent
-version: "0.6.6"
-appVersion: "0.6.6"
+version: "0.6.7"
+appVersion: "0.6.7"
 description: 'LSDMESP CFK: LSD Event Streaming Platform with Confluent Operator'
 keywords:
   - lsdmesp
