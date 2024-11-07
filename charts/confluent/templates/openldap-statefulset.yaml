@@ -88,6 +88,7 @@ spec:
       name: ldap-data
     spec:
       accessModes: ["ReadWriteOnce"]
+      storageClassName: {{ .Values.lsdmesp.storageClass }}
       resources:
         requests:
           storage: 500Mi
@@ -95,6 +96,7 @@ spec:
       name: ldap-config
     spec:
       accessModes: ["ReadWriteOnce"]
+      storageClassName: {{ .Values.lsdmesp.storageClass }}
       resources:
         requests:
           storage: 500Mi
