@@ -2,7 +2,7 @@
   "name": "prod.teamblue.datagen.conn",
   "config": {
     "value.converter.basic.auth.credentials.source": "USER_INFO",
-    "value.converter.schema.registry.url": "https://schemaregistry.lsdmesp-confluent.svc.cluster.local:8081",
+    "value.converter.schema.registry.url": "https://schemaregistry.lsdmesp.svc.cluster.local:8081",
     "value.converter.schema.registry.basic.auth.user.info": "bob:bob-secret",
     "value.converter.schema.registry.ssl.truststore.location": "/mnt/sslcerts/truststore.jks",
     "value.converter.schema.registry.ssl.truststore.password": "${file:/mnt/sslcerts/jksPassword.txt:jksPassword}",
@@ -13,4 +13,3 @@
     "quickstart": "users"
   }
 }
-
