@@ -1,4 +1,4 @@
-{{- if and .Values.lsdmesp.monitoring.enabled -}}
+{{- if .Values.lsdmesp.monitoring.enabled -}}
 ---
 apiVersion: v1
 kind: ConfigMap

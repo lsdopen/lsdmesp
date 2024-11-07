@@ -1,7 +1,7 @@
 apiVersion: v2
 name: lsdmesp-strimzi
-version: "1.0.5"
-appVersion: "1.0.5"
+version: "1.0.6"
+appVersion: "1.0.6"
 description: 'LSDMESP Strimzi: LSD Event Streaming Platform based on Strimzi'
 keywords:
   - lsdmesp
