@@ -1,112 +1,16 @@
 {{- if .Values.lsdmesp.monitoring.enabled -}}
+{{ range $path, $_ :=  .Files.Glob  "dashboards/**.json" }}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: dashboard-cp-kafka-connect
+  name: dashboard-{{ base $path | lower | trimSuffix ".json" }}
+  annotations:
+    grafana_folder: "lsdmesp"
   labels:
     grafana_dashboard: "1"
 data:
-  cp-kafka-connect.json: |-
-{{ .Files.Get "dashboards/cp-kafka-connect.json" | indent 4}}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: dashboard-cp-kafka-consumer
-  labels:
-    grafana_dashboard: "1"
-data:
-  cp-kafka-consumer.json: |-
-{{ .Files.Get "dashboards/cp-kafka-consumer.json" | indent 4}}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: dashboard-cp-kafka-lag-exporter
-  labels:
-    grafana_dashboard: "1"
-data:
-  cp-kafka-lag-exporter.json: |-
-{{ .Files.Get "dashboards/cp-kafka-lag-exporter.json" | indent 4}}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: dashboard-cp-kafka-producer
-  labels:
-    grafana_dashboard: "1"
-data:
-  cp-kafka-producer.json: |-
-{{ .Files.Get "dashboards/cp-kafka-producer.json" | indent 4}}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: dashboard-cp-kafka-rest
-  labels:
-    grafana_dashboard: "1"
-data:
-  cp-kafka-rest.json: |-
-{{ .Files.Get "dashboards/cp-kafka-rest.json" | indent 4}}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: dashboard-cp-kafka-streams
-  labels:
-    grafana_dashboard: "1"
-data:
-  cp-kafka-streams.json: |-
-{{ .Files.Get "dashboards/cp-kafka-streams.json" | indent 4}}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: dashboard-cp-kafka-topics
-  labels:
-    grafana_dashboard: "1"
-data:
-  cp-kafka-topics.json: |-
-{{ .Files.Get "dashboards/cp-kafka-topics.json" | indent 4}}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: dashboard-cp-kafka
-  labels:
-    grafana_dashboard: "1"
-data:
-  cp-kafka.json: |-
-{{ .Files.Get "dashboards/cp-kafka.json" | indent 4}}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: dashboard-cp-kraft
-  labels:
-    grafana_dashboard: "1"
-data:
-  cp-kraft.json: |-
-{{ .Files.Get "dashboards/cp-kraft.json" | indent 4}}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: dashboard-cp-ksql-server
-  labels:
-    grafana_dashboard: "1"
-data:
-  cp-ksql-server.json: |-
-{{ .Files.Get "dashboards/cp-ksql-server.json" | indent 4}}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: dashboard-cp-schema-registry
-  labels:
-    grafana_dashboard: "1"
-data:
-  cp-schema-registry.json: |-
-{{ .Files.Get "dashboards/cp-schema-registry.json" | indent 4}}
+  {{ base $path | lower }}: |-
+{{ $.Files.Get $path | indent 4}}
+{{ end }}
 {{- end -}}
