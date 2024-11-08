@@ -36,6 +36,12 @@ Finally connect to the nodeport port for any of the brokers:
 
 > kafka-topics --list --bootstrap-server broker0.mesp.lsdopen.io:32100 --command-config ../config/lsdadmin.properties
 
+### Testing from outside using the AWS ingress
+
+After creating the keystore and the property file:
+
+> kafka-topics.sh --list --bootstrap-server bootstrap.mesp-strimzi.sandbox.internal.lsdopen.io:443 --command-config lsdadmin.properties
+
 ### Create connector
 
 > curl -k -u "lsdmesp-api:oYR3tYgsUAabgaA" -X DELETE https://lsdmesp-cp-kafka-connect:8083/connectors/prod.teamblue.datagen.conn
