@@ -1,11 +1,5 @@
 ## Testing
 
-### Basic army knife testing:
-
-List all topics using the internal listener from within the army knife:
-
-> kafka-topics --list --bootstrap-server lsdmesp-kafka-bootstrap:9092
-
 ### Testing from the 'outside' using the nodeports
 
 Find out where the brokers are running:
