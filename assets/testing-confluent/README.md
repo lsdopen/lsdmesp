@@ -62,8 +62,10 @@ Then check that the sequence is correct, in either case:
 
 ### Connect testing
 
-See connector json file in this folder.
+See connector json file:
+> kafka-blueprints/kafka-connector-blueprints/prod_teamblue_datagen_conn.json
 
 ### KSQL Testing
 
-See stream sql file in this folder.
+See stream sql file:
+> kafka-blueprints/kafka-ksqldb-blueprints/prod_teamblue_datagen_stream.sql
