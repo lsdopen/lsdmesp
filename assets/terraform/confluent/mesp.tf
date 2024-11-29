@@ -22,27 +22,27 @@ module "eks-blueprint-mesp" {
   confluent_kafka = {
     enabled  = true
     username = "cf_kafka"
-    ingress  = false
+    ingress  = true
   }
   confluent_connect = {
     enabled  = true
     username = "cf_connect"
-    ingress  = false
+    ingress  = true
   }
   confluent_controlcenter = {
     enabled  = true
     username = "cf_controlcenter"
-    ingress  = false
+    ingress  = true
   }
   confluent_ksqldb = {
     enabled  = true
     username = "cf_ksqldb"
-    ingress  = false
+    ingress  = true
   }
   confluent_schemaregistry = {
     enabled  = true
     username = "cf_schemaregistry"
-    ingress  = false
+    ingress  = true
   }
 
   namespace = "lsdmesp"
