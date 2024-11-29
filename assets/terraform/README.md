@@ -53,7 +53,7 @@ In addition, one can create /etc/hosts entries for each ingress like this for te
 127.0.0.1 schemaregistry.apps.mesp.lsdopen.io
 ```
 
-Which allows for the endpoint testing, e.g.:
+Which allows for the endpoint testing one the module is applied, e.g.:
 
 ```
 curl -k -u "peter:peter-secret" https://schemaregistry.apps.mesp.lsdopen.io/subjects

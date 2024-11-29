@@ -11,7 +11,7 @@ provider "helm" {
 
 module "eks-blueprint-mesp" {
   source  = "app.terraform.io/lsdopen/eks-blueprint-mesp/aws"
-  version = "1.2.1"
+  version = "1.3.1"
 
   cluster_name             = "kind"
   base_url                 = "apps.mesp.lsdopen.io"
