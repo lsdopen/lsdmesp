@@ -9,6 +9,11 @@ provider "helm" {
   }
 }
 
+module "ingress-nginx" {
+  source  = "../ingress-nginx"
+  enabled = true
+}
+
 module "observe" {
   source  = "../observe"
   enabled = var.monitoring
@@ -79,6 +84,7 @@ module "eks-blueprint-mesp" {
   confluent_storage_class = "standard"
 
   depends_on = [
+    module.ingress-nginx,
     module.observe
   ]
 }
