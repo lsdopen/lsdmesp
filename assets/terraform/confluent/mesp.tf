@@ -9,6 +9,11 @@ provider "helm" {
   }
 }
 
+module "observe" {
+  source  = "../observe"
+  enabled = var.monitoring
+}
+
 module "eks-blueprint-mesp" {
   source  = "app.terraform.io/lsdopen/eks-blueprint-mesp/aws"
   version = "1.3.1"
@@ -53,7 +58,7 @@ module "eks-blueprint-mesp" {
     enabled = true
   }
 
-  monitoring = false
+  monitoring = var.monitoring
 
   army_knife = {
     enabled  = false
@@ -72,4 +77,8 @@ module "eks-blueprint-mesp" {
   }
 
   confluent_storage_class = "standard"
+
+  depends_on = [
+    module.observe
+  ]
 }

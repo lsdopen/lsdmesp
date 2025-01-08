@@ -27,6 +27,7 @@ resource "kubernetes_labels" "lsdmesp-monitoring-namespace_labels" {
 }
 
 resource "helm_release" "lsdmesp-monitoring" {
+  count      = var.enabled ? 1 : 0
   name       = "lsdmesp-monitoring"
 
   repository = "https://prometheus-community.github.io/helm-charts"
@@ -35,6 +36,6 @@ resource "helm_release" "lsdmesp-monitoring" {
   namespace = kubernetes_namespace.lsdmesp-monitoring-namespace.metadata[0].name
 
   values = [
-    file("./values-lsdmesp.yaml")
+    file("${path.module}/values-lsdmesp.yaml")
   ]
 }
