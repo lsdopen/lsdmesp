@@ -1,14 +1,3 @@
-provider "kubernetes" {
-  config_path = "~/.kube/config"
-}
-
-provider "helm" {
-  debug = true
-  kubernetes {
-    config_path = "~/.kube/config"
-  }
-}
-
 resource "kubernetes_namespace" "lsdmesp-monitoring-namespace" {
   metadata {
     name = "openshift-user-workload-monitoring"
@@ -27,8 +16,8 @@ resource "kubernetes_labels" "lsdmesp-monitoring-namespace_labels" {
 }
 
 resource "helm_release" "lsdmesp-monitoring" {
-  count      = var.enabled ? 1 : 0
-  name       = "lsdmesp-monitoring"
+  count = var.enabled ? 1 : 0
+  name  = "lsdmesp-monitoring"
 
   repository = "https://prometheus-community.github.io/helm-charts"
   chart      = "kube-prometheus-stack"

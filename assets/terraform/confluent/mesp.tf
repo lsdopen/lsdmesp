@@ -12,11 +12,23 @@ provider "helm" {
 module "ingress-nginx" {
   source  = "../ingress-nginx"
   enabled = var.enable-ingress-nginx
+
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+  }
 }
 
 module "observe" {
   source  = "../observe"
   enabled = var.enable-monitoring
+
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+  }
+
+  depends_on = [module.ingress-nginx]
 }
 
 module "eks-blueprint-mesp" {

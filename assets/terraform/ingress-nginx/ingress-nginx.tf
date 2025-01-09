@@ -1,14 +1,3 @@
-provider "kubernetes" {
-  config_path = "~/.kube/config"
-}
-
-provider "helm" {
-  debug = true
-  kubernetes {
-    config_path = "~/.kube/config"
-  }
-}
-
 resource "helm_release" "ingress-nginx" {
   count         = var.enabled ? 1 : 0
   name          = "ingress-nginx"
