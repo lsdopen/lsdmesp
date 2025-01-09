@@ -20,15 +20,15 @@ resource "helm_release" "ingress-nginx" {
 resource "null_resource" "wait_for_instance" {
   provisioner "local-exec" {
     command = <<EOT
-    for i in $(seq 1 30); do
-      CHECK=`kubectl get pods -n ingress-nginx | grep controller | awk '{print $2}'`
-      echo "CHECK: $CHECK"
-      if [ X"$CHECK" = X"1/1" ]; then
-        echo "Nginx is running!"
+    for i in $(seq 1 20); do
+      READY=`kubectl get pods -n ingress-nginx | grep controller | awk '{print $2}'`
+      if [ X"$READY" = X"1/1" ]; then
+        echo "Nginx is running! READY: $READY"
+        sleep 5
         break
       else
-        echo "Waiting for nginx to start..."
-        sleep 2
+        echo "Waiting for nginx to start. READY: $READY"
+        sleep 5
       fi
     done
     EOT
