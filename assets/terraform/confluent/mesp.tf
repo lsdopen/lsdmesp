@@ -11,12 +11,12 @@ provider "helm" {
 
 module "ingress-nginx" {
   source  = "../ingress-nginx"
-  enabled = true
+  enabled = var.enable-ingress-nginx
 }
 
 module "observe" {
   source  = "../observe"
-  enabled = var.monitoring
+  enabled = var.enable-monitoring
 }
 
 module "eks-blueprint-mesp" {
@@ -63,7 +63,7 @@ module "eks-blueprint-mesp" {
     enabled = true
   }
 
-  monitoring = var.monitoring
+  monitoring = var.enable-monitoring
 
   army_knife = {
     enabled  = false
