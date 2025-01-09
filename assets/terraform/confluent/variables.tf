@@ -9,3 +9,9 @@ variable "enable-monitoring" {
   type        = bool
   default     = false
 }
+
+variable "enable-army-knife" {
+  description = "Should enable army knife"
+  type        = bool
+  default     = true
+}

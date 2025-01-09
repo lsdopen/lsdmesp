@@ -66,7 +66,7 @@ module "eks-blueprint-mesp" {
   monitoring = var.enable-monitoring
 
   army_knife = {
-    enabled  = false
+    enabled  = var.enable-army-knife
     replicas = 1
   }
 
