@@ -1,3 +1,4 @@
 enable-ingress-nginx = true
-enable-monitoring    = true
-enable-army-knife    = true
+enable-cert-manager  = false
+enable-monitoring    = false
+enable-army-knife    = false

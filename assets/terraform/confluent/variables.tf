@@ -4,6 +4,12 @@ variable "enable-ingress-nginx" {
   default     = true
 }
 
+variable "enable-cert-manager" {
+  description = "Should deploy cert manager"
+  type        = bool
+  default     = false
+}
+
 variable "enable-monitoring" {
   description = "Should enable monitoring"
   type        = bool

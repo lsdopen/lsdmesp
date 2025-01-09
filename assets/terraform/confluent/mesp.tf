@@ -19,6 +19,18 @@ module "ingress-nginx" {
   }
 }
 
+module "cert-manager" {
+  source  = "../cert-manager"
+  enabled = var.enable-cert-manager
+
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+  }
+
+  depends_on = [module.ingress-nginx]
+}
+
 module "observe" {
   source  = "../observe"
   enabled = var.enable-monitoring
