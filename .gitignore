@@ -39,3 +39,7 @@ tmp/
 # Credentials
 *.pem
 *.txt
+
+# Terraform
+.terraform
+.terraform.lock.hcl

@@ -1,11 +1,5 @@
 ## Testing
 
-### Basic army knife testing:
-
-List all topics using the internal listener from within the army knife:
-
-> kafka-topics --list --bootstrap-server lsdmesp-kafka-bootstrap:9092
-
 ### Testing from the 'outside' using the nodeports
 
 Find out where the brokers are running:
@@ -35,6 +29,12 @@ cd assets/testing-strimzi/scripts/bin
 Finally connect to the nodeport port for any of the brokers:
 
 > kafka-topics --list --bootstrap-server broker0.mesp.lsdopen.io:32100 --command-config ../config/lsdadmin.properties
+
+### Testing from outside using the AWS ingress
+
+After creating the keystore and the property file:
+
+> kafka-topics.sh --list --bootstrap-server bootstrap.mesp-strimzi.sandbox.internal.lsdopen.io:443 --command-config lsdadmin.properties
 
 ### Create connector
 

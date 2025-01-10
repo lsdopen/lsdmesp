@@ -1,0 +1,5 @@
+apiVersion: v2
+name: lsdmesp-cert-manager
+version: "0.1.0"
+appVersion: "0.1.0"
+description: 'Simple chart that wraps the static cert manager deploy'

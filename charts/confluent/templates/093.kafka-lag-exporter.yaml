@@ -48,7 +48,7 @@ stringData:
       clusters = [
         {
           name = "lsdmesp-cluster"
-          bootstrap-brokers = "kafka.{{ .Release.Namespace }}.svc.cluster.local:9092"
+          bootstrap-brokers = "kafka.{{ .Release.Namespace }}.svc.cluster.local:9095"
 
           admin-client-properties = {
             client.id = "admin-client-id"
