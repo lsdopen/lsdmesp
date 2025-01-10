@@ -3551,7 +3551,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Kafka Streams - RocksDb Memory",
+  "title": "Confluent Kafka Streams RocksDb",
   "uid": "cp-kafka-streams-rocksdb-1",
   "version": 1,
   "weekStart": ""

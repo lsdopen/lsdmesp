@@ -1048,7 +1048,7 @@
     ]
   },
   "timezone": "",
-  "title": "Kafka Transaction Coordinator",
+  "title": "Confluent Kafka Transaction Coordinator",
   "uid": "cp-kafka-trx-1",
   "version": 1,
   "weekStart": ""
