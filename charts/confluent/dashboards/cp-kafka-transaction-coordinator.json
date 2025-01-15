@@ -70,7 +70,7 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "gridPos": {
         "h": 1,
@@ -84,7 +84,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "refId": "A"
         }
@@ -95,7 +95,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -141,7 +141,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "sum(kafka_server_transaction_coordinator_metrics_transaction_timeout_count{job=\"kafka\", namespace=~\"$namespace\"})",
@@ -157,7 +157,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -203,7 +203,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "sum(\nkafka_server_transaction_coordinator_metrics_transaction_state_error_count{job=\"kafka\", namespace=~\"$namespace\"})",
@@ -219,7 +219,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "fieldConfig": {
         "defaults": {
@@ -265,7 +265,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "sum(\nkafka_server_transaction_coordinator_metrics_transactional_id_count{job=\"kafka\", namespace=~\"$namespace\"})",
@@ -281,7 +281,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The rate at which transactions are timed out by the coordinator",
       "fieldConfig": {
@@ -362,7 +362,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "kafka_server_transaction_coordinator_metrics_transaction_timeout_rate{job=\"kafka\",namespace=~\"$namespace\"}",
@@ -377,7 +377,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The rate at which transactions are timed out by the coordinator",
       "fieldConfig": {
@@ -458,7 +458,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "kafka_server_transaction_coordinator_metrics_transaction_timeout_rate{job=\"kafka\",namespace=~\"$namespace\"}",
@@ -474,7 +474,7 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "gridPos": {
         "h": 1,
@@ -488,7 +488,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "refId": "A"
         }
@@ -499,7 +499,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The max time a currently-open transaction has been open",
       "fieldConfig": {
@@ -580,7 +580,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "kafka_server_transaction_coordinator_metrics_active_transaction_total_time_max{job=\"kafka\",namespace=~\"$namespace\"}",
@@ -595,7 +595,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The avg time it took for a transaction to transit from PrepareCommit to CompleteCommit state in the last 30sec",
       "fieldConfig": {
@@ -676,7 +676,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "kafka_server_transaction_coordinator_metrics_prepare_commit_to_complete_commit_latency{job=\"kafka\",namespace=~\"$namespace\"}",
@@ -692,7 +692,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "gridPos": {
         "h": 1,
@@ -706,7 +706,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "refId": "A"
         }
@@ -717,7 +717,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The total size of the partitions owned by the transaction coordinator",
       "fieldConfig": {
@@ -792,7 +792,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "kafka_server_transaction_coordinator_metrics_partitions_total_size{job=\"kafka\",namespace=~\"$namespace\"}",
@@ -807,7 +807,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The max time it took to load the partitions in the last 30sec",
       "fieldConfig": {
@@ -882,7 +882,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "kafka_server_transaction_coordinator_metrics_partition_load_time_max{job=\"kafka\",namespace=~\"$namespace\"}",
@@ -897,7 +897,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The avg time it took to load the partitions in the last 30sec",
       "fieldConfig": {
@@ -972,7 +972,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "kafka_server_transaction_coordinator_metrics_partition_load_time_avg{job=\"kafka\",namespace=~\"$namespace\"}",

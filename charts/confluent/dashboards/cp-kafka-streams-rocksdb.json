@@ -69,7 +69,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "gridPos": {
         "h": 1,
@@ -82,7 +82,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The capacity of all block cache in your application.\n",
           "fieldConfig": {
@@ -128,7 +128,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "exemplar": true,
               "expr": "kafka_streams_stream_state_metrics_block_cache_capacity{ }",
@@ -145,7 +145,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The memory size of the entries residing in all block cache in bytes.",
           "fieldConfig": {
@@ -191,7 +191,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "exemplar": true,
               "expr": "kafka_streams_stream_state_metrics_block_cache_usage{ }",
@@ -208,7 +208,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The memory size for the entries being pinned in all block cache in bytes.",
           "fieldConfig": {
@@ -254,7 +254,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_block_cache_pinned_usage{}",
               "format": "table",
@@ -270,7 +270,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The approximate size of active, unflushed immutable, and pinned immutable all memtables in bytes.",
           "fieldConfig": {
@@ -316,7 +316,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_size_all_mem_tables{}",
               "format": "table",
@@ -332,7 +332,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The number of immutable memtables that have not yet been flushed.",
           "fieldConfig": {
@@ -378,7 +378,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_num_immutable_mem_table{}",
               "format": "table",
@@ -394,7 +394,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The approximate size of active and unflushed immutable all memtables in bytes.",
           "fieldConfig": {
@@ -440,7 +440,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_total_sst_files_size{}",
               "format": "table",
@@ -456,7 +456,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The total estimated number of keys in the active and unflushed immutable memtables and storage.",
           "fieldConfig": {
@@ -502,7 +502,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_estimate_num_keys{}",
               "format": "table",
@@ -518,7 +518,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "This metric reports 1 if at least one compaction is pending, otherwise it reports 0.",
           "fieldConfig": {
@@ -564,7 +564,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_compaction_pending{}",
               "format": "table",
@@ -580,7 +580,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "This metric reports 1 if a memtable flush is pending, otherwise it reports 0.",
           "fieldConfig": {
@@ -626,7 +626,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_mem_table_flush_pending{}",
               "format": "table",
@@ -642,7 +642,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The total number of background errors.",
           "fieldConfig": {
@@ -696,7 +696,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_background_errors{}",
               "format": "table",
@@ -714,7 +714,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "refId": "A"
         }
@@ -726,7 +726,7 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "gridPos": {
         "h": 1,
@@ -740,7 +740,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "refId": "A"
         }
@@ -751,7 +751,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The capacity of all block cache in your application.\n",
       "fieldConfig": {
@@ -798,7 +798,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "expr": "kafka_streams_stream_state_metrics_block_cache_capacity{ thread_id=\"$thread_id\"}",
           "format": "table",
@@ -814,7 +814,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The memory size of the entries residing in all block cache in bytes.",
       "fieldConfig": {
@@ -861,7 +861,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "expr": "kafka_streams_stream_state_metrics_block_cache_usage{ thread_id=\"$thread_id\"}",
           "format": "table",
@@ -877,7 +877,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The approximate size of active, unflushed immutable, and pinned immutable all memtables in bytes.",
       "fieldConfig": {
@@ -924,7 +924,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "expr": "kafka_streams_stream_state_metrics_size_all_mem_tables{thread_id=\"$thread_id\"}",
           "format": "table",
@@ -940,7 +940,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The total estimated number of keys in the active and unflushed immutable memtables and storage.",
       "fieldConfig": {
@@ -987,7 +987,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "expr": "kafka_streams_stream_state_metrics_estimate_num_keys{thread_id=\"$thread_id\"}",
           "format": "table",
@@ -1007,7 +1007,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The estimated number of keys in the active and unflushed immutable memtables and storage.",
       "fieldConfig": {
@@ -1054,7 +1054,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "expr": "kafka_streams_stream_state_metrics_estimate_num_keys{ thread_id=\"$thread_id\"}",
           "interval": "",
@@ -1099,7 +1099,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The estimated total number of bytes a compaction needs to rewrite on disk to get all levels down to under target size (only valid for level compaction).",
       "fieldConfig": {
@@ -1146,7 +1146,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "expr": "kafka_streams_stream_state_metrics_estimate_pending_compaction_bytes{ thread_id=\"$thread_id\"}",
           "interval": "",
@@ -1191,7 +1191,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The total number of background errors.",
       "fieldConfig": {
@@ -1238,7 +1238,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "expr": "kafka_streams_stream_state_metrics_background_errors{ thread_id=\"$thread_id\"}",
           "interval": "",
@@ -1280,7 +1280,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "gridPos": {
         "h": 1,
@@ -1297,7 +1297,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The approximate size of active, unflushed immutable, and pinned immutable memtables in bytes.",
           "fieldConfig": {
@@ -1344,7 +1344,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_size_all_mem_tables{ thread_id=\"$thread_id\"}",
               "interval": "",
@@ -1389,7 +1389,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The approximate size of the active memtable in bytes.",
           "fieldConfig": {
@@ -1436,7 +1436,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_cur_size_active_mem_table{ thread_id=\"$thread_id\"}",
               "interval": "",
@@ -1481,7 +1481,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The number of entries in the active memtable.",
           "fieldConfig": {
@@ -1528,7 +1528,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_num_entries_active_mem_table{ thread_id=\"$thread_id\"}",
               "interval": "",
@@ -1573,7 +1573,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The number of immutable memtables that have not yet been flushed.",
           "fieldConfig": {
@@ -1620,7 +1620,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_num_immutable_mem_table{ thread_id=\"$thread_id\"}",
               "interval": "",
@@ -1665,7 +1665,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The number of entries in the unflushed immutable memtables.",
           "fieldConfig": {
@@ -1712,7 +1712,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_num_entries_imm_mem_tables{ thread_id=\"$thread_id\"}",
               "interval": "",
@@ -1757,7 +1757,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The number of delete entries in the active memtable.",
           "fieldConfig": {
@@ -1804,7 +1804,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_num_deletes_active_mem_table{ thread_id=\"$thread_id\"}",
               "interval": "",
@@ -1849,7 +1849,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The number of delete entries in the unflushed immutable memtables.",
           "fieldConfig": {
@@ -1896,7 +1896,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_num_deletes_imm_mem_tables{ thread_id=\"$thread_id\"}",
               "interval": "",
@@ -1939,7 +1939,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "refId": "A"
         }
@@ -1951,7 +1951,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "gridPos": {
         "h": 1,
@@ -1968,7 +1968,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The memory size of the entries residing in block cache in bytes.",
           "fieldConfig": {
@@ -2015,7 +2015,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_block_cache_usage{ thread_id=\"$thread_id\"}",
               "interval": "",
@@ -2060,7 +2060,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The memory size for the entries being pinned in the block cache in bytes.",
           "fieldConfig": {
@@ -2107,7 +2107,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_block_cache_pinned_usage{ thread_id=\"$thread_id\"}",
               "interval": "",
@@ -2152,7 +2152,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The capacity of the block cache in bytes.",
           "fieldConfig": {
@@ -2199,7 +2199,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_block_cache_capacity{ thread_id=\"$thread_id\"}",
               "interval": "",
@@ -2242,7 +2242,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "refId": "A"
         }
@@ -2254,7 +2254,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "gridPos": {
         "h": 1,
@@ -2271,7 +2271,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The total size in bytes of all Sorted Sequence Table (SST) files.",
           "fieldConfig": {
@@ -2318,7 +2318,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_total_sst_files_size{ thread_id=\"$thread_id\"}",
               "interval": "",
@@ -2363,7 +2363,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The total size in bytes of all Sorted Sequence Table (SST) files that belong to the latest log-structured merge (LSM) tree.",
           "fieldConfig": {
@@ -2410,7 +2410,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_live_sst_files_size{ thread_id=\"$thread_id\"}",
               "interval": "",
@@ -2455,7 +2455,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The estimated memory in bytes used for reading Sorted Sequence Tables (SSTs), excluding memory used in block cache.",
           "fieldConfig": {
@@ -2502,7 +2502,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_estimate_table_readers_mem{ thread_id=\"$thread_id\"}",
               "interval": "",
@@ -2547,7 +2547,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "Number of live versions of the log-structured merge (LSM) tree.",
           "fieldConfig": {
@@ -2594,7 +2594,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_num_live_versions{ thread_id=\"$thread_id\"}",
               "interval": "",
@@ -2637,7 +2637,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "refId": "A"
         }
@@ -2649,7 +2649,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "gridPos": {
         "h": 1,
@@ -2666,7 +2666,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The average number of bytes written per second to the RocksDB state store.",
           "fieldConfig": {
@@ -2713,7 +2713,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_bytes_written_rate{ thread_id=\"$thread_id\"}",
               "interval": "",
@@ -2758,7 +2758,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The average number of bytes read per second from the RocksDB state store.",
           "fieldConfig": {
@@ -2805,7 +2805,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_bytes_read_rate{ thread_id=\"$thread_id\"}",
               "interval": "",
@@ -2850,7 +2850,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The average number of bytes flushed per second from the memtable to disk.",
           "fieldConfig": {
@@ -2897,7 +2897,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_memtable_bytes_flushed_rate{ thread_id=\"$thread_id\"}",
               "interval": "",
@@ -2942,7 +2942,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The ratio of block cache hits for data blocks, relative to all lookups for data blocks to the block cache.",
           "fill": 1,
@@ -2983,7 +2983,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_block_cache_data_hit_ratio{ thread_id=\"$thread_id\"}",
               "interval": "",
@@ -3030,7 +3030,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The ratio of block cache hits for filter blocks, relative to all lookups for filter blocks to the block cache.",
           "fill": 1,
@@ -3071,7 +3071,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_block_cache_filter_hit_ratio{ thread_id=\"$thread_id\"}",
               "interval": "",
@@ -3118,7 +3118,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The ratio of block cache hits for index blocks, relative to all lookups for index blocks to the block cache.",
           "fill": 1,
@@ -3159,7 +3159,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_block_cache_index_hit_ratio{ thread_id=\"$thread_id\"}",
               "interval": "",
@@ -3206,7 +3206,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The ratio of memtable hits, relative to all lookups to the memtable.",
           "fill": 1,
@@ -3247,7 +3247,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_memtable_hit_ratio{ thread_id=\"$thread_id\"}",
               "interval": "",
@@ -3294,7 +3294,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The number of current open files.",
           "fieldConfig": {
@@ -3341,7 +3341,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_number_open_files{ thread_id=\"$thread_id\"}",
               "interval": "",
@@ -3386,7 +3386,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "description": "The total number of file errors that occurred.",
           "fieldConfig": {
@@ -3433,7 +3433,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${Prometheus}"
+                "uid": ""
               },
               "expr": "kafka_streams_stream_state_metrics_number_file_errors_total{ thread_id=\"$thread_id\"}",
               "format": "time_series",
@@ -3477,7 +3477,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "refId": "A"
         }
@@ -3521,7 +3521,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "${Prometheus}"
+          "uid": ""
         },
         "definition": "label_values(kafka_streams_stream_state_metrics_number_open_files, thread_id)",
         "hide": 0,

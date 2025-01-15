@@ -70,7 +70,7 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "gridPos": {
         "h": 1,
@@ -84,7 +84,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "refId": "A"
         }
@@ -95,7 +95,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "Number of active writers in the metadata cluster. Alert if the sum is any number other than one because there should be exactly one writer in the metadata cluster.",
       "fieldConfig": {
@@ -149,7 +149,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "sum(confluent_metadata_kafkaauthstore{job=\"kafka\",  name=\"active-writer-count\"})",
@@ -164,7 +164,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The number of role bindings defined. This metric is useful in cases where you need to know the exact number of role bindings that exist.",
       "fieldConfig": {
@@ -222,7 +222,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "topk(1, sum(confluent_auth_store_metrics_rbac_role_bindings_count{job=\"kafka\", namespace=~\"$namespace\"}) by (instance))",
@@ -237,7 +237,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The number of RBAC access rules defined. This metric is useful in cases where you need to know the exact number of RBAC access rules that exist. Access rules allow or deny access to specific resources within a specific scope, unlike role bindings, which assign an RBAC role for a specific resource to a specific principal.",
       "fieldConfig": {
@@ -320,7 +320,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "exemplar": true,
@@ -337,7 +337,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The number of ACL access rules defined. This metric is useful in cases where you need to know the exact number of ACLs that exist.",
       "fieldConfig": {
@@ -420,7 +420,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "editorMode": "code",
           "exemplar": true,
@@ -437,7 +437,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The number of seconds since the last failure in the consumer that processes authentication or authorization metadata from the topics in the metadata cluster. This is reset to zero after the next successful metadata refresh. This metric is available on all brokers configured to use RBAC. Alert if value is greater than zero.",
       "fieldConfig": {
@@ -520,7 +520,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "confluent_metadata_kafkaauthstore{job=\"kafka\",  namespace=~\"$namespace\", name=\"reader-failure-start-seconds-ago\"}",
@@ -535,7 +535,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The number of seconds since the last failed attempt to process metadata from the LDAP server. This is reset to zero on the next successful metadata refresh. This metric is available on brokers in the metadata cluster if LDAP group-based authorization is enabled. Alert if value is greater than zero.",
       "fieldConfig": {
@@ -618,7 +618,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "confluent_metadata_ldapgroupmanager{job=\"kafka\",  namespace=~\"$namespace\", name=\"failure-start-seconds-ago\"}",
@@ -633,7 +633,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The average number of records sent per second to the metadata topic partitions.",
       "fieldConfig": {
@@ -715,7 +715,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "confluent_metadata_kafkaauthstore{job=\"kafka\",  namespace=~\"$namespace\", name=\"record-send-rate\"}",
@@ -730,7 +730,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The number of seconds since the last failure in the writer that updates authentication or authorization metadata on topics in the metadata cluster. This is reset to zero after the next successful metadata update. This metric is available on brokers in the metadata cluster. Alert if value is greater than zero.",
       "fieldConfig": {
@@ -812,7 +812,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "confluent_metadata_kafkaauthstore{job=\"kafka\",  namespace=~\"$namespace\", name=\"writer-failure-start-seconds-ago\"}",
@@ -827,7 +827,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The number of seconds since the last failure in the metadata service, for example, due to LDAP refresh failures for a long duration. This is reset to zero when notification of successful refresh from the metadata service is processed. This metric is available on all brokers configured to use RBAC. Alert if value is greater than zero.",
       "fieldConfig": {
@@ -909,7 +909,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "confluent_metadata_kafkaauthstore{job=\"kafka\",  namespace=~\"$namespace\", name=\"remote-failure-start-seconds-ago\"}",
@@ -924,7 +924,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${Prometheus}"
+        "uid": ""
       },
       "description": "The average number of record send attempts per second to the metadata topic partitions that failed.",
       "fieldConfig": {
@@ -1006,7 +1006,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${Prometheus}"
+            "uid": ""
           },
           "exemplar": true,
           "expr": "confluent_metadata_kafkaauthstore{job=\"kafka\",  namespace=~\"$namespace\", name=\"record-error-rate\"}",
