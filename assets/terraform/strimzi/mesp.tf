@@ -9,9 +9,43 @@ provider "helm" {
   }
 }
 
+module "ingress-nginx" {
+  source  = "../ingress-nginx"
+  enabled = var.enable-ingress-nginx
+
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+  }
+}
+
+module "cert-manager" {
+  source  = "../cert-manager"
+  enabled = var.enable-cert-manager
+
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+  }
+
+  depends_on = [module.ingress-nginx]
+}
+
+module "observe" {
+  source  = "../observe"
+  enabled = var.enable-monitoring
+
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+  }
+
+  depends_on = [module.ingress-nginx]
+}
+
 module "eks-blueprint-mesp" {
   source  = "app.terraform.io/lsdopen/eks-blueprint-mesp/aws"
-  version = "1.3.1"
+  version = "1.5.0"
 
   cluster_name             = "kind"
   base_url                 = "apps.mesp.lsdopen.io"
@@ -21,11 +55,19 @@ module "eks-blueprint-mesp" {
 
   namespace = "lsdmesp"
 
-  strimzi               = true
-  monitoring            = false
+  strimzi = true
+
+  monitoring = var.enable-monitoring
+
   army_knife = {
-    enabled  = false
+    enabled  = var.enable-army-knife
     replicas = 1
   }
+
   strimzi_storage_class = "standard"
+
+  depends_on = [
+    module.ingress-nginx,
+    module.observe
+  ]
 }
