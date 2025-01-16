@@ -1,7 +1,7 @@
 lsdmesp:
   clusterType: "kind"
-  cpVersion: "7.7.1"
-  cpOperatorVersion: "2.9.3"
+  cpVersion: "7.8.0"
+  cpOperatorVersion: "2.10.0"
   storageClass: standard
   defaultReplicationFactor: 3
   defaultMinInSyncReplicas: 2
