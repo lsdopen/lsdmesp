@@ -45,7 +45,7 @@ module "observe" {
 
 module "eks-blueprint-mesp" {
   source  = "app.terraform.io/lsdopen/eks-blueprint-mesp/aws"
-  version = "1.5.0"
+  version = "1.5.1"
 
   cluster_name             = "kind"
   base_url                 = "apps.mesp.lsdopen.io"
@@ -109,6 +109,7 @@ module "eks-blueprint-mesp" {
 
   depends_on = [
     module.ingress-nginx,
+    module.cert-manager,
     module.observe
   ]
 }
