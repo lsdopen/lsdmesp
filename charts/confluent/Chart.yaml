@@ -25,12 +25,12 @@ maintainers:
     url: https://lsdopen.io
 deprecated: false
 dependencies:
-  - name: confluent-for-kubernetes
-    version: "0.1145.6"
-    repository: https://packages.confluent.io/helm
   - name: flink-kubernetes-operator
     version: "1.100.1"
     repository: https://packages.confluent.io/helm
   - name: confluent-manager-for-apache-flink
     version: "1.0.1"
+    repository: https://packages.confluent.io/helm
+  - name: confluent-for-kubernetes
+    version: "0.1145.6"
     repository: https://packages.confluent.io/helm

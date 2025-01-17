@@ -8,7 +8,7 @@ lsdmesp:
   defaultNumPartitions: 6
 
   security:
-    enabledDemo: false
+    enabledDemo: true
     vault:
       enabled: false
       type: kv-v2
@@ -26,7 +26,7 @@ lsdmesp:
   armyKnife:
     enabled: true
     image: lsdopen/kafka-army-knife:latest
-    replicas: 0
+    replicas: 1
 
   monitoring:
     enabled: false
@@ -300,7 +300,7 @@ confluent-for-kubernetes:
     registry: docker.io
     repository: confluentinc/confluent-operator
     pullPolicy: IfNotPresent
-    tag: "0.1033.33"
+    tag: "0.1145.6"
   priorityClassName: ""
   replicas: 1
   namespaced: true
@@ -314,6 +314,9 @@ confluent-for-kubernetes:
       memory: 256Mi
   terminationGracePeriodSeconds: 30
   debug: false
+  fipsmode: false
+  numDay2Worker: ""
+  enableCMFDay2Ops: true
   affinity: {}
   tolerations: []
   podSecurity:
@@ -332,6 +335,8 @@ confluent-for-kubernetes:
   clusterRole:
     openshift: false
   telemetry:
+    operator:
+      enabled: false
     enabled: false
     proxy:
       enabled: false
