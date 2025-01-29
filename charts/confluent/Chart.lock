@@ -1,12 +1,12 @@
 dependencies:
-- name: confluent-for-kubernetes
-  repository: https://packages.confluent.io/helm
-  version: 0.1145.6
 - name: flink-kubernetes-operator
   repository: https://packages.confluent.io/helm
   version: 1.100.1
 - name: confluent-manager-for-apache-flink
   repository: https://packages.confluent.io/helm
   version: 1.0.1
-digest: sha256:988ba774b72d038d702857b8eb757a87e60ee9fddbf6d942306431f95712d881
-generated: "2025-01-16T09:05:56.528742214Z"
+- name: confluent-for-kubernetes
+  repository: https://packages.confluent.io/helm
+  version: 0.1145.6
+digest: sha256:fd75c006aca6f8ad0e6e91a1da9039bdeedb54387296d20e89f1be05bc0e970d
+generated: "2025-01-29T10:01:31.649684+02:00"
