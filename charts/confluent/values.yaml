@@ -8,7 +8,7 @@ lsdmesp:
   defaultNumPartitions: 6
 
   security:
-    enabledDemo: false
+    enabledDemo: true
     vault:
       enabled: false
       type: kv-v2
@@ -26,7 +26,7 @@ lsdmesp:
   armyKnife:
     enabled: true
     image: lsdopen/kafka-army-knife:latest
-    replicas: 0
+    replicas: 1
 
   monitoring:
     enabled: false
@@ -281,6 +281,32 @@ lsdmesp:
         tls:
           secretName: controlcenter-tls
 
+confluent-manager-for-apache-flink:
+  cmf:
+    ssl:
+      keystore: /opt/keystore/keystore.p12
+      keystore-password: 112233
+      trust-store: /opt/truststore/truststore.p12
+      trust-store-password: 112233
+      client-auth: need
+    authentication:
+      type: mtls
+    k8s: #This configuration is only required if you did not setup FKO and CMF can reach FKO
+      enabled: true
+  mountedVolumes:
+    volumeMounts:
+      - name: truststore
+        mountPath: /opt/truststore
+      - name: keystore
+        mountPath: /opt/keystore
+    volumes:
+      - name: truststore
+        configMap:
+          name: cmf-truststore
+      - name: keystore
+        configMap:
+          name: cmf-keystore
+
 confluent-for-kubernetes:
   name: confluent-operator
   licenseKey: ""
@@ -300,7 +326,7 @@ confluent-for-kubernetes:
     registry: docker.io
     repository: confluentinc/confluent-operator
     pullPolicy: IfNotPresent
-    tag: "0.1033.33"
+    tag: "0.1145.6"
   priorityClassName: ""
   replicas: 1
   namespaced: true
@@ -314,6 +340,9 @@ confluent-for-kubernetes:
       memory: 256Mi
   terminationGracePeriodSeconds: 30
   debug: false
+  fipsmode: false
+  numDay2Worker: ""
+  enableCMFDay2Ops: true
   affinity: {}
   tolerations: []
   podSecurity:
@@ -332,6 +361,8 @@ confluent-for-kubernetes:
   clusterRole:
     openshift: false
   telemetry:
+    operator:
+      enabled: false
     enabled: false
     proxy:
       enabled: false

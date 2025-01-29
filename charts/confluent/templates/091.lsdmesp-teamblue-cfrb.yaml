@@ -2,6 +2,17 @@
 apiVersion: platform.confluent.io/v1beta1
 kind: ConfluentRolebinding
 metadata:
+  name: lsdmesp-teamblue-admin-clusteradmin
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: TeamBlueAdmin
+    type: group
+  role: ClusterAdmin
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
   name: lsdmesp-teamblue-admin-connector
   namespace: {{ .Release.Namespace }}
 spec:

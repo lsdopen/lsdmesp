@@ -1,7 +1,7 @@
 apiVersion: v2
 name: lsdmesp-confluent
-version: "0.6.10"
-appVersion: "0.6.10"
+version: "0.6.11"
+appVersion: "0.6.11"
 description: 'LSDMESP CFK: LSD Event Streaming Platform with Confluent Operator'
 keywords:
   - lsdmesp
@@ -25,12 +25,12 @@ maintainers:
     url: https://lsdopen.io
 deprecated: false
 dependencies:
-  - name: confluent-for-kubernetes
-    version: "0.1145.6"
-    repository: https://packages.confluent.io/helm
   - name: flink-kubernetes-operator
     version: "1.100.1"
     repository: https://packages.confluent.io/helm
   - name: confluent-manager-for-apache-flink
     version: "1.0.1"
+    repository: https://packages.confluent.io/helm
+  - name: confluent-for-kubernetes
+    version: "0.1145.6"
     repository: https://packages.confluent.io/helm

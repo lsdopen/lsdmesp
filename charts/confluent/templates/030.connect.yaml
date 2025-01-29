@@ -21,6 +21,9 @@ spec:
         - name: kafka-connect-http
           owner: confluentinc
           version: 1.7.5
+        - name: kafka-connect-http-source
+          owner: confluentinc
+          version: 0.2.0
         - name: kafka-connect-elasticsearch
           owner: confluentinc
           version: 14.0.12
