@@ -281,6 +281,32 @@ lsdmesp:
         tls:
           secretName: controlcenter-tls
 
+confluent-manager-for-apache-flink:
+  cmf:
+    ssl:
+      keystore: /opt/keystore/keystore.p12
+      keystore-password: 112233
+      trust-store: /opt/truststore/truststore.p12
+      trust-store-password: 112233
+      client-auth: need
+    authentication:
+      type: mtls
+    k8s: #This configuration is only required if you did not setup FKO and CMF can reach FKO
+      enabled: true
+  mountedVolumes:
+    volumeMounts:
+      - name: truststore
+        mountPath: /opt/truststore
+      - name: keystore
+        mountPath: /opt/keystore
+    volumes:
+      - name: truststore
+        configMap:
+          name: cmf-truststore
+      - name: keystore
+        configMap:
+          name: cmf-keystore
+
 confluent-for-kubernetes:
   name: confluent-operator
   licenseKey: ""
