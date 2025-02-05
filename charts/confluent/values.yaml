@@ -286,8 +286,8 @@ confluent-manager-for-apache-flink:
     ssl:
       keystore: /opt/keystore/keystore.p12
       keystore-password: 112233
-      trust-store: /opt/truststore/truststore.p12
-      trust-store-password: 112233
+      trust-store: /mnt/sslcerts/truststore.jks
+      trust-store-password: mystorepassword
       client-auth: need
     authentication:
       type: mtls
@@ -296,13 +296,13 @@ confluent-manager-for-apache-flink:
   mountedVolumes:
     volumeMounts:
       - name: truststore
-        mountPath: /opt/truststore
+        mountPath: /mnt/sslcerts
       - name: keystore
         mountPath: /opt/keystore
     volumes:
       - name: truststore
-        configMap:
-          name: cmf-truststore
+        secret:
+          secretName: kafka-generated-jks
       - name: keystore
         configMap:
           name: cmf-keystore
