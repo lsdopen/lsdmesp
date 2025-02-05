@@ -45,7 +45,7 @@ module "observe" {
 
 module "eks-blueprint-mesp" {
   source  = "app.terraform.io/lsdopen/eks-blueprint-mesp/aws"
-  version = "1.5.1"
+  version = "1.5.6"
 
   cluster_name             = "kind"
   base_url                 = "apps.mesp.lsdopen.io"
