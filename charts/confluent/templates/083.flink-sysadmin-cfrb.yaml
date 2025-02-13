@@ -1,0 +1,71 @@
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-sysadmin-cmf-1
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: cf_connect
+    type: user
+  clustersScopeByIds:
+    cmfId: CMF-id
+  role: SystemAdmin
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-sysadmin-cmf-2
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: cf_connect
+    type: user
+  clustersScopeByIds:
+    cmfId: CMF-id
+    flinkEnvironmentId: flink-lsdmesp
+  role: SystemAdmin
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-sysadmin-cmf-3
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: CN=lsdmesp
+    type: user
+  clustersScopeByIds:
+    cmfId: CMF-id
+  role: SystemAdmin
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-sysadmin-cmf-4
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: CN=lsdmesp
+    type: user
+  clustersScopeByIds:
+    cmfId: CMF-id
+    flinkEnvironmentId: flink-lsdmesp
+  role: SystemAdmin
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: lsdmesp-sysadmin-cmf-5
+  namespace: {{ .Release.Namespace }}
+spec:
+  principal:
+    name: CN=lsdmesp
+    type: user
+  clustersScopeByIds:
+    cmfId: CMF-id
+    flinkEnvironmentId: flink-lsdmesp
+  resourcePatterns:
+    - name: flink
+      patternType: PREFIXED
+      resourceType: FlinkApplication
+  role: ResourceOwner
