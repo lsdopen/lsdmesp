@@ -332,7 +332,7 @@ confluent-for-kubernetes:
     certDurationInDays: 60
     renewBeforeInDays: 30
     sans: ""
-  imagePullSecretRef:  confluent-registry
+  imagePullSecretRef: ""
   image:
     registry: docker.io
     repository: confluentinc/confluent-operator
