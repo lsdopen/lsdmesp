@@ -2,6 +2,45 @@ apiVersion: v1
 entries:
   lsdmesp-confluent:
   - apiVersion: v2
+    appVersion: 0.6.15
+    created: "2025-02-13T14:18:54.143485061Z"
+    dependencies:
+    - name: flink-kubernetes-operator
+      repository: https://packages.confluent.io/helm
+      version: 1.100.1
+    - name: confluent-manager-for-apache-flink
+      repository: https://packages.confluent.io/helm
+      version: 1.0.1
+    - name: confluent-for-kubernetes
+      repository: https://packages.confluent.io/helm
+      version: 0.1145.6
+    description: 'LSDMESP CFK: LSD Event Streaming Platform with Confluent Operator'
+    digest: aa09896d95e90f77858f41efdf536edf895102e012604a59127f838a5c6d0ab7
+    home: https://github.com/lsdopen/lsdmesp.cfk
+    keywords:
+    - lsdmesp
+    - confluent
+    - confluent operator
+    - confluent platform
+    - cfk
+    - operator
+    - event
+    - stream
+    - kubernetes
+    - kafka
+    - messaging
+    - topic
+    maintainers:
+    - email: support@lsdopen.io
+      name: LSD
+      url: https://lsdopen.io
+    name: lsdmesp-confluent
+    sources:
+    - https://github.com/lsdopen/lsdmesp.cfk
+    urls:
+    - https://github.com/lsdopen/lsdmesp/releases/download/lsdmesp-confluent-0.6.15/lsdmesp-confluent-0.6.15.tgz
+    version: 0.6.15
+  - apiVersion: v2
     appVersion: 0.6.14
     created: "2025-02-13T10:46:44.771481652Z"
     dependencies:
@@ -1391,4 +1430,4 @@ entries:
     urls:
     - https://github.com/lsdopen/lsdmesp/releases/download/lsdmesp-strimzi-1.0.1/lsdmesp-strimzi-1.0.1.tgz
     version: 1.0.1
-generated: "2025-02-13T10:46:44.771897823Z"
+generated: "2025-02-13T14:18:54.143766507Z"
