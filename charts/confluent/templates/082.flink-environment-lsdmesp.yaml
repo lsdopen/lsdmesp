@@ -1,0 +1,13 @@
+apiVersion: platform.confluent.io/v1beta1
+kind: FlinkEnvironment
+metadata:
+  name: flink-lsdmesp
+  namespace: {{ .Release.Namespace }}
+spec:
+  kubernetesNamespace: {{ .Release.Namespace }}
+  flinkApplicationDefaults:
+    spec:
+      flinkConfiguration:
+        taskmanager.numberOfTaskSlots: "2"
+  cmfRestClassRef:
+    name: default

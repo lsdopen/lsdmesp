@@ -1,0 +1,36 @@
+{{- if .Values.lsdmesp.monitoring.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels:
+    release: lsdmesp-monitoring
+    monitoring: confluent
+  name: pm-flink
+  namespace: {{ .Release.Namespace }}
+spec:
+  jobLabel: platform.confluent.io/origin
+  selector:
+    matchExpressions:
+      - key: platform.confluent.io/origin
+        operator: In
+        values: [ "flink" ]
+  podMetricsEndpoints:
+    - port: prometheus
+      interval: 60s
+      scheme: http
+      scrapeTimeout: 30s
+      metricRelabelings:
+        - sourceLabels: [ __name__ ]
+          regex: 'flink_jobmanager_Status_JVM_CPU_Time'
+          targetLabel: __name__
+          replacement: 'flink_jobmanager_Status_JVM_CPU_Time_total'
+        - sourceLabels: [ __name__ ]
+          regex: 'flink_taskmanager_Status_JVM_CPU_Time'
+          targetLabel: __name__
+          replacement: 'flink_taskmanager_Status_JVM_CPU_Time_total'
+      relabelings:
+        - sourceLabels: [ __address__ ]
+          targetLabel: instance
+          regex: '([^:]+)(:[0-9]+)?'
+          replacement: '${1}'
+{{- end -}}
