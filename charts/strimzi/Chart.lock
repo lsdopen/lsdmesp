@@ -8,5 +8,8 @@ dependencies:
 - name: kafka-ui
   repository: https://kafbat.github.io/helm-charts
   version: 1.4.2
-digest: sha256:513fa47de3a3c94f993d54bc081cbfc092b1b2359319fe00056c61f2a41b5a21
-generated: "2024-06-27T15:07:12.213227263+02:00"
+- name: flink-kubernetes-operator
+  repository: https://downloads.apache.org/flink/flink-kubernetes-operator-1.11.0
+  version: 1.11.0
+digest: sha256:2f3872037a8020adcf3f646b7f13e423928f98faf4480ef2f3a7efd4e5792fb7
+generated: "2025-03-20T12:26:03.386149+02:00"
