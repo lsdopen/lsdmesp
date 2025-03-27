@@ -35,6 +35,14 @@ spec:
         - RULE:.*CN[\s]?=[\s]?([a-zA-Z0-9.]*)?.*/$1/
         type: mtls
   oneReplicaPerNode: true
+  metricReporter:
+    authentication:
+      type: mtls
+    bootstrapEndpoint: kafka:9071
+    enabled: false
+    replicationFactor: 3
+    tls:
+      enabled: true
   metrics:
     prometheus:
       blacklist:

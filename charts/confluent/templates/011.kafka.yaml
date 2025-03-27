@@ -10,6 +10,7 @@ spec:
     type: rbac
     superUsers:
       - User:kafka
+      - User:kraftcontroller
       - User:cf_kafka
   configOverrides:
     jvm:
