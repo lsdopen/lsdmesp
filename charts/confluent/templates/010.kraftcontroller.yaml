@@ -9,6 +9,15 @@ spec:
     jvm:
     - -Xms{{ $kraftcontroller.jvm.Xms }}
     - -Xmx{{ $kraftcontroller.jvm.Xmx }}
+    server:
+      - listener.security.protocol.map=CONTROLLER:SSL,REPLICATION:SSL
+      - listener.name.replication.ssl.client.auth=required
+      - listener.name.replication.ssl.key.password=${file:/mnt/sslcerts/jksPassword.txt:jksPassword}
+      - listener.name.replication.ssl.keystore.location=/mnt/sslcerts/keystore.jks
+      - listener.name.replication.ssl.keystore.password=${file:/mnt/sslcerts/jksPassword.txt:jksPassword}
+      - listener.name.replication.ssl.principal.mapping.rules=RULE:.*CN[\s]?=[\s]?([a-zA-Z0-9.]*)?.*/$1/
+      - listener.name.replication.ssl.truststore.location=/mnt/sslcerts/truststore.jks
+      - listener.name.replication.ssl.truststore.password=${file:/mnt/sslcerts/jksPassword.txt:jksPassword}
   dataVolumeCapacity: {{ $kraftcontroller.dataVolumeCapacity }}
   image:
     application: docker.io/confluentinc/cp-server:{{ .Values.lsdmesp.cpVersion }}
