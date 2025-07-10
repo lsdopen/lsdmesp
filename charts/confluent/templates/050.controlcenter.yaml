@@ -54,7 +54,7 @@ spec:
   externalAccess: {{ $controlcenter.externalAccess }}
   {{- end }}
   image:
-    application: confluentinc/cp-enterprise-control-center:{{ .Values.lsdmesp.cpVersion }}
+    application: confluentinc/cp-enterprise-control-center-next-gen:{{ .Values.lsdmesp.cpCCCNextGenVersion }}
     init: confluentinc/confluent-init-container:{{ .Values.lsdmesp.cpOperatorVersion }}
   internalTopicReplicatorFactor: {{ .Values.lsdmesp.defaultReplicationFactor }}
   {{- if not ((index .Values "confluent-for-kubernetes" "licenseKey") | empty) }}

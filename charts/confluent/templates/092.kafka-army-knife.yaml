@@ -9,12 +9,12 @@ stringData:
     security.protocol=SASL_SSL
     sasl.mechanism=PLAIN
     sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="{{ .Values.lsdmesp.confluent.kafka.username }}" password="{{ .Values.lsdmesp.confluent.kafka.password }}";
-    ssl.truststore.location=/root/lsdmesp.truststore.jks
-    ssl.truststore.password=112233
+    ssl.truststore.location=/mnt/sslcerts/truststore.jks
+    ssl.truststore.password=mystorepassword
     basic.auth.credentials.source=USER_INFO
     basic.auth.user.info={{ .Values.lsdmesp.confluent.kafka.username }}:{{ .Values.lsdmesp.confluent.kafka.password }}
-    schema.registry.ssl.truststore.location=/root/lsdmesp.truststore.jks
-    schema.registry.ssl.truststore.password=112233
+    schema.registry.ssl.truststore.location=/mnt/sslcerts/truststore.jks
+    schema.registry.ssl.truststore.password=mystorepassword
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -45,13 +45,11 @@ spec:
             - "360000"
           imagePullPolicy: IfNotPresent
           name: kafka-army-knife
-          lifecycle:
-            postStart:
-              exec:
-                command: [ 'sh', '-c', "keytool -keystore /root/lsdmesp.truststore.jks -alias CARoot -importcert -file /root/certs/ca.pem -storepass 112233 -noprompt" ]
           volumeMounts:
             - mountPath: /root/etc
               name: kafka-army-knife-client-properties
+            - mountPath: /mnt/sslcerts
+              name: in-ssl-kafka-generated-jks
             - mountPath: /root/certs
               name: ca-pair-sslcerts-tls-crt
           securityContext:
@@ -61,6 +59,10 @@ spec:
             defaultMode: 420
             secretName: kafka-army-knife-client-properties
           name: kafka-army-knife-client-properties
+        - secret:
+            defaultMode: 420
+            secretName: kafka-generated-jks
+          name: in-ssl-kafka-generated-jks
         - secret:
             defaultMode: 420
             secretName: ca-pair-sslcerts

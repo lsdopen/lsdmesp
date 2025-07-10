@@ -40,6 +40,21 @@ Create topic with enough replicas:
 > python3 consume.py
 ```
 
+#### Example produce REST with schemas test
+
+Avro Schema:
+
+```
+curl -k -u "peter:peter-secret" -X POST -H "Content-Type: application/vnd.kafka.avro.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data '{"value_schema": "{\"type\": \"record\", \"name\": \"User\", \"fields\": [{\"name\": \"name\", \"type\": \"string\"}]}", "records": [{"value": {"name": "testUser"}}]}' "https://kafkarestproxy:8082/topics/prod.teamblue.rest.topic"
+curl -k -u "peter:peter-secret" -X POST -H "Content-Type: application/vnd.kafka.avro.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data '{"value_schema_id": 1, "records": [{"value": {"name": "testUser2"}}]}' "https://kafkarestproxy:8082/topics/prod.teamblue.rest.topic"
+```
+
+JSON Schema:
+```
+curl -k -u "peter:peter-secret" -X POST -H "Content-Type: application/vnd.kafka.jsonschema.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data '{"value_schema": "{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\"}}}", "records": [{"value": {"name": "testUser"}}]}' "https://kafkarestproxy:8082/topics/prod.teamblue.rest2.topic"
+curl -k -u "peter:peter-secret" -X POST -H "Content-Type: application/vnd.kafka.jsonschema.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data '{"value_schema_id": 2, "records": [{"value": {"name": "testUser2"}}]}' "https://kafkarestproxy:8082/topics/prod.teamblue.rest2.topic"
+```
+
 ### Ordering and Duplication tests
 
 Create topic with 1 partition only for ordering:

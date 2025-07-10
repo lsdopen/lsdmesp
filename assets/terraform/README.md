@@ -43,11 +43,9 @@ networking:
   apiServerPort: 6443    
 ```
 
-## Create Ingress Controller
+## Use Ingress Controller
 
-`kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml`
-
-In addition, one can create /etc/hosts entries for each ingress like this for testing locally:
+One can create /etc/hosts entries for each ingress like this for testing locally:
 
 ```
 127.0.0.1 schemaregistry.apps.mesp.lsdopen.io
