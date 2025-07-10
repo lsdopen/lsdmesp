@@ -1,7 +1,8 @@
 lsdmesp:
   clusterType: "kind"
-  cpVersion: "7.8.0"
-  cpOperatorVersion: "2.10.0"
+  cpVersion: "8.0.0"
+  cpOperatorVersion: "3.0.0"
+  cpCCCNextGenVersion: "2.2.0"
   storageClass: standard
   defaultReplicationFactor: 3
   defaultMinInSyncReplicas: 2
@@ -165,8 +166,8 @@ lsdmesp:
       password: ""
       # java memory sizes
       jvm:
-        Xms: 512m
-        Xmx: 512m
+        Xms: 1024m
+        Xmx: 1024m
       # pod resource limits and request
       resources:
         limits:
@@ -174,7 +175,7 @@ lsdmesp:
           memory: 2Gi
         requests:
           cpu: 20m
-          memory: 1Gi
+          memory: 2Gi
       # number of pod replicas
       replicas: 1
       externalAccess: {}
@@ -317,6 +318,10 @@ confluent-manager-for-apache-flink:
       - name: keystore
         configMap:
           name: cmf-keystore
+  encryption:
+    key:
+      kubernetesSecretName: "cmf-encryption-key"
+      kubernetesSecretProperty: "encryption-key"
 
 confluent-for-kubernetes:
   name: confluent-operator
@@ -337,7 +342,7 @@ confluent-for-kubernetes:
     registry: docker.io
     repository: confluentinc/confluent-operator
     pullPolicy: IfNotPresent
-    tag: "0.1145.6"
+    tag: "0.1263.8"
   priorityClassName: ""
   replicas: 1
   namespaced: true
