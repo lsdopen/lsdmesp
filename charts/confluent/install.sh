@@ -10,6 +10,8 @@ openssl pkcs12 -in keystore.p12 -nodes -nocerts -out lsdmesp.key -password pass:
 keytool -keystore keystore.p12 -alias CARoot -importcert -file ca.crt -storepass 112233 -noprompt
 keytool -keystore keystore.p12 -alias lsdmesp -importcert -file lsdmesp.crt -storepass 112233 -noprompt
 
+openssl rand -out cmf.key 32
+
 kubectl create -f https://github.com/jetstack/cert-manager/releases/download/v1.16.2/cert-manager.yaml
 echo "Sleeping a bit for cert-manager"
 sleep 10
@@ -17,6 +19,8 @@ echo "Done!"
 helm dependency update .
 kubectl create ns lsdmesp
 kubectl config set-context --current --namespace lsdmesp
+
+kubectl create secret generic cmf-encryption-key --from-file=encryption-key=cmf.key
 
 kubectl create configmap cmf-keystore --from-file ./keystore.p12
 kubectl create secret generic cmf-day2-tls --from-file=fullchain.pem=./lsdmesp.crt --from-file=privkey.pem=./lsdmesp.key --from-file=cacerts.pem=./ca.crt

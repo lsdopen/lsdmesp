@@ -4,7 +4,7 @@ provider "kubernetes" {
 
 provider "helm" {
   debug = true
-  kubernetes {
+  kubernetes = {
     config_path = "~/.kube/config"
   }
 }
@@ -45,9 +45,9 @@ module "observe" {
 
 module "eks-blueprint-mesp" {
   source  = "app.terraform.io/lsdopen/eks-blueprint-mesp/aws"
-  version = "1.5.16"
+  version = "1.5.22"
 
-  cluster_name             = "kind"
+  #cluster_name             = "kind"
   base_url                 = "apps.mesp.lsdopen.io"
   cluster_issuer_name      = "issuer"
   ingress_class_name       = "nginx"
