@@ -14,34 +14,37 @@ spec:
         confluentHub:
         - name: kafka-connect-datagen
           owner: confluentinc
-          version: 0.6.3
+          version: 0.6.7
         - name: kafka-connect-jdbc
           owner: confluentinc
-          version: 10.7.4
+          version: 10.8.4
         - name: kafka-connect-http
           owner: confluentinc
-          version: 1.7.5
+          version: 1.7.10
         - name: kafka-connect-http-source
           owner: confluentinc
-          version: 0.2.0
+          version: 1.0.1
         - name: kafka-connect-elasticsearch
           owner: confluentinc
-          version: 14.0.12
+          version: 15.0.1
         - name: kafka-connect-s3-source
           owner: confluentinc
-          version: 2.5.10
+          version: 2.6.16
         - name: kafka-connect-s3
           owner: confluentinc
-          version: 10.5.7
+          version: 10.6.7
         - name: debezium-connector-mysql
           owner: debezium
-          version: 2.2.1
+          version: 3.1.2
         - name: debezium-connector-postgresql
           owner: debezium
-          version: 2.5.4
+          version: 3.1.2
         - name: kafka-connect-elasticsearch-source
           owner: dariobalinzo
           version: 1.5.5
+        - name: iceberg-kafka-connect
+          owner: iceberg
+          version: 1.9.1
         locationType: confluentHub
     type: onDemand
   configOverrides:
@@ -286,7 +289,19 @@ spec:
     podSecurityContext:
       fsGroup: 1000
       runAsUser: 1000
-      runAsNonRoot: true
+    probe:
+      liveness:
+        failureThreshold: 20
+        initialDelaySeconds: 180
+        periodSeconds: 20
+        successThreshold: 1
+        timeoutSeconds: 10
+      readiness:
+        failureThreshold: 20
+        initialDelaySeconds: 180
+        periodSeconds: 20
+        successThreshold: 1
+        timeoutSeconds: 10
     resources:
       {{- toYaml $connect.resources | nindent 6 }}
   replicas: {{ $connect.replicas }}
