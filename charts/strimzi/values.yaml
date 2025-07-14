@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 lsdmesp:
   clusterType: "kind"
-  cpVersion: "7.6.1"
+  cpVersion: "8.0.0"
   storageClass: standard
   environment: dev
   defaultReplicationFactor: 3
@@ -24,7 +24,7 @@ lsdmesp:
 
   strimzi:
     clusterName: lsdmesp
-    version: 3.6.1
+    version: 4.0.0
 
     kraftcontroller:
       # java memory sizes
@@ -151,7 +151,7 @@ cp-helm:
         enabled: true
     replicaCount: 1
     image: lsdtrip/cp-kafka-connect
-    imageTag: "7.6.1"
+    imageTag: "8.0.0"
     servicePort: 8083
     configurationOverrides:
       "plugin.path": "/usr/share/java,/usr/share/confluent-hub-components"
@@ -191,7 +191,7 @@ cp-helm:
         enabled: true
     replicaCount: 1
     image: confluentinc/cp-schema-registry
-    imageTag: "7.6.1"
+    imageTag: "8.0.0"
     heapOptions: "-Xms512m -Xmx512m"
     schemaRegistryOpts: "-Djava.security.auth.login.config=/opt/kafka/jaas-config/jaas_config.conf"
     kafka:
@@ -217,7 +217,7 @@ cp-helm:
         enabled: true
     replicaCount: 1
     image: confluentinc/cp-kafka-rest
-    imageTag: "7.6.1"
+    imageTag: "8.0.0"
     heapOptions: "-Xms512m -Xmx512m"
     kafkaRestOpts: "-Djava.security.auth.login.config=/opt/kafka/jaas-config/jaas_config.conf"
     cp-kafka:
@@ -245,7 +245,7 @@ cp-helm:
         enabled: true
     replicaCount: 1
     image: confluentinc/cp-ksqldb-server
-    imageTag: "7.6.1"
+    imageTag: "8.0.0"
     heapOptions: "-Xms512M -Xmx1g"
     ksqlOpts: "-Djava.security.auth.login.config=/opt/kafka/jaas-config/jaas_config.conf"
     overrideServiceId: lsdmesp-ksql-server
@@ -293,7 +293,7 @@ strimzi-kafka-operator:
   watchAnyNamespace: false
   defaultImageRegistry: quay.io
   defaultImageRepository: strimzi
-  defaultImageTag: 0.41.0
+  defaultImageTag: 0.46.1
   image:
     imagePullPolicy: IfNotPresent
     registry: ""
@@ -378,7 +378,7 @@ strimzi-kafka-operator:
       registry: ""
       repository:
       name: kafka-bridge
-      tag: 0.28.0
+      tag: 0.32.0
   kafkaExporter:
     image:
       registry: ""
