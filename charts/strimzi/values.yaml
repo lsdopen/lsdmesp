@@ -429,6 +429,12 @@ strimzi-kafka-operator:
   connectBuildTimeoutMs: 300000
 
 kafka-ui:
+  image:
+    registry: ghcr.io
+    repository: kafbat/kafka-ui
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
   env:
     - name: KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL
       value: "SASL_SSL"
