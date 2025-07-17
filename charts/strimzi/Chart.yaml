@@ -1,7 +1,7 @@
 apiVersion: v2
 name: lsdmesp-strimzi
-version: "1.0.8"
-appVersion: "1.0.8"
+version: "1.0.9"
+appVersion: "1.0.9"
 description: 'LSDMESP Strimzi: LSD Event Streaming Platform based on Strimzi'
 keywords:
   - lsdmesp
@@ -31,5 +31,5 @@ dependencies:
     version: "1.5.0"
     repository: https://kafbat.github.io/helm-charts
   - name: flink-kubernetes-operator
-    version: "1.11.0"
-    repository: https://downloads.apache.org/flink/flink-kubernetes-operator-1.11.0
+    version: "1.12.1"
+    repository: https://downloads.apache.org/flink/flink-kubernetes-operator-1.12.1

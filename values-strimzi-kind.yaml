@@ -1,0 +1,23 @@
+lsdmesp:
+  armyKnife:
+    image: localhost:5001/lsdopen/kafka-army-knife:latest
+cp-helm:
+  restSecurity:
+    basic:
+      apiPassword: oYR3tYgsUAabgaA
+  cp-kafka-connect:
+    image: localhost:5001/lsdtrip/cp-kafka-connect
+  cp-schema-registry:
+    image: localhost:5001/confluentinc/cp-schema-registry
+  cp-kafka-rest:
+    image: localhost:5001/confluentinc/cp-kafka-rest
+  cp-ksql-server:
+    image: localhost:5001/confluentinc/cp-ksqldb-server
+strimzi-kafka-operator:
+  defaultImageRegistry: localhost:5001
+  kafkaConnect:
+    image:
+      registry: localhost:5001
+kafka-ui:
+  image:
+    registry: localhost:5001

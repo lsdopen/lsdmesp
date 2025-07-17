@@ -6,7 +6,7 @@ metadata:
 data:
   jaas_config.conf: |+
     LSDMESPRealm {
-    org.eclipse.jetty.jaas.spi.PropertyFileLoginModule required
+    org.eclipse.jetty.security.jaas.spi.PropertyFileLoginModule required
     file="/opt/kafka/lsdmesp-passwords/passwords.txt"
     debug="false";
     };
