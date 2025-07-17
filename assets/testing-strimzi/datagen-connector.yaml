@@ -1,0 +1,18 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: datagen-avro-connector
+  labels:
+    strimzi.io/cluster: lsdmesp
+spec:
+  class: io.confluent.kafka.connect.datagen.DatagenConnector
+  tasksMax: 2
+  config:
+    value.converter.schema.registry.url: https://lsdmesp-cp-schema-registry:8081
+    value.converter.schema.registry.ssl.truststore.location: /mnt/kafka_basicauth/truststore.p12
+    value.converter.schema.registry.ssl.truststore.password: 112233
+    value.converter.basic.auth.credentials.source: USER_INFO
+    value.converter.schema.registry.basic.auth.user.info: lsdmesp-api:oYR3tYgsUAabgaA
+    value.converter: io.confluent.connect.avro.AvroConverter
+    kafka.topic: users
+    quickstart: users
