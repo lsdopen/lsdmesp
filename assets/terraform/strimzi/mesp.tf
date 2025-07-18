@@ -43,15 +43,33 @@ module "observe" {
   depends_on = [module.ingress-nginx]
 }
 
+data "kubernetes_nodes" "all_kube_nodes" {
+  depends_on = [module.ingress-nginx]
+}
+
+resource "kubernetes_labels" "kafka_worker_labels" {
+  count = var.number_kafka_brokers
+
+  api_version = "v1"
+  kind        = "Node"
+  metadata {
+    name = data.kubernetes_nodes.all_kube_nodes.nodes[count.index+1].metadata.0.name
+  }
+  labels = {
+    "accept-pod" = "lsdmesp-broker-${count.index}"
+  }
+}
+
 module "eks-blueprint-mesp" {
   source  = "app.terraform.io/lsdopen/eks-blueprint-mesp/aws"
-  version = "1.5.25"
+  version = "1.5.26"
 
   # cluster_name             = "kind"
-  base_url                 = "apps.mesp.lsdopen.io"
+  base_url                 = "mesp.lsdopen.io"
   cluster_issuer_name      = "issuer"
   ingress_class_name       = "nginx"
   kafka_ingress_class_name = "nginx"
+  kafka_ingress_enabled    = false
 
   namespace = "lsdmesp"
 
@@ -70,6 +88,7 @@ module "eks-blueprint-mesp" {
   depends_on = [
     module.ingress-nginx,
     module.cert-manager,
-    module.observe
+    module.observe,
+    kubernetes_labels.kafka_worker_labels
   ]
 }
