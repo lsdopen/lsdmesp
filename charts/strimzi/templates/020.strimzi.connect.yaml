@@ -1,0 +1,65 @@
+{{- if .Values.lsdmesp.strimzi.connect.enabled -}}
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnect
+metadata:
+  name: lsdmesp
+  labels:
+    strimzi.io/cluster: {{ .Release.Name }}
+  annotations:
+    strimzi.io/use-connector-resources: "true"
+spec:
+  version: {{ .Values.lsdmesp.strimzi.version }}
+  replicas: {{ .Values.lsdmesp.strimzi.connect.replicas }}
+  bootstrapServers: {{ .Values.lsdmesp.strimzi.connect.bootstrap }}
+  authentication:
+    type: scram-sha-512
+    username: lsdmesp
+    passwordSecret:
+      secretName: lsdmesp
+      password: password
+  config:
+    config.storage.topic: connect-cluster-configs
+    group.id: connect-cluster
+    heartbeat.interval.ms: 3000
+    offset.flush.interval.ms: 60000
+    offset.flush.timeout.ms: 5000
+    offset.storage.topic: connect-cluster-offsets
+    rebalance.timeout.ms: 60000
+    request.timeout.ms: 40000
+    session.timeout.ms: 10000
+    status.storage.topic: connect-cluster-status
+    worker.sync.timeout.ms: 3000
+    config.storage.replication.factor: -1
+    offset.storage.replication.factor: -1
+    status.storage.replication.factor: -1
+  jvmOptions:
+    -Xms: {{ .Values.lsdmesp.strimzi.connect.jvm.Xms }}
+    -Xmx: {{ .Values.lsdmesp.strimzi.connect.jvm.Xmx }}
+  logging:
+    loggers:
+      connect.root.logger.level: WARN
+    type: inline
+  metricsConfig:
+    type: jmxPrometheusExporter
+    valueFrom:
+      configMapKeyRef:
+        name: connect-metrics
+        key: metrics-config.yml
+  resources:
+{{- toYaml .Values.lsdmesp.strimzi.connect.resources | nindent 4 }}
+  template:
+    connectContainer:
+      volumeMounts:
+        - name: lsdmesp-tls
+          mountPath: /mnt/kafka_basicauth
+    pod:
+      volumes:
+        - name: lsdmesp-tls
+          secret:
+            defaultMode: 292
+            secretName: lsdmesp-tls
+  tls:
+    trustedCertificates:
+      - secretName: lsdmesp-cluster-ca-cert
+        certificate: ca.crt
+{{- end }}

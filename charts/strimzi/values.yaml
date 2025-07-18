@@ -91,6 +91,22 @@ lsdmesp:
           memory: 10Mi
 
     connect:
+      enabled: false
+      bootstrap: "lsdmesp-kafka-bootstrap:9092"
+      # number of pod replicas
+      replicas: 1
+      # java memory sizes
+      jvm:
+        Xms: 1536m
+        Xmx: 1536m
+      # pod resource limits and request
+      resources:
+        limits:
+          cpu: 1
+          memory: 2Gi
+        requests:
+          cpu: 1
+          memory: 2Gi
       ingress:
         url: *anchorstrimziConnectURL
 
