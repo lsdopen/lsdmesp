@@ -1,5 +1,6 @@
 lsdmesp:
   clusterType: "kind"
+  cpRegistry: docker.io
   cpVersion: "8.0.0"
   cpOperatorVersion: "3.0.0"
   cpCCCNextGenVersion: "2.2.0"
@@ -26,6 +27,7 @@ lsdmesp:
 
   armyKnife:
     enabled: true
+    registry: docker.io
     image: lsdopen/kafka-army-knife:latest
     replicas: 1
 
@@ -33,6 +35,7 @@ lsdmesp:
     enabled: false
     kafkaLagExporter:
       enabled: false
+      registry: docker.io
       image: lsdtrip/kafka-lag-exporter:latest
       replicas: 1
 
@@ -54,6 +57,7 @@ lsdmesp:
     readOnlyUser:
       username: "mds"
       password: ""
+    registry: docker.io
     image: osixia/openldap:1.5.0
     tls:
       enabled: false
@@ -161,6 +165,10 @@ lsdmesp:
     connect:
       # if `true`, then will be provisioned
       enabled: true
+      # build will install connector plugins from confluent hub
+      build: true
+      # image will need to be overriden if a custom image is used
+      image: confluentinc/cp-server-connect
       # credential config
       username: cf_connect
       password: ""
@@ -282,6 +290,9 @@ lsdmesp:
         tls:
           secretName: controlcenter-tls
 
+flink-kubernetes-operator:
+  watchNamespaces: []
+
 confluent-manager-for-apache-flink:
   cmf:
     authorization:
@@ -318,6 +329,13 @@ confluent-manager-for-apache-flink:
       - name: keystore
         configMap:
           name: cmf-keystore
+  resources:
+    limits:
+      cpu: 1
+      memory: 2048Mi
+    requests:
+      cpu: 200m
+      memory: 1024Mi
   encryption:
     key:
       kubernetesSecretName: "cmf-encryption-key"

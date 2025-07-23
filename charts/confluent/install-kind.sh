@@ -1,7 +1,7 @@
 #!/bin/bash
 
-cat ../../values.yaml | yq -r .lsdmesp.tls.ca.cert > ca.crt
-cat ../../values.yaml | yq -r .lsdmesp.tls.ca.key > ca.key
+cat ../../values-kind.yaml | yq -r .lsdmesp.tls.ca.cert > ca.crt
+cat ../../values-kind.yaml | yq -r .lsdmesp.tls.ca.key > ca.key
 
 keytool -keystore keystore.p12 -alias lsdmesp -keyalg RSA -validity 3650 -genkey -storepass 112233 -keypass 112233 -dname "CN=lsdmesp"
 keytool -keystore keystore.p12 -alias lsdmesp -certreq -file lsdmesp.csr -storepass 112233
@@ -25,7 +25,7 @@ kubectl create secret generic cmf-encryption-key --from-file=encryption-key=cmf.
 kubectl create configmap cmf-keystore --from-file ./keystore.p12
 kubectl create secret generic cmf-day2-tls --from-file=fullchain.pem=./lsdmesp.crt --from-file=privkey.pem=./lsdmesp.key --from-file=cacerts.pem=./ca.crt
 
-helm install lsdmesp . -f ../../values.yaml -n lsdmesp
+helm install lsdmesp . -f ../../values-kind.yaml -n lsdmesp
 
 rm ./cmf.key
 rm ./lsdmesp.crt

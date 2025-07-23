@@ -34,7 +34,7 @@ spec:
         app: kafka-army-knife
     spec:
       containers:
-        - image: {{ .Values.lsdmesp.armyKnife.image }}
+        - image: {{ .Values.lsdmesp.armyKnife.registry }}/{{ .Values.lsdmesp.armyKnife.image }}
           env:
             - name: LSDMESP_BOOTSTRAP_SERVERS
               value: "kafka.{{ .Release.Namespace }}.svc.cluster.local:9095"

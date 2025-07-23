@@ -20,8 +20,8 @@ spec:
       - listener.name.replication.ssl.truststore.password=${file:/mnt/sslcerts/jksPassword.txt:jksPassword}
   dataVolumeCapacity: {{ $kraftcontroller.dataVolumeCapacity }}
   image:
-    application: docker.io/confluentinc/cp-server:{{ .Values.lsdmesp.cpVersion }}
-    init: confluentinc/confluent-init-container:{{ .Values.lsdmesp.cpOperatorVersion }}
+    application: {{ .Values.lsdmesp.cpRegistry }}/confluentinc/cp-server:{{ .Values.lsdmesp.cpVersion }}
+    init: {{ .Values.lsdmesp.cpRegistry }}/confluentinc/confluent-init-container:{{ .Values.lsdmesp.cpOperatorVersion }}
   {{- if not ((index .Values "confluent-for-kubernetes" "licenseKey") | empty) }}
   license:
     globalLicense: true
