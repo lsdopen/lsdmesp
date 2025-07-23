@@ -290,6 +290,13 @@ lsdmesp:
         tls:
           secretName: controlcenter-tls
 
+    flink:
+      # if `true`, then will be provisioned
+      enabled: true
+      # credential config
+      username: cf_flink
+      password: ""
+
 flink-kubernetes-operator:
   watchNamespaces: []
 
@@ -301,7 +308,7 @@ confluent-manager-for-apache-flink:
         authentication:
           type: basic
           config:
-            confluent.metadata.basic.auth.user.info: "cf_connect:bk(2KW{LgFj3"
+            confluent.metadata.basic.auth.user.info: "cf_flink:Vf9{y(oFZewL"
             confluent.metadata.bootstrap.server.urls: https://kafka.lsdmesp.svc.cluster.local:8090
             confluent.metadata.http.auth.credentials.provider: BASIC
             confluent.metadata.ssl.truststore.location: /mnt/sslcerts/truststore.jks

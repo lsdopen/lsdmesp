@@ -28,9 +28,11 @@ dependencies:
   - name: flink-kubernetes-operator
     version: "1.120.1"
     repository: https://packages.confluent.io/helm
+    condition: lsdmesp.confluent.flink.enabled
   - name: confluent-manager-for-apache-flink
     version: "2.0.1"
     repository: https://packages.confluent.io/helm
+    condition: lsdmesp.confluent.flink.enabled
   - name: confluent-for-kubernetes
     version: "0.1263.8"
     repository: https://packages.confluent.io/helm

@@ -1,4 +1,4 @@
-{{- if .Values.lsdmesp.monitoring.enabled -}}
+{{- if and .Values.lsdmesp.monitoring.enabled .Values.lsdmesp.confluent.flink.enabled -}}
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:

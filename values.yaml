@@ -17,6 +17,9 @@ lsdmesp:
       password: (3WKbLg{F2jk
     schemaregistry:
       password: jgkW{b23KFL(
+    flink:
+      password: Vf9{y(oFZewL
+
   tls:
     ca:
       cert: |
