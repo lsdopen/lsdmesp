@@ -1,4 +1,5 @@
-FROM confluentinc/cp-kafka-connect:7.6.1 AS cp
+FROM confluentinc/cp-server-connect:7.6.1
+USER root
 RUN confluent-hub install --no-prompt confluentinc/kafka-connect-avro-converter:7.6.1
 RUN confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.6.0
 RUN confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:10.6.0
@@ -9,3 +10,4 @@ RUN confluent-hub install --no-prompt debezium/debezium-connector-sqlserver:1.9.
 RUN confluent-hub install --no-prompt debezium/debezium-connector-postgresql:1.9.7
 RUN confluent-hub install --no-prompt debezium/debezium-connector-mysql:1.9.7
 RUN confluent-hub install --no-prompt debezium/debezium-connector-mongodb:1.9.7
+USER 1001
