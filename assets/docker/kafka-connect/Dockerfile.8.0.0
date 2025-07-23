@@ -7,9 +7,6 @@ RUN confluent-hub install --no-prompt confluentinc/kafka-connect-http-source:1.0
 RUN confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:15.0.1
 RUN confluent-hub install --no-prompt confluentinc/kafka-connect-s3-source:2.6.16
 RUN confluent-hub install --no-prompt confluentinc/kafka-connect-s3:10.6.7
-RUN confluent-hub install --no-prompt debezium/debezium-connector-sqlserver:3.1.2
 RUN confluent-hub install --no-prompt debezium/debezium-connector-postgresql:3.1.2
 RUN confluent-hub install --no-prompt debezium/debezium-connector-mysql:3.1.2
-RUN confluent-hub install --no-prompt debezium/debezium-connector-mongodb:3.1.2
-RUN confluent-hub install --no-prompt dariobalinzo/kafka-connect-elasticsearch-source:1.5.5
-RUN confluent-hub install --no-prompt iceberg/iceberg-kafka-connect:1.9.1
+# RUN confluent-hub install --no-prompt iceberg/iceberg-kafka-connect:1.9.1

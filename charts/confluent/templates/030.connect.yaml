@@ -8,6 +8,7 @@ metadata:
 spec:
   authorization:
     type: rbac
+  {{- if $connect.build }}
   build:
     onDemand:
       plugins:
@@ -47,6 +48,7 @@ spec:
           version: 1.9.1
         locationType: confluentHub
     type: onDemand
+  {{- end }}
   configOverrides:
     jvm:
       - -Xms{{ $connect.jvm.Xms }}
@@ -76,8 +78,8 @@ spec:
   externalAccess: {{ $connect.externalAccess }}
   {{- end }}
   image:
-    application: confluentinc/cp-server-connect:{{ .Values.lsdmesp.cpVersion }}
-    init: confluentinc/confluent-init-container:{{ .Values.lsdmesp.cpOperatorVersion }}
+    application: {{ .Values.lsdmesp.cpRegistry }}/{{ $connect.image }}:{{ .Values.lsdmesp.cpVersion }}
+    init: {{ .Values.lsdmesp.cpRegistry }}/confluentinc/confluent-init-container:{{ .Values.lsdmesp.cpOperatorVersion }}
   internalTopicReplicationFactor: {{ .Values.lsdmesp.defaultReplicationFactor }}
   {{- if not ((index .Values "confluent-for-kubernetes" "licenseKey") | empty) }}
   license:

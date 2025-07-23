@@ -1,11 +1,26 @@
+confluent-for-kubernetes:
+  image:
+    registry: localhost:5001
+  namespaceList: ["lsdmesp", "fun"]
+flink-kubernetes-operator:
+  watchNamespaces: []
 lsdmesp:
+  cpRegistry: localhost:5001
+  armyKnife:
+    registry: localhost:5001
+  monitoring:
+    kafkaLagExporter:
+      registry: localhost:5001
   ldap:
+    registry: localhost:5001
     readOnlyUser:
       password: Developer!
     admin_password: "confluentrox"
     config_password: "confluentconfigrox"
   confluent:
     connect:
+      build: false
+      image: lsdtrip/cp-kafka-connect
       password: bk(2KW{LgFj3
     controlcenter:
       password: '{(kLWbjg2K3F'
@@ -17,9 +32,6 @@ lsdmesp:
       password: (3WKbLg{F2jk
     schemaregistry:
       password: jgkW{b23KFL(
-    flink:
-      password: Vf9{y(oFZewL
-
   tls:
     ca:
       cert: |

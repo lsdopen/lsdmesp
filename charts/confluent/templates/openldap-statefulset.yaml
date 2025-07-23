@@ -22,7 +22,7 @@ spec:
         - --copy-service
         - --loglevel=debug
         imagePullPolicy: IfNotPresent
-        image: {{ $ldap.image }}
+        image: {{ .Values.lsdmesp.ldap.registry }}/{{ $ldap.image }}
         ports:
         - containerPort: 389
           name: ldap

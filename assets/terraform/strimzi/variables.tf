@@ -21,3 +21,9 @@ variable "enable-army-knife" {
   type        = bool
   default     = true
 }
+
+variable "number_kafka_brokers" {
+  description = "Number of brokers"
+  type        = number
+  default     = "3"
+}

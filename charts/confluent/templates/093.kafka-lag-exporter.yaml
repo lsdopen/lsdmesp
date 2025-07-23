@@ -89,7 +89,7 @@ spec:
         app: kafka-lag-exporter
     spec:
       containers:
-        - image: {{ .Values.lsdmesp.monitoring.kafkaLagExporter.image }}
+        - image: {{ .Values.lsdmesp.monitoring.kafkaLagExporter.registry }}/{{ .Values.lsdmesp.monitoring.kafkaLagExporter.image }}
           imagePullPolicy: IfNotPresent
           name: kafka-lag-exporter
           lifecycle:
