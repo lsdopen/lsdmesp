@@ -43,3 +43,4 @@ tmp/
 # Terraform
 .terraform
 .terraform.lock.hcl
+*.tfstate
