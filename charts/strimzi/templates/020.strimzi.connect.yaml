@@ -32,6 +32,18 @@ spec:
     config.storage.replication.factor: -1
     offset.storage.replication.factor: -1
     status.storage.replication.factor: -1
+  livenessProbe:
+    failureThreshold: 20
+    initialDelaySeconds: 180
+    periodSeconds: 20
+    successThreshold: 1
+    timeoutSeconds: 10
+  readinessProbe:
+    failureThreshold: 20
+    initialDelaySeconds: 180
+    periodSeconds: 20
+    successThreshold: 1
+    timeoutSeconds: 10
   jvmOptions:
     -Xms: {{ .Values.lsdmesp.strimzi.connect.jvm.Xms }}
     -Xmx: {{ .Values.lsdmesp.strimzi.connect.jvm.Xmx }}
