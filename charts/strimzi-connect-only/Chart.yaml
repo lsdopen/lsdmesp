@@ -1,8 +1,8 @@
 apiVersion: v2
-name: lsdmesp-strimzi-connect
+name: lsdmesp-strimzi-connect-only
 version: "1.0.0"
 appVersion: "1.0.0"
-description: 'LSDMESP Strimzi Connect'
+description: 'LSDMESP Strimzi Connect Only'
 keywords:
   - lsdmesp
   - event

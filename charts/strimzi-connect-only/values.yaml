@@ -9,7 +9,6 @@ lsdmesp:
     version: 4.0.0
 
     connect:
-      enabled: false
       bootstrap: "lsdmesp-kafka-bootstrap:9092"
       username: lsdmesp
       password: "112233"
@@ -28,7 +27,7 @@ lsdmesp:
         requests:
           cpu: 1
           memory: 2Gi
-      awsArn: arn:aws:iam::887069583911:role/mesp-strimzi-cluster-20250724063401038500000002
+      awsArn: ""
 
 strimzi-kafka-operator:
   replicas: 1
