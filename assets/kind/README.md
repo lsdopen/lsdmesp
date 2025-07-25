@@ -8,7 +8,7 @@ docker pull lsdopen/kafka-army-knife:latest
 docker pull quay.io/strimzi/operator:0.46.1
 docker pull quay.io/strimzi/kafka:0.46.1-kafka-4.0.0
 docker pull quay.io/strimzi/kafka-bridge:0.32.0
-docker pull lsdtrip/cp-kafka-connect:8.0.0
+docker pull lsdtrip/cp-server-connect:8.0.0
 docker pull confluentinc/cp-schema-registry:8.0.0
 docker pull confluentinc/cp-kafka-rest:8.0.0
 docker pull confluentinc/cp-ksqldb-server:8.0.0
@@ -19,7 +19,7 @@ docker tag lsdopen/kafka-army-knife:latest localhost:5001/lsdopen/kafka-army-kni
 docker tag quay.io/strimzi/operator:0.46.1 localhost:5001/strimzi/operator:0.46.1
 docker tag quay.io/strimzi/kafka:0.46.1-kafka-4.0.0 localhost:5001/strimzi/kafka:0.46.1-kafka-4.0.0
 docker tag quay.io/strimzi/kafka-bridge:0.32.0 localhost:5001/strimzi/kafka-bridge:0.32.0
-docker tag lsdtrip/cp-kafka-connect:8.0.0 localhost:5001/lsdtrip/cp-kafka-connect:8.0.0
+docker tag lsdtrip/cp-server-connect:8.0.0 localhost:5001/lsdtrip/cp-server-connect:8.0.0
 docker tag confluentinc/cp-schema-registry:8.0.0 localhost:5001/confluentinc/cp-schema-registry:8.0.0
 docker tag confluentinc/cp-kafka-rest:8.0.0 localhost:5001/confluentinc/cp-kafka-rest:8.0.0
 docker tag confluentinc/cp-ksqldb-server:8.0.0 localhost:5001/confluentinc/cp-ksqldb-server:8.0.0
@@ -30,7 +30,7 @@ docker push localhost:5001/lsdopen/kafka-army-knife:latest
 docker push localhost:5001/strimzi/operator:0.46.1
 docker push localhost:5001/strimzi/kafka:0.46.1-kafka-4.0.0
 docker push localhost:5001/strimzi/kafka-bridge:0.32.0
-docker push localhost:5001/lsdtrip/cp-kafka-connect:8.0.0
+docker push localhost:5001/lsdtrip/cp-server-connect:8.0.0
 docker push localhost:5001/confluentinc/cp-schema-registry:8.0.0
 docker push localhost:5001/confluentinc/cp-kafka-rest:8.0.0
 docker push localhost:5001/confluentinc/cp-ksqldb-server:8.0.0

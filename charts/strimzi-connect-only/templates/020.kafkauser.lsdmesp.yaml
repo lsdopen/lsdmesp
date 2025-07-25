@@ -1,0 +1,8 @@
+apiVersion: v1
+data:
+  password: {{ .Values.lsdmesp.strimzi.connect.password | b64enc }}
+  sasl.jaas.config: {{ .Values.lsdmesp.strimzi.connect.saslJaasConfig | b64enc }}
+kind: Secret
+metadata:
+  name: {{ .Values.lsdmesp.strimzi.connect.username }}
+type: Opaque

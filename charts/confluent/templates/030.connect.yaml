@@ -44,8 +44,8 @@ spec:
           owner: dariobalinzo
           version: 1.5.5
         - name: iceberg-kafka-connect
-          owner: iceberg
-          version: 1.9.1
+          owner: tabular
+          version: 0.6.19
         locationType: confluentHub
     type: onDemand
   {{- end }}

@@ -45,7 +45,7 @@ module "observe" {
 
 module "eks-blueprint-mesp" {
   source  = "app.terraform.io/lsdopen/eks-blueprint-mesp/aws"
-  version = "1.5.22"
+  version = "1.5.27"
 
   #cluster_name             = "kind"
   base_url                 = "apps.mesp.lsdopen.io"
@@ -76,6 +76,11 @@ module "eks-blueprint-mesp" {
   confluent_schemaregistry = {
     enabled  = true
     username = "cf_schemaregistry"
+    ingress  = true
+  }
+  confluent_flink = {
+    enabled  = true
+    username = "cf_flink"
     ingress  = true
   }
 

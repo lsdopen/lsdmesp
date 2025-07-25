@@ -20,7 +20,7 @@ lsdmesp:
   confluent:
     connect:
       build: false
-      image: lsdtrip/cp-kafka-connect
+      image: lsdtrip/cp-server-connect
       password: bk(2KW{LgFj3
     controlcenter:
       password: '{(kLWbjg2K3F'

@@ -1,4 +1,3 @@
-{{- if .Values.lsdmesp.strimzi.connect.enabled -}}
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnect
 metadata:
@@ -60,18 +59,9 @@ spec:
   resources:
 {{- toYaml .Values.lsdmesp.strimzi.connect.resources | nindent 4 }}
   template:
-    connectContainer:
-      volumeMounts:
-        - name: lsdmesp-tls
-          mountPath: /mnt/kafka_basicauth
-    pod:
-      volumes:
-        - name: lsdmesp-tls
-          secret:
-            defaultMode: 292
-            secretName: lsdmesp-tls
+    serviceAccount:
+      metadata:
+        annotations:
+          eks.amazonaws.com/role-arn: {{ .Values.lsdmesp.strimzi.connect.awsArn }}}
   tls:
-    trustedCertificates:
-      - secretName: lsdmesp-cluster-ca-cert
-        certificate: ca.crt
-{{- end }}
+    trustedCertificates: []
