@@ -1,0 +1,172 @@
+# Default values for lsdmesp.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+lsdmesp:
+  clusterType: "kind"
+
+  strimzi:
+    clusterName: lsdmesp
+    version: 4.0.0
+
+    connect:
+      enabled: false
+      bootstrap: "lsdmesp-kafka-bootstrap:9092"
+      username: lsdmesp
+      password: "112233"
+      saslJaasConfig: org.apache.kafka.common.security.scram.ScramLoginModule required username="lsdmesp" password="112233";
+      # number of pod replicas
+      replicas: 1
+      # java memory sizes
+      jvm:
+        Xms: 1536m
+        Xmx: 1536m
+      # pod resource limits and request
+      resources:
+        limits:
+          cpu: 1
+          memory: 2Gi
+        requests:
+          cpu: 1
+          memory: 2Gi
+      awsArn: arn:aws:iam::887069583911:role/mesp-strimzi-cluster-20250724063401038500000002
+
+strimzi-kafka-operator:
+  replicas: 1
+  watchNamespaces: []
+  watchAnyNamespace: false
+  defaultImageRegistry: quay.io
+  defaultImageRepository: strimzi
+  defaultImageTag: 0.46.1
+  image:
+    imagePullPolicy: IfNotPresent
+    registry: ""
+    repository: ""
+    name: operator
+    tag: ""
+    # imagePullSecrets:
+    #   - name: secretname
+  logVolume: co-config-volume
+  logConfigMap: strimzi-cluster-operator
+  logConfiguration: ""
+  logLevel: ${env:STRIMZI_LOG_LEVEL:-INFO}
+  fullReconciliationIntervalMs: 120000
+  operationTimeoutMs: 300000
+  kubernetesServiceDnsDomain: cluster.local
+  featureGates: ""
+  tmpDirSizeLimit: 1Mi
+  extraEnvs: []
+  tolerations: []
+  affinity: {}
+  annotations: {}
+  labels: {}
+  nodeSelector: {}
+  priorityClassName: ""
+  podSecurityContext: {}
+  securityContext: {}
+  rbac:
+    create: yes
+  serviceAccountCreate: yes
+  serviceAccount: strimzi-cluster-operator
+  leaderElection:
+    enable: true
+  podDisruptionBudget:
+    enabled: false
+    minAvailable: 1
+    maxUnavailable:
+  dashboards:
+    enabled: false
+    namespace: ~
+    label: grafana_dashboard # this is the default value from the grafana chart
+    labelValue: "1" # this is the default value from the grafana chart
+    annotations: {}
+    extraLabels: {}
+  kafka:
+    image:
+      registry: ""
+      repository: ""
+      name: kafka
+      tagPrefix: ""
+  kafkaConnect:
+    image:
+      registry: "docker.io"
+      repository: "lsdtrip"
+      name: kafka-connect
+      tagPrefix: ""
+  topicOperator:
+    image:
+      registry: ""
+      repository: ""
+      name: operator
+      tag: ""
+  userOperator:
+    image:
+      registry:
+      repository:
+      name: operator
+      tag: ""
+  kafkaInit:
+    image:
+      registry: ""
+      repository: ""
+      name: operator
+      tag: ""
+  kafkaMirrorMaker:
+    image:
+      registry: ""
+      repository: ""
+      name: kafka
+      tagPrefix: ""
+  kafkaBridge:
+    image:
+      registry: ""
+      repository:
+      name: kafka-bridge
+      tag: 0.32.0
+  kafkaExporter:
+    image:
+      registry: ""
+      repository: ""
+      name: kafka
+      tagPrefix: ""
+  kafkaMirrorMaker2:
+    image:
+      registry: ""
+      repository: ""
+      name: kafka
+      tagPrefix: ""
+  cruiseControl:
+    image:
+      registry: ""
+      repository: ""
+      name: kafka
+      tagPrefix: ""
+  kanikoExecutor:
+    image:
+      registry: ""
+      repository: ""
+      name: kaniko-executor
+      tag: ""
+  mavenBuilder:
+    image:
+      registry: ""
+      repository: ""
+      name: maven-builder
+      tag: ""
+  resources:
+    limits:
+      memory: 384Mi
+      cpu: 1000m
+    requests:
+      memory: 384Mi
+      cpu: 10m
+  livenessProbe:
+    initialDelaySeconds: 10
+    periodSeconds: 30
+  readinessProbe:
+    initialDelaySeconds: 10
+    periodSeconds: 30
+  createGlobalResources: true
+  createAggregateRoles: false
+  labelsExclusionPattern: ""
+  generateNetworkPolicy: true
+  connectBuildTimeoutMs: 300000

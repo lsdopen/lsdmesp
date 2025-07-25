@@ -1,0 +1,26 @@
+apiVersion: v2
+name: lsdmesp-strimzi-connect
+version: "1.0.0"
+appVersion: "1.0.0"
+description: 'LSDMESP Strimzi Connect'
+keywords:
+  - lsdmesp
+  - event
+  - stream
+  - kubernetes
+  - kafka
+  - messaging
+  - topic
+home: https://github.com/lsdopen/lsdmesp
+sources:
+  - https://github.com/lsdopen/lsdmesp
+maintainers:
+  - name: LSD
+    email: support@lsdopen.io
+    url: https://lsdopen.io
+deprecated: false
+
+dependencies:
+  - name: strimzi-kafka-operator
+    version: "0.46.1"
+    repository: https://strimzi.io/charts/

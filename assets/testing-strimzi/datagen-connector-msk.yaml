@@ -1,0 +1,18 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: datagen-avro-connector
+  labels:
+    strimzi.io/cluster: lsdmesp
+spec:
+  class: io.confluent.kafka.connect.datagen.DatagenConnector
+  tasksMax: 2
+  config:
+    value.converter.registry.name: "mesp-msk-registry"
+    value.converter: "com.amazonaws.services.schemaregistry.kafkaconnect.AWSKafkaAvroConverter"
+    value.converter.schemas.enable: false
+    value.converter.region: "eu-west-1"
+    value.converter.compatibility: "FORWARD"
+    value.converter.schemaAutoRegistrationEnabled: true
+    kafka.topic: users
+    quickstart: users
