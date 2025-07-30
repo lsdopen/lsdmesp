@@ -156,9 +156,36 @@ data:
       type: GAUGE
       #debezium.postgres:type=connector-metrics,context=streaming,server=<topic.prefix>
       #debezium.postgres:type=connector-metrics,context=snapshot,server=<topic.prefix>
+    - pattern : "kafka.connect<type=connect-worker-metrics>([^:]+):"
+      name: "kafka_connect_worker_metrics_$1"
+    - pattern : "kafka.connect<type=connect-metrics, client-id=([^:]+)><>([^:]+)"
+      name: "kafka_connect_metrics_$2"
+      labels:
+        client: "$1"
+    - pattern: "debezium.([^:]+)<type=connector-metrics, context=([^,]+), server=([^,]+), key=([^>]+)><>RowsScanned"
+      name: "debezium_metrics_RowsScanned"
+      labels:
+        plugin: "$1"
+        name: "$3"
+        context: "$2"
+        table: "$4"
+    - pattern: "debezium.([^:]+)<type=connector-metrics, server=([^,]+), task=([^,]+), context=([^,]+), database=([^>]+)>([^:]+)"
+      name: "debezium_metrics_$6"
+      labels:
+        plugin: "$1"
+        name: "$2"
+        task: "$3"
+        context: "$4"
+        database: "$5"
+    - pattern: "debezium.([^:]+)<type=connector-metrics, server=([^,]+), task=([^,]+), context=([^>]+)>([^:]+)"
+      name: "debezium_metrics_$5"
+      labels:
+        plugin: "$1"
+        name: "$2"
+        task: "$3"
+        context: "$4"
     - pattern: "debezium.([^:]+)<type=connector-metrics, context=([^,]+), server=([^>]+)>([^:]+)"
       name: "debezium_metrics_$4"
-      help: "Debezium Connector JMX metrics for plugin $1"
       labels:
         plugin: "$1"
         name: "$3"
