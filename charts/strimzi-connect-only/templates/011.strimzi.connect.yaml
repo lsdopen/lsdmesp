@@ -62,6 +62,6 @@ spec:
     serviceAccount:
       metadata:
         annotations:
-          eks.amazonaws.com/role-arn: {{ .Values.lsdmesp.strimzi.connect.awsArn }}}
+          eks.amazonaws.com/role-arn: {{ .Values.lsdmesp.strimzi.connect.awsArn }}
   tls:
     trustedCertificates: []
