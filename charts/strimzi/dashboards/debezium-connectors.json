@@ -144,7 +144,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "debezium_metrics_connected{context=\"streaming\",name=\"mesp\"}\t\r\n",
+          "expr": "debezium_metrics_connected{context=\"streaming\"}\t\r\n",
           "refId": "A"
         }
       ],
@@ -221,7 +221,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "debezium_metrics_binlogposition{context=\"streaming\",name=\"mesp\"}\t\r\n",
+          "expr": "debezium_metrics_binlogposition{context=\"streaming\"}\t\r\n",
           "refId": "A"
         }
       ],
@@ -300,7 +300,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "debezium_metrics_isgtidmodeenabled{context=\"streaming\",name=\"mesp\"}\t\r\n",
+          "expr": "debezium_metrics_isgtidmodeenabled{context=\"streaming\"}\t\r\n",
           "refId": "A"
         }
       ],
@@ -377,7 +377,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "debezium_metrics_numberofcommittedtransactions{context=\"streaming\",name=\"mesp\"}\t\r\n",
+          "expr": "debezium_metrics_numberofcommittedtransactions{context=\"streaming\"}\t\r\n",
           "refId": "A"
         }
       ],
@@ -454,7 +454,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "debezium_metrics_numberofrolledbacktransactions{context=\"streaming\",name=\"mesp\"}\t\r\n",
+          "expr": "debezium_metrics_numberofrolledbacktransactions{context=\"streaming\"}\t\r\n",
           "refId": "A"
         }
       ],
@@ -531,7 +531,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "debezium_metrics_numberofnotwellformedtransactions{context=\"streaming\",name=\"mesp\"}\r\n",
+          "expr": "debezium_metrics_numberofnotwellformedtransactions{context=\"streaming\"}\r\n",
           "refId": "A"
         }
       ],
@@ -608,7 +608,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "debezium_metrics_totalnumberofeventsseen{context=\"streaming\",name=\"mesp\"}\t\r\n",
+          "expr": "debezium_metrics_totalnumberofeventsseen{context=\"streaming\"}\t\r\n",
           "refId": "A"
         }
       ],
@@ -677,7 +677,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "debezium_metrics_numberofskippedevents{context=\"streaming\",name=\"mesp\"}\t\r\n",
+          "expr": "debezium_metrics_numberofskippedevents{context=\"streaming\"}\t\r\n",
           "refId": "A"
         }
       ],
@@ -754,7 +754,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "debezium_metrics_numberofeventsfiltered{context=\"streaming\",name=\"mesp\"}\t\r\n",
+          "expr": "debezium_metrics_numberofeventsfiltered{context=\"streaming\"}\t\r\n",
           "refId": "A"
         }
       ],
@@ -825,7 +825,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_SecondsSinceLastEvent{context=\"binlog\",instance=\"192.168.11.182:7071\",name=\"prod-aurora-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_SecondsSinceLastEvent{context=\"binlog\"}"
             },
             "properties": [
               {
@@ -840,7 +840,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_SecondsSinceLastEvent{context=\"binlog\",instance=\"192.168.11.182:7071\",name=\"snapshot-prod-aurora-cluster-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_SecondsSinceLastEvent{context=\"binlog\"}"
             },
             "properties": [
               {
@@ -855,7 +855,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_SecondsSinceLastEvent{context=\"binlog\",instance=\"192.168.13.124:7071\",name=\"prod-aurora-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_SecondsSinceLastEvent{context=\"binlog\"}"
             },
             "properties": [
               {
@@ -896,7 +896,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "debezium_metrics_millisecondssincelastevent{context=\"streaming\",name=\"mesp\"}\t\r\n",
+          "expr": "debezium_metrics_millisecondssincelastevent{context=\"streaming\"}\t\r\n",
           "legendFormat": "{{name}} ({{plugin}})",
           "range": true,
           "refId": "A"
@@ -975,7 +975,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "debezium_metrics_queuetotalcapacity{context=\"streaming\",name=\"mesp\"}\t\r\n",
+          "expr": "debezium_metrics_queuetotalcapacity{context=\"streaming\"}\t\r\n",
           "refId": "A"
         }
       ],
@@ -1052,7 +1052,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "debezium_metrics_queueremainingcapacity{context=\"streaming\",name=\"mesp\"}\t\r\n",
+          "expr": "debezium_metrics_queueremainingcapacity{context=\"streaming\"}\t\r\n",
           "refId": "A"
         }
       ],
@@ -1123,7 +1123,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_secondsbehindmaster{context=\"binlog\",instance=\"192.168.11.182:7071\",name=\"prod-aurora-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_secondsbehindmaster{context=\"binlog\"}"
             },
             "properties": [
               {
@@ -1138,7 +1138,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_secondsbehindmaster{context=\"binlog\",instance=\"192.168.11.182:7071\",name=\"snapshot-prod-aurora-cluster-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_secondsbehindmaster{context=\"binlog\"}"
             },
             "properties": [
               {
@@ -1153,7 +1153,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_secondsbehindmaster{context=\"binlog\",instance=\"192.168.13.124:7071\",name=\"prod-aurora-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_secondsbehindmaster{context=\"binlog\"}"
             },
             "properties": [
               {
@@ -1194,7 +1194,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "debezium_metrics_secondsbehindmaster{context=\"streaming\",name=\"mesp\"}",
+          "expr": "debezium_metrics_secondsbehindmaster{context=\"streaming\"}",
           "legendFormat": "{{name}} ({{plugin}})",
           "range": true,
           "refId": "A"
@@ -1267,7 +1267,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_MilliSecondsBehindSource{context=\"binlog\",instance=\"192.168.11.182:7071\",name=\"prod-aurora-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_MilliSecondsBehindSource{context=\"binlog\"}"
             },
             "properties": [
               {
@@ -1282,7 +1282,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_MilliSecondsBehindSource{context=\"binlog\",instance=\"192.168.11.182:7071\",name=\"snapshot-prod-aurora-cluster-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_MilliSecondsBehindSource{context=\"binlog\"}"
             },
             "properties": [
               {
@@ -1297,7 +1297,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_MilliSecondsBehindSource{context=\"binlog\",instance=\"192.168.13.124:7071\",name=\"prod-aurora-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_MilliSecondsBehindSource{context=\"binlog\"}"
             },
             "properties": [
               {
@@ -1338,7 +1338,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "debezium_metrics_millisecondsbehindsource{context=\"streaming\",name=\"mesp\"}\t\r\n",
+          "expr": "debezium_metrics_millisecondsbehindsource{context=\"streaming\"}\t\r\n",
           "legendFormat": "{{name}} ({{plugin}})",
           "range": true,
           "refId": "A"
@@ -1411,7 +1411,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_NumberOfDisconnects{context=\"binlog\",instance=\"192.168.11.182:7071\",name=\"prod-aurora-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_NumberOfDisconnects{context=\"binlog\"}"
             },
             "properties": [
               {
@@ -1426,7 +1426,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_NumberOfDisconnects{context=\"binlog\",instance=\"192.168.11.182:7071\",name=\"snapshot-prod-aurora-cluster-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_NumberOfDisconnects{context=\"binlog\"}"
             },
             "properties": [
               {
@@ -1441,7 +1441,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_NumberOfDisconnects{context=\"binlog\",instance=\"192.168.13.124:7071\",name=\"prod-aurora-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_NumberOfDisconnects{context=\"binlog\"}"
             },
             "properties": [
               {
@@ -1482,7 +1482,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "debezium_metrics_numberofdisconnects{context=\"streaming\",name=\"mesp\"}\t\r\n",
+          "expr": "debezium_metrics_numberofdisconnects{context=\"streaming\"}\t\r\n",
           "legendFormat": "{{name}} ({{plugin}})",
           "range": true,
           "refId": "A"
@@ -1555,7 +1555,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_NumberOfLargeTransactions{context=\"binlog\",instance=\"192.168.11.182:7071\",name=\"prod-aurora-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_NumberOfLargeTransactions{context=\"binlog\"}"
             },
             "properties": [
               {
@@ -1570,7 +1570,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_NumberOfLargeTransactions{context=\"binlog\",instance=\"192.168.11.182:7071\",name=\"snapshot-prod-aurora-cluster-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_NumberOfLargeTransactions{context=\"binlog\"}"
             },
             "properties": [
               {
@@ -1585,7 +1585,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_NumberOfLargeTransactions{context=\"binlog\",instance=\"192.168.13.124:7071\",name=\"prod-aurora-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_NumberOfLargeTransactions{context=\"binlog\"}"
             },
             "properties": [
               {
@@ -1626,7 +1626,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "debezium_metrics_numberoflargetransactions{context=\"streaming\",name=\"mesp\"}\t\r\n",
+          "expr": "debezium_metrics_numberoflargetransactions{context=\"streaming\"}\t\r\n",
           "legendFormat": "{{name}} ({{plugin}})",
           "range": true,
           "refId": "A"
@@ -1718,7 +1718,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "debezium_metrics_totaltablecount{context=\"snapshot\",name=\"mesp\"}",
+          "expr": "debezium_metrics_totaltablecount{context=\"snapshot\"}",
           "refId": "A"
         }
       ],
@@ -1796,7 +1796,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "debezium_metrics_remainingtablecount{context=\"snapshot\",name=\"mesp\"}",
+          "expr": "debezium_metrics_remainingtablecount{context=\"snapshot\"}",
           "refId": "A"
         }
       ],
@@ -1875,7 +1875,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "debezium_metrics_holdinggloballock{context=\"snapshot\",name=\"mesp\"}",
+          "expr": "debezium_metrics_holdinggloballock{context=\"snapshot\"}",
           "refId": "A"
         }
       ],
@@ -1954,7 +1954,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "debezium_metrics_snapshotrunning{context=\"snapshot\",name=\"mesp\"}",
+          "expr": "debezium_metrics_snapshotrunning{context=\"snapshot\"}",
           "refId": "A"
         }
       ],
@@ -2033,7 +2033,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "debezium_metrics_snapshotaborted{context=\"snapshot\",name=\"mesp\"}\t\r\n",
+          "expr": "debezium_metrics_snapshotaborted{context=\"snapshot\"}\t\r\n",
           "refId": "A"
         }
       ],
@@ -2112,7 +2112,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "debezium_metrics_snapshotcompleted{context=\"snapshot\",name=\"mesp\"}",
+          "expr": "debezium_metrics_snapshotcompleted{context=\"snapshot\"}",
           "refId": "A"
         }
       ],
@@ -2185,7 +2185,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "debezium_metrics_snapshotdurationinseconds{context=\"snapshot\",name=\"mesp\"}\t\r\n",
+          "expr": "debezium_metrics_snapshotdurationinseconds{context=\"snapshot\"}\t\r\n",
           "refId": "A"
         }
       ],
@@ -2256,7 +2256,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_NumberOfEventsFiltered{context=\"binlog\",instance=\"192.168.11.182:7071\",name=\"prod-aurora-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_NumberOfEventsFiltered{context=\"binlog\"}"
             },
             "properties": [
               {
@@ -2271,7 +2271,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_NumberOfEventsFiltered{context=\"binlog\",instance=\"192.168.13.124:7071\",name=\"prod-aurora-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_NumberOfEventsFiltered{context=\"binlog\"}"
             },
             "properties": [
               {
@@ -2286,7 +2286,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_NumberOfEventsFiltered{context=\"snapshot\",instance=\"192.168.11.182:7071\",name=\"snapshot-prod-aurora-cluster-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_NumberOfEventsFiltered{context=\"snapshot\"}"
             },
             "properties": [
               {
@@ -2327,7 +2327,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "debezium_metrics_numberofeventsfiltered{context=\"snapshot\",name=\"mesp\"}\t\r\n",
+          "expr": "debezium_metrics_numberofeventsfiltered{context=\"snapshot\"}\t\r\n",
           "legendFormat": "{{name}} ({{plugin}})",
           "range": true,
           "refId": "A"
@@ -2406,7 +2406,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "debezium_metrics_millisecondssincelastevent{context=\"snapshot\",name=\"mesp\"}\r\n",
+          "expr": "debezium_metrics_millisecondssincelastevent{context=\"snapshot\"}\r\n",
           "refId": "A"
         }
       ],
@@ -2483,7 +2483,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "debezium_metrics_queuetotalcapacity{context=\"snapshot\",name=\"mesp\"}\t\r\n",
+          "expr": "debezium_metrics_queuetotalcapacity{context=\"snapshot\"}\t\r\n",
           "refId": "A"
         }
       ],
@@ -2552,7 +2552,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "debezium_metrics_queueremainingcapacity{context=\"snapshot\",name=\"mesp\"}\t\r\n",
+          "expr": "debezium_metrics_queueremainingcapacity{context=\"snapshot\"}\t\r\n",
           "refId": "A"
         }
       ],
@@ -2623,7 +2623,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_NumberOfErroneousEvents{context=\"binlog\",instance=\"192.168.11.182:7071\",name=\"prod-aurora-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_NumberOfErroneousEvents{context=\"binlog\"}"
             },
             "properties": [
               {
@@ -2638,7 +2638,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_NumberOfErroneousEvents{context=\"binlog\",instance=\"192.168.13.124:7071\",name=\"prod-aurora-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_NumberOfErroneousEvents{context=\"binlog\"}"
             },
             "properties": [
               {
@@ -2653,7 +2653,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_NumberOfErroneousEvents{context=\"snapshot\",instance=\"192.168.11.182:7071\",name=\"snapshot-prod-aurora-cluster-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_NumberOfErroneousEvents{context=\"snapshot\"}"
             },
             "properties": [
               {
@@ -2694,7 +2694,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "debezium_metrics_numberoferroneousevents{context=\"snapshot\",name=\"mesp\"}\r\n",
+          "expr": "debezium_metrics_numberoferroneousevents{context=\"snapshot\"}\r\n",
           "legendFormat": "{{name}} ({{plugin}})",
           "range": true,
           "refId": "A"
@@ -2767,7 +2767,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_TotalNumberOfEventsSeen{context=\"binlog\",instance=\"192.168.11.182:7071\",name=\"prod-aurora-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_TotalNumberOfEventsSeen{context=\"binlog\"}"
             },
             "properties": [
               {
@@ -2782,7 +2782,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_TotalNumberOfEventsSeen{context=\"binlog\",instance=\"192.168.13.124:7071\",name=\"prod-aurora-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_TotalNumberOfEventsSeen{context=\"binlog\"}"
             },
             "properties": [
               {
@@ -2797,7 +2797,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_TotalNumberOfEventsSeen{context=\"snapshot\",instance=\"192.168.11.182:7071\",name=\"snapshot-prod-aurora-cluster-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_TotalNumberOfEventsSeen{context=\"snapshot\"}"
             },
             "properties": [
               {
@@ -2838,7 +2838,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "debezium_metrics_totalnumberofeventsseen{context=\"snapshot\",name=\"mesp\"}\t\r\n",
+          "expr": "debezium_metrics_totalnumberofeventsseen{context=\"snapshot\"}\t\r\n",
           "legendFormat": "{{name}} ({{plugin}})",
           "range": true,
           "refId": "A"
@@ -2956,7 +2956,7 @@
       "pluginVersion": "11.2.2+security-01",
       "targets": [
         {
-          "expr": "debezium_metrics_recoverystarttime{context=\"schema-history\",name=\"mesp\"}",
+          "expr": "debezium_metrics_recoverystarttime{context=\"schema-history\"}",
           "format": "time_series",
           "instant": false,
           "legendFormat": "",
@@ -3032,7 +3032,7 @@
       "pluginVersion": "11.2.2+security-01",
       "targets": [
         {
-          "expr": "debezium_metrics_millisecondssincelastappliedchange{context=\"schema-history\",name=\"mesp\"}\t\r",
+          "expr": "debezium_metrics_millisecondssincelastappliedchange{context=\"schema-history\"}\t\r",
           "refId": "A"
         }
       ],
@@ -3105,7 +3105,7 @@
       "pluginVersion": "11.2.2+security-01",
       "targets": [
         {
-          "expr": "debezium_metrics_millisecondssincelastrecoveredchange{context=\"schema-history\",name=\"mesp\"}\t\r",
+          "expr": "debezium_metrics_millisecondssincelastrecoveredchange{context=\"schema-history\"}\t\r",
           "refId": "A"
         }
       ],
@@ -3176,7 +3176,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_ChangesRecovered{context=\"schema-history\",instance=\"192.168.11.182:7071\",name=\"snapshot-prod-aurora-cluster-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_ChangesRecovered{context=\"schema-history\"}"
             },
             "properties": [
               {
@@ -3191,7 +3191,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_ChangesRecovered{context=\"schema-history\",instance=\"192.168.13.124:7071\",name=\"prod-aurora-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_ChangesRecovered{context=\"schema-history\"}"
             },
             "properties": [
               {
@@ -3232,7 +3232,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "debezium_metrics_changesrecovered{context=\"schema-history\",name=\"mesp\"}\t\r",
+          "expr": "debezium_metrics_changesrecovered{context=\"schema-history\"}\t\r",
           "legendFormat": "{{name}} ({{plugin}})",
           "range": true,
           "refId": "A"
@@ -3305,7 +3305,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_ChangesApplied{context=\"schema-history\",instance=\"192.168.11.182:7071\",name=\"snapshot-prod-aurora-cluster-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_ChangesApplied{context=\"schema-history\"}"
             },
             "properties": [
               {
@@ -3320,7 +3320,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "debezium_metrics_ChangesApplied{context=\"schema-history\",instance=\"192.168.13.124:7071\",name=\"prod-aurora-cluster\",plugin=\"mysql\"}"
+              "options": "debezium_metrics_ChangesApplied{context=\"schema-history\"}"
             },
             "properties": [
               {
@@ -3361,7 +3361,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "debezium_metrics_changesapplied{context=\"schema-history\",name=\"mesp\"}\t\r",
+          "expr": "debezium_metrics_changesapplied{context=\"schema-history\"}\t\r",
           "legendFormat": "{{name}} ({{plugin}})",
           "range": true,
           "refId": "A"
