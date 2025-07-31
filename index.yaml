@@ -1777,6 +1777,34 @@ entries:
     version: 1.0.1
   lsdmesp-strimzi-connect-only:
   - apiVersion: v2
+    appVersion: 1.0.1
+    created: "2025-07-31T08:51:41.73916676Z"
+    dependencies:
+    - name: strimzi-kafka-operator
+      repository: https://strimzi.io/charts/
+      version: 0.46.1
+    description: LSDMESP Strimzi Connect Only
+    digest: 967a90d03d1b3783bea5ac7db9e890142d2f193ca2c4c62cad0b7b202db40f53
+    home: https://github.com/lsdopen/lsdmesp
+    keywords:
+    - lsdmesp
+    - event
+    - stream
+    - kubernetes
+    - kafka
+    - messaging
+    - topic
+    maintainers:
+    - email: support@lsdopen.io
+      name: LSD
+      url: https://lsdopen.io
+    name: lsdmesp-strimzi-connect-only
+    sources:
+    - https://github.com/lsdopen/lsdmesp
+    urls:
+    - https://github.com/lsdopen/lsdmesp/releases/download/lsdmesp-strimzi-connect-only-1.0.1/lsdmesp-strimzi-connect-only-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
     appVersion: 1.0.0
     created: "2025-07-25T09:10:29.815483941Z"
     dependencies:
@@ -1804,4 +1832,4 @@ entries:
     urls:
     - https://github.com/lsdopen/lsdmesp/releases/download/lsdmesp-strimzi-connect-only-1.0.0/lsdmesp-strimzi-connect-only-1.0.0.tgz
     version: 1.0.0
-generated: "2025-07-25T09:10:29.8155984Z"
+generated: "2025-07-31T08:51:41.73925572Z"
