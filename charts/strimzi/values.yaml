@@ -166,7 +166,7 @@ cp-helm:
       basic:
         enabled: true
     replicaCount: 1
-    image: lsdtrip/cp-kafka-connect
+    image: lsdtrip/cp-server-connect
     imageTag: "8.0.0"
     servicePort: 8083
     configurationOverrides:
