@@ -1,0 +1,39 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: jdbc-sink-connector
+  labels:
+    strimzi.io/cluster: lsdmesp
+spec:
+  class: io.confluent.connect.jdbc.JdbcSinkConnector
+  tasksMax: 1
+  config:
+    value.converter.schema.registry.url: https://lsdmesp-cp-schema-registry:8081
+    value.converter.schema.registry.ssl.truststore.location: /mnt/kafka_basicauth/truststore.p12
+    value.converter.schema.registry.ssl.truststore.password: 112233
+    value.converter.basic.auth.credentials.source: USER_INFO
+    value.converter.schema.registry.basic.auth.user.info: lsdmesp-api:oYR3tYgsUAabgaA
+    value.converter: io.confluent.connect.avro.AvroConverter
+    value.converter.schemas.enable: true
+
+    key.converter.schema.registry.url: https://lsdmesp-cp-schema-registry:8081
+    key.converter.schema.registry.ssl.truststore.location: /mnt/kafka_basicauth/truststore.p12
+    key.converter.schema.registry.ssl.truststore.password: 112233
+    key.converter.basic.auth.credentials.source: USER_INFO
+    key.converter.schema.registry.basic.auth.user.info: lsdmesp-api:oYR3tYgsUAabgaA
+    key.converter: io.confluent.connect.avro.AvroConverter
+    key.converter.schemas.enable: true
+
+    schema.registry.url: https://lsdmesp-cp-schema-registry:8081
+
+    topics: postgres.bank.transactions
+    connector.class: io.confluent.connect.jdbc.JdbcSinkConnector
+    connection.url: jdbc:postgresql://postgres.postgres.svc.cluster.local:5432/postgres?user=postgres&password=app-mod-c0nflu3nt!
+    insert.mode: INSERT
+    errors.tolerance: all
+    table.name.format: bank.transactions2
+    pk.fields: transaction_id
+    pk.mode: record_value
+    auto.create: true
+    auto.evolve: true
+    tasks.max: 1
