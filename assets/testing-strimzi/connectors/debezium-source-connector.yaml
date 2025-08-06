@@ -1,0 +1,38 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: debezium-source-connector
+  labels:
+    strimzi.io/cluster: lsdmesp
+spec:
+  class: io.debezium.connector.postgresql.PostgresConnector
+  tasksMax: 1
+  config:
+    value.converter.schema.registry.url: https://lsdmesp-cp-schema-registry:8081
+    value.converter.schema.registry.ssl.truststore.location: /mnt/kafka_basicauth/truststore.p12
+    value.converter.schema.registry.ssl.truststore.password: 112233
+    value.converter.basic.auth.credentials.source: USER_INFO
+    value.converter.schema.registry.basic.auth.user.info: lsdmesp-api:oYR3tYgsUAabgaA
+    value.converter: io.confluent.connect.avro.AvroConverter
+    key.converter.schema.registry.url: https://lsdmesp-cp-schema-registry:8081
+    key.converter.schema.registry.ssl.truststore.location: /mnt/kafka_basicauth/truststore.p12
+    key.converter.schema.registry.ssl.truststore.password: 112233
+    key.converter.basic.auth.credentials.source: USER_INFO
+    key.converter.schema.registry.basic.auth.user.info: lsdmesp-api:oYR3tYgsUAabgaA
+    key.converter: io.confluent.connect.avro.AvroConverter
+    schema.registry.url: https://lsdmesp-cp-schema-registry:8081
+    connector.class: io.debezium.connector.postgresql.PostgresConnector
+    tasks.max: 1
+    plugin.name: pgoutput
+    topic.prefix: postgres
+    database.hostname: postgres.postgres.svc.cluster.local
+    database.port: 5432
+    database.user: postgres
+    database.password: app-mod-c0nflu3nt!
+    database.dbname : postgres
+    database.server.name: postgres
+    table.include.list: bank.customers, bank.accounts, bank.transactions
+    output.data.format: AVRO
+    after.state.only: true
+    transforms: unwrap
+    transforms.unwrap.type: io.debezium.transforms.ExtractNewRecordState
