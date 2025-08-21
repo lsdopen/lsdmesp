@@ -2,6 +2,47 @@ apiVersion: v1
 entries:
   lsdmesp-confluent:
   - apiVersion: v2
+    appVersion: 0.6.21
+    created: "2025-08-21T06:32:39.404697493Z"
+    dependencies:
+    - condition: lsdmesp.confluent.flink.enabled
+      name: flink-kubernetes-operator
+      repository: https://packages.confluent.io/helm
+      version: 1.120.1
+    - condition: lsdmesp.confluent.flink.enabled
+      name: confluent-manager-for-apache-flink
+      repository: https://packages.confluent.io/helm
+      version: 2.0.1
+    - name: confluent-for-kubernetes
+      repository: https://packages.confluent.io/helm
+      version: 0.1263.8
+    description: 'LSDMESP CFK: LSD Event Streaming Platform with Confluent Operator'
+    digest: d5668d2cef6666e55d5d8271dd2adfe43c588dc518c6d01d974d39d1139e0071
+    home: https://github.com/lsdopen/lsdmesp.cfk
+    keywords:
+    - lsdmesp
+    - confluent
+    - confluent operator
+    - confluent platform
+    - cfk
+    - operator
+    - event
+    - stream
+    - kubernetes
+    - kafka
+    - messaging
+    - topic
+    maintainers:
+    - email: support@lsdopen.io
+      name: LSD
+      url: https://lsdopen.io
+    name: lsdmesp-confluent
+    sources:
+    - https://github.com/lsdopen/lsdmesp.cfk
+    urls:
+    - https://github.com/lsdopen/lsdmesp/releases/download/lsdmesp-confluent-0.6.21/lsdmesp-confluent-0.6.21.tgz
+    version: 0.6.21
+  - apiVersion: v2
     appVersion: 0.6.20
     created: "2025-07-23T11:11:18.166977519Z"
     dependencies:
@@ -1832,4 +1873,4 @@ entries:
     urls:
     - https://github.com/lsdopen/lsdmesp/releases/download/lsdmesp-strimzi-connect-only-1.0.0/lsdmesp-strimzi-connect-only-1.0.0.tgz
     version: 1.0.0
-generated: "2025-07-31T08:51:41.73925572Z"
+generated: "2025-08-21T06:32:39.909119472Z"
