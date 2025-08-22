@@ -2,3 +2,6 @@ cp-helm:
   restSecurity:
     basic:
       apiPassword: oYR3tYgsUAabgaA
+lsdmesp:
+  prometheus:
+    enableMetrics: false
