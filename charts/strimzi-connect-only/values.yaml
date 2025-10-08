@@ -6,7 +6,7 @@ lsdmesp:
 
   strimzi:
     clusterName: lsdmesp
-    version: 4.0.0
+    version: 4.1.0
 
     connect:
       bootstrap: "lsdmesp-kafka-bootstrap:9092"
@@ -35,7 +35,7 @@ strimzi-kafka-operator:
   watchAnyNamespace: false
   defaultImageRegistry: quay.io
   defaultImageRepository: strimzi
-  defaultImageTag: 0.46.1
+  defaultImageTag: "0.48.0"
   image:
     imagePullPolicy: IfNotPresent
     registry: ""
@@ -120,7 +120,7 @@ strimzi-kafka-operator:
       registry: ""
       repository:
       name: kafka-bridge
-      tag: 0.32.0
+      tag: 0.33.1
   kafkaExporter:
     image:
       registry: ""

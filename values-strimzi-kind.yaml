@@ -1,6 +1,8 @@
 lsdmesp:
   armyKnife:
     image: localhost:5001/lsdopen/kafka-army-knife:latest
+  prometheus:
+    enableMetrics: false
 cp-helm:
   restSecurity:
     basic:

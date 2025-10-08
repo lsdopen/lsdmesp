@@ -4,16 +4,12 @@ RUN confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.6.7
 RUN confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:10.8.4
 RUN confluent-hub install --no-prompt confluentinc/kafka-connect-http:1.7.10
 RUN confluent-hub install --no-prompt confluentinc/kafka-connect-http-source:1.0.1
-RUN confluent-hub install --no-prompt mongodb/kafka-connect-mongodb:2.0.0
 RUN confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:15.0.1
-RUN confluent-hub install --no-prompt dariobalinzo/kafka-connect-elasticsearch-source:1.5.5
 RUN confluent-hub install --no-prompt confluentinc/kafka-connect-s3:10.6.7
 RUN confluent-hub install --no-prompt confluentinc/kafka-connect-s3-source:2.6.16
-RUN confluent-hub install --no-prompt debezium/debezium-connector-sqlserver:3.1.2
 RUN confluent-hub install --no-prompt debezium/debezium-connector-postgresql:3.1.2
 RUN confluent-hub install --no-prompt debezium/debezium-connector-mysql:3.1.2
-RUN confluent-hub install --no-prompt debezium/debezium-connector-mongodb:3.1.2
-RUN confluent-hub install --no-prompt iceberg/iceberg-kafka-connect:1.9.1
+RUN confluent-hub install --no-prompt tabular/iceberg-kafka-connect:0.6.19
 FROM quay.io/strimzi/kafka:0.46.1-kafka-4.0.0
 USER root:root
 RUN mkdir -p /opt/kafka/plugins/avro && mkdir -p /opt/kafka/plugins/datagen-connector && mkdir -p /opt/kafka/plugins/jdbc-connector 
@@ -22,19 +18,20 @@ RUN mkdir -p /opt/kafka/plugins/mongodb-connector && mkdir -p /opt/kafka/plugins
 RUN mkdir -p /opt/kafka/plugins/s3-sink-connector && mkdir -p /opt/kafka/plugins/s3-source-connector
 RUN mkdir -p /opt/kafka/plugins/debezium-sqlserver-source-connector && mkdir -p /opt/kafka/plugins/debezium-postgresql-source-connector && mkdir -p /opt/kafka/plugins/debezium-mysql-source-connector && mkdir -p /opt/kafka/plugins/debezium-mongodb-source-connector
 RUN mkdir -p /opt/kafka/plugins/iceberg-connector
+RUN mkdir -p /opt/kafka/plugins/amazon 
+COPY ./amazon/aws-msk-iam-auth-2.3.2-all.jar /opt/kafka/plugins/amazon/aws-msk-iam-auth-2.3.2-all.jar
+COPY ./amazon/schema-registry-kafkaconnect-converter-1.1.24.jar /opt/kafka/plugins/amazon/schema-registry-kafkaconnect-converter-1.1.24.jar
+# RUN curl -o /opt/kafka/plugins/amazon/aws-msk-iam-auth-2.3.2-all.jar https://github.com/aws/aws-msk-iam-auth/releases/download/v2.3.2/aws-msk-iam-auth-2.3.2-all.jar
+# RUN curl -o /opt/kafka/plugins/amazon/schema-registry-kafkaconnect-converter-1.1.24.jar https://repo1.maven.org/maven2/software/amazon/glue/schema-registry-kafkaconnect-converter/1.1.24/schema-registry-kafkaconnect-converter-1.1.24.jar
 COPY --from=cp /usr/share/confluent-hub-components/confluentinc-kafka-connect-avro-converter /opt/kafka/plugins/avro/
 COPY --from=cp /usr/share/confluent-hub-components/confluentinc-kafka-connect-datagen /opt/kafka/plugins/datagen-connector/
 COPY --from=cp /usr/share/confluent-hub-components/confluentinc-kafka-connect-jdbc /opt/kafka/plugins/jdbc-connector/
 COPY --from=cp /usr/share/confluent-hub-components/confluentinc-kafka-connect-http /opt/kafka/plugins/http-sink-connector/
 COPY --from=cp /usr/share/confluent-hub-components/confluentinc-kafka-connect-http /opt/kafka/plugins/http-source-connector/
-COPY --from=cp /usr/share/confluent-hub-components/mongodb-kafka-connect-mongodb /opt/kafka/plugins/mongodb-connector/
 COPY --from=cp /usr/share/confluent-hub-components/confluentinc-kafka-connect-elasticsearch /opt/kafka/plugins/elasticsearch-sink-connector/
-COPY --from=cp /usr/share/confluent-hub-components/dariobalinzo-kafka-connect-elasticsearch-source /opt/kafka/plugins/elasticsearch-source-connector/
 COPY --from=cp /usr/share/confluent-hub-components/confluentinc-kafka-connect-s3 /opt/kafka/plugins/s3-sink-connector/
 COPY --from=cp /usr/share/confluent-hub-components/confluentinc-kafka-connect-s3-source /opt/kafka/plugins/s3-source-connector/
-COPY --from=cp /usr/share/confluent-hub-components/debezium-debezium-connector-sqlserver /opt/kafka/plugins/debezium-sqlserver-source-connector/
 COPY --from=cp /usr/share/confluent-hub-components/debezium-debezium-connector-postgresql /opt/kafka/plugins/debezium-postgresql-source-connector/
 COPY --from=cp /usr/share/confluent-hub-components/debezium-debezium-connector-mysql /opt/kafka/plugins/debezium-mysql-source-connector/
-COPY --from=cp /usr/share/confluent-hub-components/debezium-debezium-connector-mongodb /opt/kafka/plugins/debezium-mongodb-source-connector/
-COPY --from=cp /usr/share/confluent-hub-components/iceberg-iceberg-kafka-connect /opt/kafka/plugins/iceberg-connector/
+COPY --from=cp /usr/share/confluent-hub-components/tabular-iceberg-kafka-connect /opt/kafka/plugins/iceberg-connector/
 USER 1001
