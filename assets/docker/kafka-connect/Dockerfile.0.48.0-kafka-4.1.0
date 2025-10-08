@@ -29,12 +29,12 @@ COPY --from=cp /usr/share/confluent-hub-components/confluentinc-kafka-connect-s3
 COPY --from=cp /usr/share/confluent-hub-components/confluentinc-kafka-connect-s3-source /opt/kafka/plugins/s3-source-connector/
 COPY --from=cp /usr/share/confluent-hub-components/iceberg-iceberg-kafka-connect /opt/kafka/plugins/iceberg-connector/
 # Installing Debezium Postgres and MySQL connectors manually to get the latest versions
-RUN wget https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/3.3.0.Final/debezium-connector-postgres-3.3.0.Final-plugin.tar.gz -O /tmp/debezium-connector-postgres.tar.gz
+RUN curl -o /tmp/debezium-connector-postgres.tar.gz https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/3.3.0.Final/debezium-connector-postgres-3.3.0.Final-plugin.tar.gz
 RUN tar -xzvf /tmp/debezium-connector-postgres.tar.gz -C /opt/kafka/plugins/ && rm -rf /tmp/debezium-connector-postgres.tar.gz
-RUN wget https://repo1.maven.org/maven2/io/debezium/debezium-connector-mysql/3.3.0.Final/debezium-connector-mysql-3.3.0.Final-plugin.tar.gz -O /tmp/debezium-connector-mysql.tar.gz
+RUN curl -o /tmp/debezium-connector-mysql.tar.gz https://repo1.maven.org/maven2/io/debezium/debezium-connector-mysql/3.3.0.Final/debezium-connector-mysql-3.3.0.Final-plugin.tar.gz
 RUN tar -xzvf /tmp/debezium-connector-mysql.tar.gz -C /opt/kafka/plugins/ && rm -rf /tmp/debezium-connector-mysql.tar.gz
 # Debezium Oracle connector must be installed manually as it is not available via Confluent Hub
 # See https://debezium.io/documentation/reference/stable/connectors/oracle.html#installation
-RUN wget https://repo1.maven.org/maven2/io/debezium/debezium-connector-oracle/3.3.0.Final/debezium-connector-oracle-3.3.0.Final-plugin.tar.gz -O /tmp/debezium-connector-oracle-3.3.0.Final-plugin.tar.gz
+RUN curl -o /tmp/debezium-connector-oracle-3.3.0.Final-plugin.tar.gz https://repo1.maven.org/maven2/io/debezium/debezium-connector-oracle/3.3.0.Final/debezium-connector-oracle-3.3.0.Final-plugin.tar.gz
 RUN tar -xzvf /tmp/debezium-connector-oracle-3.3.0.Final-plugin.tar.gz -C /opt/kafka/plugins/ && rm -rf /tmp/debezium-connector-oracle-3.3.0.Final-plugin.tar.gz
 USER 1001
