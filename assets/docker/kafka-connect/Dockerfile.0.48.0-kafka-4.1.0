@@ -1,0 +1,40 @@
+FROM confluentinc/cp-server-connect:8.0.1 AS cp
+RUN confluent-hub install --no-prompt confluentinc/kafka-connect-avro-converter:8.0.1
+RUN confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.6.7
+RUN confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:10.8.4
+RUN confluent-hub install --no-prompt confluentinc/kafka-connect-http:1.7.11
+RUN confluent-hub install --no-prompt confluentinc/kafka-connect-http-source:1.0.1
+RUN confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:15.0.1
+RUN confluent-hub install --no-prompt confluentinc/kafka-connect-s3:11.0.6
+RUN confluent-hub install --no-prompt confluentinc/kafka-connect-s3-source:3.0.0
+RUN confluent-hub install --no-prompt iceberg/iceberg-kafka-connect:1.9.2
+FROM quay.io/strimzi/kafka:0.48.0-kafka-4.1.0
+USER root:root
+RUN mkdir -p /opt/kafka/plugins/avro && mkdir -p /opt/kafka/plugins/datagen-connector && mkdir -p /opt/kafka/plugins/jdbc-connector 
+RUN mkdir -p /opt/kafka/plugins/http-sink-connector && mkdir -p /opt/kafka/plugins/http-source-connector
+RUN mkdir -p /opt/kafka/plugins/mongodb-connector && mkdir -p /opt/kafka/plugins/elasticsearch-sink-connector && mkdir -p /opt/kafka/plugins/elasticsearch-source-connector
+RUN mkdir -p /opt/kafka/plugins/s3-sink-connector && mkdir -p /opt/kafka/plugins/s3-source-connector
+RUN mkdir -p /opt/kafka/plugins/debezium-postgresql-source-connector && mkdir -p /opt/kafka/plugins/debezium-mysql-source-connector && mkdir -p /opt/kafka/plugins/debezium-oracle-source-connector
+RUN mkdir -p /opt/kafka/plugins/iceberg-connector
+RUN mkdir -p /opt/kafka/plugins/amazon 
+COPY ./amazon/aws-msk-iam-auth-2.3.2-all.jar /opt/kafka/plugins/amazon/aws-msk-iam-auth-2.3.2-all.jar
+COPY ./amazon/schema-registry-kafkaconnect-converter-1.1.24.jar /opt/kafka/plugins/amazon/schema-registry-kafkaconnect-converter-1.1.24.jar
+COPY --from=cp /usr/share/confluent-hub-components/confluentinc-kafka-connect-avro-converter /opt/kafka/plugins/avro/
+COPY --from=cp /usr/share/confluent-hub-components/confluentinc-kafka-connect-datagen /opt/kafka/plugins/datagen-connector/
+COPY --from=cp /usr/share/confluent-hub-components/confluentinc-kafka-connect-jdbc /opt/kafka/plugins/jdbc-connector/
+COPY --from=cp /usr/share/confluent-hub-components/confluentinc-kafka-connect-http /opt/kafka/plugins/http-sink-connector/
+COPY --from=cp /usr/share/confluent-hub-components/confluentinc-kafka-connect-http /opt/kafka/plugins/http-source-connector/
+COPY --from=cp /usr/share/confluent-hub-components/confluentinc-kafka-connect-elasticsearch /opt/kafka/plugins/elasticsearch-sink-connector/
+COPY --from=cp /usr/share/confluent-hub-components/confluentinc-kafka-connect-s3 /opt/kafka/plugins/s3-sink-connector/
+COPY --from=cp /usr/share/confluent-hub-components/confluentinc-kafka-connect-s3-source /opt/kafka/plugins/s3-source-connector/
+COPY --from=cp /usr/share/confluent-hub-components/iceberg-iceberg-kafka-connect /opt/kafka/plugins/iceberg-connector/
+# Installing Debezium Postgres and MySQL connectors manually to get the latest versions
+RUN wget https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/3.3.0.Final/debezium-connector-postgres-3.3.0.Final-plugin.tar.gz -O /tmp/debezium-connector-postgres.tar.gz
+RUN tar -xzvf /tmp/debezium-connector-postgres.tar.gz -C /opt/kafka/plugins/ && rm -rf /tmp/debezium-connector-postgres.tar.gz
+RUN wget https://repo1.maven.org/maven2/io/debezium/debezium-connector-mysql/3.3.0.Final/debezium-connector-mysql-3.3.0.Final-plugin.tar.gz -O /tmp/debezium-connector-mysql.tar.gz
+RUN tar -xzvf /tmp/debezium-connector-mysql.tar.gz -C /opt/kafka/plugins/ && rm -rf /tmp/debezium-connector-mysql.tar.gz
+# Debezium Oracle connector must be installed manually as it is not available via Confluent Hub
+# See https://debezium.io/documentation/reference/stable/connectors/oracle.html#installation
+RUN wget https://repo1.maven.org/maven2/io/debezium/debezium-connector-oracle/3.3.0.Final/debezium-connector-oracle-3.3.0.Final-plugin.tar.gz -O /tmp/debezium-connector-oracle-3.3.0.Final-plugin.tar.gz
+RUN tar -xzvf /tmp/debezium-connector-oracle-3.3.0.Final-plugin.tar.gz -C /opt/kafka/plugins/ && rm -rf /tmp/debezium-connector-oracle-3.3.0.Final-plugin.tar.gz
+USER 1001

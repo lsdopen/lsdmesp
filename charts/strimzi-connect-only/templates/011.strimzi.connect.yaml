@@ -12,7 +12,7 @@ spec:
   bootstrapServers: {{ .Values.lsdmesp.strimzi.connect.bootstrap }}
   authentication:
     type: scram-sha-512
-    username: lsdmesp
+    username: {{ .Values.lsdmesp.strimzi.connect.username }}
     passwordSecret:
       secretName: lsdmesp
       password: password
