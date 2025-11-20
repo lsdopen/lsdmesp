@@ -19,8 +19,10 @@ RUN mkdir -p /opt/kafka/plugins/s3-sink-connector && mkdir -p /opt/kafka/plugins
 RUN mkdir -p /opt/kafka/plugins/debezium-sqlserver-source-connector && mkdir -p /opt/kafka/plugins/debezium-postgresql-source-connector && mkdir -p /opt/kafka/plugins/debezium-mysql-source-connector && mkdir -p /opt/kafka/plugins/debezium-mongodb-source-connector
 RUN mkdir -p /opt/kafka/plugins/iceberg-connector
 RUN mkdir -p /opt/kafka/plugins/amazon 
+RUN mkdir -p /opt/kafka/plugins/smt
 COPY ./amazon/aws-msk-iam-auth-2.3.2-all.jar /opt/kafka/plugins/amazon/aws-msk-iam-auth-2.3.2-all.jar
 COPY ./amazon/schema-registry-kafkaconnect-converter-1.1.24.jar /opt/kafka/plugins/amazon/schema-registry-kafkaconnect-converter-1.1.24.jar
+COPY ./smt/kafka-connect-smt-blueprints-1.0.0-SNAPSHOT.jar /opt/kafka/plugins/smt/kafka-connect-smt-blueprints-1.0.0-SNAPSHOT.jar
 # RUN curl -o /opt/kafka/plugins/amazon/aws-msk-iam-auth-2.3.2-all.jar https://github.com/aws/aws-msk-iam-auth/releases/download/v2.3.2/aws-msk-iam-auth-2.3.2-all.jar
 # RUN curl -o /opt/kafka/plugins/amazon/schema-registry-kafkaconnect-converter-1.1.24.jar https://repo1.maven.org/maven2/software/amazon/glue/schema-registry-kafkaconnect-converter/1.1.24/schema-registry-kafkaconnect-converter-1.1.24.jar
 COPY --from=cp /usr/share/confluent-hub-components/confluentinc-kafka-connect-avro-converter /opt/kafka/plugins/avro/
