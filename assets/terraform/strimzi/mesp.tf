@@ -43,6 +43,18 @@ module "observe" {
   depends_on = [module.ingress-nginx]
 }
 
+module "argo-cd" {
+  source  = "../argo-cd"
+  enabled = var.enable-argo-cd
+
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+  }
+
+  depends_on = [module.ingress-nginx]
+}
+
 data "kubernetes_nodes" "all_kube_nodes" {
   depends_on = [module.ingress-nginx]
 }
