@@ -1,7 +1,7 @@
 dependencies:
 - name: strimzi-kafka-operator
   repository: https://strimzi.io/charts/
-  version: 0.46.1
+  version: 0.50.0
 - name: cp-helm
   repository: file://charts/cp-helm
   version: 0.6.1
@@ -11,5 +11,5 @@ dependencies:
 - name: flink-kubernetes-operator
   repository: https://downloads.apache.org/flink/flink-kubernetes-operator-1.11.0
   version: 1.11.0
-digest: sha256:7b045b5a1864d0d2d278f8beada1cbe173a77f22140c44cc438d32ee84262f34
-generated: "2025-07-17T09:26:01.345698+02:00"
+digest: sha256:782066b02397aa16de7d170c5760e26f3b2d0e21846ea8fedaf3bd345000a67d
+generated: "2026-01-22T12:35:00.968271+02:00"
