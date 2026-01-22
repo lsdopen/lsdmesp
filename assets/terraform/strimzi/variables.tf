@@ -16,6 +16,12 @@ variable "enable-monitoring" {
   default     = false
 }
 
+variable "enable-argo-cd" {
+  description = "Should enable argo cd"
+  type        = bool
+  default     = false
+}
+
 variable "enable-army-knife" {
   description = "Should enable army knife"
   type        = bool

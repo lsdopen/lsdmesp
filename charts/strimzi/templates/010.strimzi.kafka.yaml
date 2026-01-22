@@ -1,6 +1,6 @@
 {{- $kraftcontroller := .Values.lsdmesp.strimzi.kraftcontroller -}}
 {{- $kafka := .Values.lsdmesp.strimzi.kafka -}}
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
 kind: KafkaNodePool
 metadata:
   name: controller
@@ -37,7 +37,7 @@ spec:
                       - controller
               topologyKey: kubernetes.io/hostname
 ---
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
 kind: KafkaNodePool
 metadata:
   name: broker
@@ -99,7 +99,7 @@ spec:
                   - broker
               topologyKey: kubernetes.io/hostname
 ---
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
 kind: Kafka
 metadata:
   name: {{ .Release.Name }}

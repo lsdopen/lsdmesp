@@ -24,7 +24,7 @@ lsdmesp:
 
   strimzi:
     clusterName: lsdmesp
-    version: 4.0.0
+    version: 4.1.1
 
     kraftcontroller:
       # java memory sizes
@@ -91,7 +91,7 @@ lsdmesp:
           memory: 10Mi
 
     connect:
-      enabled: false
+      enabled: true
       bootstrap: "lsdmesp-kafka-bootstrap:9092"
       # number of pod replicas
       replicas: 1
@@ -309,7 +309,7 @@ strimzi-kafka-operator:
   watchAnyNamespace: false
   defaultImageRegistry: quay.io
   defaultImageRepository: strimzi
-  defaultImageTag: 0.46.1
+  defaultImageTag: 0.50.0
   image:
     imagePullPolicy: IfNotPresent
     registry: ""
