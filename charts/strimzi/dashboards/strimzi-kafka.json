@@ -2883,7 +2883,6 @@
   },
   "timezone": "",
   "title": "Strimzi Kafka",
-  "uid": "strimzi-kafka-1",
-  "version": 1,
+  "version": 4,
   "weekStart": ""
 }

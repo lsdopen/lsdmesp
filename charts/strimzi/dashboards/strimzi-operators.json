@@ -1771,7 +1771,6 @@
   },
   "timezone": "",
   "title": "Strimzi Operators",
-  "uid": "strimzi-operators-1",
-  "version": 1,
+  "version": 6,
   "weekStart": ""
 }
