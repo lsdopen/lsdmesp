@@ -493,13 +493,13 @@
       "targets": [
         {
           "datasource": "${DS_PROMETHEUS}",
-          "expr": "sum(strimzi_resources{kind=\"KafkaMirrorMaker\"})",
+          "expr": "sum(strimzi_resources{kind=\"KafkaNodePool\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
         }
       ],
-      "title": "Mirror Maker CRs",
+      "title": "Node Pool CRs",
       "type": "stat"
     },
     {
@@ -1771,6 +1771,7 @@
   },
   "timezone": "",
   "title": "Strimzi Operators",
-  "version": 6,
+  "uid": "strimzi-operators-1",
+  "version": 1,
   "weekStart": ""
 }
