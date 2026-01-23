@@ -17,17 +17,17 @@ spec:
     passwordSecret:
       secretName: lsdmesp
       password: password
+  groupId: connect-cluster
+  configStorageTopic: connect-cluster-configs
+  offsetStorageTopic: connect-cluster-offsets
+  statusStorageTopic: connect-cluster-status
   config:
-    config.storage.topic: connect-cluster-configs
-    group.id: connect-cluster
     heartbeat.interval.ms: 3000
     offset.flush.interval.ms: 60000
     offset.flush.timeout.ms: 5000
-    offset.storage.topic: connect-cluster-offsets
     rebalance.timeout.ms: 60000
     request.timeout.ms: 40000
     session.timeout.ms: 10000
-    status.storage.topic: connect-cluster-status
     worker.sync.timeout.ms: 3000
     config.storage.replication.factor: -1
     offset.storage.replication.factor: -1
