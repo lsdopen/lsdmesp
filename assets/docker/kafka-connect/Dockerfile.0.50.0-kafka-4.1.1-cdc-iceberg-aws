@@ -30,5 +30,6 @@ COPY ./kafka-connect-plugins-blueprint-1.0.0.zip /tmp/kafka-connect-plugins-blue
 RUN unzip /tmp/kafka-connect-plugins-blueprint-1.0.0.zip -d /opt/kafka/plugins/cdc-to-iceberg && rm -f /tmp/kafka-connect-plugins-blueprint-1.0.0.zip
 
 COPY ./smt/kafka-connect-smt-blueprints-1.0.0-SNAPSHOT.jar /opt/kafka/plugins/smt/kafka-connect-smt-blueprints-1.0.0-SNAPSHOT.jar
+COPY ./iceberg/iceberg-kafka-connect-1.10.1.jar /opt/kafka/plugins/cdc-to-iceberg/kafka-connect-plugins-blueprint-1.0.0/iceberg-kafka-connect-1.10.1.jar
 
 USER 1001
