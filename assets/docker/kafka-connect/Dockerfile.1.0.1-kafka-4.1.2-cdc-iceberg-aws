@@ -1,0 +1,47 @@
+FROM confluentinc/cp-server-connect:8.1.1 AS cp
+
+RUN confluent-hub install --no-prompt confluentinc/kafka-connect-avro-converter:8.0.1
+RUN confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.6.7
+
+FROM quay.io/strimzi/kafka:1.0.1-kafka-4.1.2
+USER root:root
+
+RUN mkdir -p /opt/kafka/plugins/avro
+RUN mkdir -p /opt/kafka/plugins/datagen-connector
+RUN mkdir -p /opt/kafka/plugins/smt
+RUN mkdir -p /opt/kafka/plugins/cdc-to-iceberg
+RUN mkdir -p /opt/kafka/plugins/cdc-to-iceberg/amazon
+
+COPY --from=cp /usr/share/confluent-hub-components/confluentinc-kafka-connect-avro-converter /opt/kafka/plugins/avro/
+COPY --from=cp /usr/share/confluent-hub-components/confluentinc-kafka-connect-datagen /opt/kafka/plugins/datagen-connector/
+
+# Install AWS MSK plugins and dependencies
+RUN curl -o /opt/kafka/plugins/cdc-to-iceberg/amazon/aws-msk-iam-auth-2.3.7-all.jar https://repo1.maven.org/maven2/software/amazon/msk/aws-msk-iam-auth/2.3.7/aws-msk-iam-auth-2.3.7-all.jar
+RUN curl -o /opt/kafka/plugins/cdc-to-iceberg/amazon/hadoop-aws-3.5.0.jar https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.5.0/hadoop-aws-3.5.0.jar
+
+# Install Debezium Connector plugin
+RUN curl -o /tmp/debezium-connector-oracle-3.6.1.Final-plugin.tar.gz https://repo1.maven.org/maven2/io/debezium/debezium-connector-oracle/3.6.1.Final/debezium-connector-oracle-3.6.1.Final-plugin.tar.gz
+RUN tar -xzvf /tmp/debezium-connector-oracle-3.6.1.Final-plugin.tar.gz -C /opt/kafka/plugins/cdc-to-iceberg && rm -f /tmp/debezium-connector-oracle-3.6.1.Final-plugin.tar.gz
+RUN curl -o /tmp/debezium-connector-postgres-3.6.1.Final-plugin.tar.gz https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/3.6.1.Final/debezium-connector-postgres-3.6.1.Final-plugin.tar.gz
+RUN tar -xzvf /tmp/debezium-connector-postgres-3.6.1.Final-plugin.tar.gz -C /opt/kafka/plugins/cdc-to-iceberg && rm -f /tmp/debezium-connector-postgres-3.6.1.Final-plugin.tar.gz
+RUN curl -o /tmp/debezium-connector-sqlserver-3.6.1.Final-plugin.tar.gz https://repo1.maven.org/maven2/io/debezium/debezium-connector-sqlserver/3.6.1.Final/debezium-connector-sqlserver-3.6.1.Final-plugin.tar.gz
+RUN tar -xzvf /tmp/debezium-connector-sqlserver-3.6.1.Final-plugin.tar.gz -C /opt/kafka/plugins/cdc-to-iceberg && rm -f /tmp/debezium-connector-sqlserver-3.6.1.Final-plugin.tar.gz
+
+# Install Kafka Connect plugins including Apache Iceberg
+COPY ./kafka-connect-plugins-blueprint-1.0.0.zip /tmp/kafka-connect-plugins-blueprint-1.0.0.zip
+RUN unzip /tmp/kafka-connect-plugins-blueprint-1.0.0.zip -d /opt/kafka/plugins/cdc-to-iceberg && rm -f /tmp/kafka-connect-plugins-blueprint-1.0.0.zip
+
+COPY ./smt/kafka-connect-smt-blueprints-1.0.0-SNAPSHOT.jar /opt/kafka/plugins/smt/kafka-connect-smt-blueprints-1.0.0-SNAPSHOT.jar
+COPY ./iceberg/iceberg-kafka-connect-1.11.0.jar /opt/kafka/plugins/cdc-to-iceberg/kafka-connect-plugins-blueprint-1.0.0/iceberg-kafka-connect-1.11.0.jar
+
+COPY ./debezium/debezium-util-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/debezium-connector-oracle/debezium-util-3.6.1.Final.jar
+COPY ./debezium/debezium-util-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/debezium-connector-postgres/debezium-util-3.6.1.Final.jar
+COPY ./debezium/debezium-util-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/debezium-connector-sqlserver/debezium-util-3.6.1.Final.jar
+COPY ./debezium/debezium-connector-common-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/debezium-connector-oracle/debezium-connector-common-3.6.1.Final.jar
+COPY ./debezium/debezium-connector-common-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/debezium-connector-postgres/debezium-connector-common-3.6.1.Final.jar
+COPY ./debezium/debezium-connector-common-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/debezium-connector-sqlserver/debezium-connector-common-3.6.1.Final.jar
+COPY ./debezium/debezium-connector-oracle-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/debezium-connector-oracle/debezium-connector-oracle-3.6.1.Final.jar
+COPY ./debezium/debezium-connector-postgres-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/debezium-connector-postgres/debezium-connector-postgres-3.6.1.Final.jar
+COPY ./debezium/debezium-connector-sqlserver-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/debezium-connector-sqlserver/debezium-connector-sqlserver-3.6.1.Final.jar
+
+USER 1001
