@@ -14,3 +14,20 @@ Forward port:
 ```
 kubectl port-forward service/lsdmesp-argocd-server -n lsdmesp-argocd 8080:443
 ```
+
+## Ahoy
+
+For Ahoy add this:
+
+> kc edit cm argocd-cm -n lsdmesp-argocd
+
+```
+accounts.ahoy: login,apiKey
+accounts.ci-automation: apiKey
+```
+
+> kc edit cm argocd-rbac-cm -n lsdmesp-argocd
+
+```
+policy.csv: g, ahoy, role:admin
+```
