@@ -1465,6 +1465,43 @@ entries:
     version: 0.2.0
   lsdmesp-strimzi:
   - apiVersion: v2
+    appVersion: 1.0.16
+    created: "2026-09-10T14:32:27.74227974Z"
+    dependencies:
+    - name: strimzi-kafka-operator
+      repository: https://strimzi.io/charts/
+      version: 0.50.0
+    - name: cp-helm
+      repository: file://charts/cp-helm
+      version: 0.6.1
+    - name: kafka-ui
+      repository: https://kafbat.github.io/helm-charts
+      version: 1.5.0
+    - name: flink-kubernetes-operator
+      repository: https://downloads.apache.org/flink/flink-kubernetes-operator-1.15.0
+      version: 1.15.0
+    description: 'LSDMESP Strimzi: LSD Event Streaming Platform based on Strimzi'
+    digest: 9d00793dba7249e8daf630097a3f3f5dc42a42ee0d2c75efc49b86400d1f4906
+    home: https://github.com/lsdopen/lsdmesp
+    keywords:
+    - lsdmesp
+    - event
+    - stream
+    - kubernetes
+    - kafka
+    - messaging
+    - topic
+    maintainers:
+    - email: support@lsdopen.io
+      name: LSD
+      url: https://lsdopen.io
+    name: lsdmesp-strimzi
+    sources:
+    - https://github.com/lsdopen/lsdmesp
+    urls:
+    - https://github.com/lsdopen/lsdmesp/releases/download/lsdmesp-strimzi-1.0.16/lsdmesp-strimzi-1.0.16.tgz
+    version: 1.0.16
+  - apiVersion: v2
     appVersion: 1.0.15
     created: "2026-01-28T07:52:15.627801043Z"
     dependencies:
@@ -2086,4 +2123,4 @@ entries:
     urls:
     - https://github.com/lsdopen/lsdmesp/releases/download/lsdmesp-strimzi-connect-only-1.0.0/lsdmesp-strimzi-connect-only-1.0.0.tgz
     version: 1.0.0
-generated: "2026-01-28T07:52:15.627964068Z"
+generated: "2026-09-10T14:32:27.742437572Z"
