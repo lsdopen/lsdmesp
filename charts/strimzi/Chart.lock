@@ -9,7 +9,7 @@ dependencies:
   repository: https://kafbat.github.io/helm-charts
   version: 1.5.0
 - name: flink-kubernetes-operator
-  repository: https://downloads.apache.org/flink/flink-kubernetes-operator-1.11.0
-  version: 1.11.0
-digest: sha256:782066b02397aa16de7d170c5760e26f3b2d0e21846ea8fedaf3bd345000a67d
-generated: "2026-01-22T12:35:00.968271+02:00"
+  repository: https://downloads.apache.org/flink/flink-kubernetes-operator-1.15.0
+  version: 1.15.0
+digest: sha256:2693ac82448bd7519229fc5ca662b7487bc05a09be5eb3da89fdf8b14b5f8703
+generated: "2026-09-10T16:23:38.254447+02:00"
