@@ -55,6 +55,18 @@ module "argo-cd" {
   depends_on = [module.ingress-nginx]
 }
 
+module "sealed-secrets" {
+  source  = "../sealed-secrets"
+  enabled = var.enable-sealed-secrets
+
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+  }
+
+  depends_on = [module.ingress-nginx]
+}
+
 data "kubernetes_nodes" "all_kube_nodes" {
   depends_on = [module.ingress-nginx]
 }
@@ -74,7 +86,7 @@ resource "kubernetes_labels" "kafka_worker_labels" {
 
 module "eks-blueprint-mesp" {
   source  = "app.terraform.io/lsdopen/eks-blueprint-mesp/aws"
-  version = "1.5.36"
+  version = "1.5.38"
 
   # cluster_name             = "kind"
   base_url                 = "mesp.lsdopen.io"

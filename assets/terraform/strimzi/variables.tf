@@ -22,6 +22,12 @@ variable "enable-argo-cd" {
   default     = false
 }
 
+variable "enable-sealed-secrets" {
+  description = "Should enable sealed secrets"
+  type        = bool
+  default     = false
+}
+
 variable "enable-army-knife" {
   description = "Should enable army knife"
   type        = bool

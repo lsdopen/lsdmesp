@@ -1,0 +1,2 @@
+FROM 108312057462.dkr.ecr.eu-west-1.amazonaws.com/kafka/connect:orcl-ib
+COPY ./iceberg/iceberg-kafka-connect-1.9.2.jar /opt/kafka/plugins/iceberg-plugins/fa209a36/invest-kafka-plugins-1.4.36/iceberg-kafka-connect-1.9.2.jar

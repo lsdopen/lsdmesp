@@ -16,7 +16,8 @@ RUN mkdir -p /opt/kafka/plugins/mongodb-connector && mkdir -p /opt/kafka/plugins
 RUN mkdir -p /opt/kafka/plugins/s3-sink-connector && mkdir -p /opt/kafka/plugins/s3-source-connector
 RUN mkdir -p /opt/kafka/plugins/debezium-postgresql-source-connector && mkdir -p /opt/kafka/plugins/debezium-mysql-source-connector && mkdir -p /opt/kafka/plugins/debezium-oracle-source-connector
 RUN mkdir -p /opt/kafka/plugins/iceberg-connector
-RUN mkdir -p /opt/kafka/plugins/amazon 
+RUN mkdir -p /opt/kafka/plugins/amazon
+RUN mkdir -p /opt/kafka/plugins/smt
 COPY ./amazon/aws-msk-iam-auth-2.3.2-all.jar /opt/kafka/plugins/amazon/aws-msk-iam-auth-2.3.2-all.jar
 COPY ./amazon/schema-registry-kafkaconnect-converter-1.1.24.jar /opt/kafka/plugins/amazon/schema-registry-kafkaconnect-converter-1.1.24.jar
 COPY --from=cp /usr/share/confluent-hub-components/confluentinc-kafka-connect-avro-converter /opt/kafka/plugins/avro/
@@ -43,4 +44,6 @@ RUN tar -xzvf /tmp/debezium-connector-oracle-3.3.1.Final-plugin.tar.gz -C /opt/k
 # RUN tar -xzvf /tmp/debezium-mysql.tgz -C /opt/kafka/plugins/ && rm -rf /tmp/debezium-mysql.tgz
 # RUN tar -xzvf /tmp/debezium-postgres.tgz -C /opt/kafka/plugins/ && rm -rf /tmp/debezium-postgres.tgz
 # RUN tar -xzvf /tmp/debezium-oracle.tgz -C /opt/kafka/plugins/ && rm -rf /tmp/debezium-oracle.tgz
+COPY ./smt/kafka-connect-smt-blueprints-1.0.0-SNAPSHOT.jar /opt/kafka/plugins/smt/kafka-connect-smt-blueprints-1.0.0-SNAPSHOT.jar
+COPY ./iceberg/iceberg-kafka-connect-1.9.2.jar /opt/kafka/plugins/iceberg-connector/lib/iceberg-kafka-connect-1.9.2.jar
 USER 1001

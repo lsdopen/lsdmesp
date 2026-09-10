@@ -1,0 +1,829 @@
+diff --git a/kafka-connect/kafka-connect/src/main/java/org/apache/iceberg/connect/IcebergSinkConfig.java b/kafka-connect/kafka-connect/src/main/java/org/apache/iceberg/connect/IcebergSinkConfig.java
+index a4e15932f..156ecbbeb 100644
+--- a/kafka-connect/kafka-connect/src/main/java/org/apache/iceberg/connect/IcebergSinkConfig.java
++++ b/kafka-connect/kafka-connect/src/main/java/org/apache/iceberg/connect/IcebergSinkConfig.java
+@@ -68,6 +68,9 @@ public class IcebergSinkConfig extends AbstractConfig {
+   private static final String TABLES_PROP = "iceberg.tables";
+   private static final String TABLES_DYNAMIC_PROP = "iceberg.tables.dynamic-enabled";
+   private static final String TABLES_ROUTE_FIELD_PROP = "iceberg.tables.route-field";
++  private static final String TABLES_CDC_FIELD_PROP = "iceberg.tables.cdc-field";
++  private static final String TABLES_UPSERT_MODE_ENABLED_PROP =
++      "iceberg.tables.upsert-mode-enabled";
+   private static final String TABLES_DEFAULT_COMMIT_BRANCH = "iceberg.tables.default-commit-branch";
+   private static final String TABLES_DEFAULT_ID_COLUMNS = "iceberg.tables.default-id-columns";
+   private static final String TABLES_DEFAULT_PARTITION_BY = "iceberg.tables.default-partition-by";
+@@ -129,6 +132,18 @@ public class IcebergSinkConfig extends AbstractConfig {
+         null,
+         Importance.MEDIUM,
+         "Source record field for routing records to tables");
++    configDef.define(
++        TABLES_CDC_FIELD_PROP,
++        ConfigDef.Type.STRING,
++        null,
++        Importance.MEDIUM,
++        "Source record field that identifies the type of operation (insert, update, or delete)");
++    configDef.define(
++        TABLES_UPSERT_MODE_ENABLED_PROP,
++        ConfigDef.Type.BOOLEAN,
++        false,
++        Importance.MEDIUM,
++        "Set to true to treat all appends as upserts, false otherwise");
+     configDef.define(
+         TABLES_DEFAULT_COMMIT_BRANCH,
+         ConfigDef.Type.STRING,
+@@ -397,6 +412,14 @@ public class IcebergSinkConfig extends AbstractConfig {
+     return getInt(COMMIT_TIMEOUT_MS_PROP);
+   }
+ 
++  public String tablesCdcField() {
++    return getString(TABLES_CDC_FIELD_PROP);
++  }
++
++  public boolean isUpsertMode() {
++    return getBoolean(TABLES_UPSERT_MODE_ENABLED_PROP);
++  }
++
+   public int commitThreads() {
+     return getInt(COMMIT_THREADS_PROP);
+   }
+diff --git a/kafka-connect/kafka-connect/src/main/java/org/apache/iceberg/connect/data/BaseDeltaWriter.java b/kafka-connect/kafka-connect/src/main/java/org/apache/iceberg/connect/data/BaseDeltaWriter.java
+new file mode 100644
+index 000000000..70e4d3d3d
+--- /dev/null
++++ b/kafka-connect/kafka-connect/src/main/java/org/apache/iceberg/connect/data/BaseDeltaWriter.java
+@@ -0,0 +1,144 @@
++/*
++ * Licensed to the Apache Software Foundation (ASF) under one
++ * or more contributor license agreements.  See the NOTICE file
++ * distributed with this work for additional information
++ * regarding copyright ownership.  The ASF licenses this file
++ * to you under the Apache License, Version 2.0 (the
++ * "License"); you may not use this file except in compliance
++ * with the License.  You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing,
++ * software distributed under the License is distributed on an
++ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++ * KIND, either express or implied.  See the License for the
++ * specific language governing permissions and limitations
++ * under the License.
++ */
++package org.apache.iceberg.connect.data;
++
++import java.io.IOException;
++import java.util.Set;
++import org.apache.iceberg.FileFormat;
++import org.apache.iceberg.PartitionKey;
++import org.apache.iceberg.PartitionSpec;
++import org.apache.iceberg.Schema;
++import org.apache.iceberg.StructLike;
++import org.apache.iceberg.data.InternalRecordWrapper;
++import org.apache.iceberg.data.Record;
++import org.apache.iceberg.deletes.DeleteGranularity;
++import org.apache.iceberg.io.BaseTaskWriter;
++import org.apache.iceberg.io.FileAppenderFactory;
++import org.apache.iceberg.io.FileIO;
++import org.apache.iceberg.io.OutputFileFactory;
++import org.apache.iceberg.relocated.com.google.common.collect.Sets;
++import org.apache.iceberg.types.TypeUtil;
++
++abstract class BaseDeltaWriter extends BaseTaskWriter<Record> {
++
++  private final Schema schema;
++  private final Schema deleteSchema;
++  private final InternalRecordWrapper wrapper;
++  private final InternalRecordWrapper keyWrapper;
++  private final RecordProjection keyProjection;
++  private final boolean upsert;
++  private final String[] cdcField;
++
++  BaseDeltaWriter(
++      PartitionSpec spec,
++      FileFormat format,
++      FileAppenderFactory<Record> appenderFactory,
++      OutputFileFactory fileFactory,
++      FileIO io,
++      long targetFileSize,
++      Schema schema,
++      Set<Integer> identifierFieldIds,
++      boolean upsert,
++      String cdcField) {
++    super(spec, format, appenderFactory, fileFactory, io, targetFileSize);
++
++    this.schema = schema;
++    this.deleteSchema = TypeUtil.select(schema, Sets.newHashSet(identifierFieldIds));
++    this.wrapper = new InternalRecordWrapper(schema.asStruct());
++    this.keyWrapper = new InternalRecordWrapper(deleteSchema.asStruct());
++    this.keyProjection = RecordProjection.create(schema, deleteSchema);
++    this.upsert = upsert;
++
++    if (cdcField == null || cdcField.isEmpty()) {
++      throw new IllegalArgumentException("CDC field must be provided for delta writer");
++    }
++    this.cdcField = cdcField.split("\\.");
++  }
++
++  abstract RowDataDeltaWriter route(Record row);
++
++  @Override
++  public void write(Record row) throws IOException {
++
++    Operation op = Operation.fromString(getCdcOpFromRow(row));
++    RowDataDeltaWriter writer = route(row);
++
++    switch (op) {
++      case INSERT:
++        writer.write(row);
++        break;
++      case UPDATE:
++        if (upsert) {
++          writer.deleteKey(keyProjection.wrap(row));
++        } else {
++          writer.delete(row);
++        }
++        writer.write(row);
++        break;
++      case DELETE:
++        if (upsert) {
++          writer.deleteKey(keyProjection.wrap(row));
++        } else {
++          writer.delete(row);
++        }
++        break;
++
++      default:
++        throw new UnsupportedOperationException("Unknown row kind: " + op);
++    }
++  }
++
++  private String getCdcOpFromRow(Record row) {
++    Record currentFieldLookup = row;
++    for (String field : cdcField) {
++      Object value = currentFieldLookup.getField(field);
++      if (value == null) {
++        throw new IllegalArgumentException("CDC field " + String.join(".", cdcField) + " is null");
++      }
++      if (value instanceof String) {
++        return (String) value;
++      } else {
++        currentFieldLookup = (Record) value;
++      }
++    }
++    throw new IllegalArgumentException(
++        "CDC field " + String.join(".", cdcField) + " is not a string");
++  }
++
++  public InternalRecordWrapper getWrapper() {
++    return wrapper;
++  }
++
++  protected class RowDataDeltaWriter extends BaseEqualityDeltaWriter {
++
++    RowDataDeltaWriter(PartitionKey partition) {
++      super(partition, schema, deleteSchema, DeleteGranularity.FILE);
++    }
++
++    @Override
++    protected StructLike asStructLike(Record data) {
++      return wrapper.wrap(data);
++    }
++
++    @Override
++    protected StructLike asStructLikeKey(Record data) {
++      return keyWrapper.wrap(data);
++    }
++  }
++}
+diff --git a/kafka-connect/kafka-connect/src/main/java/org/apache/iceberg/connect/data/Operation.java b/kafka-connect/kafka-connect/src/main/java/org/apache/iceberg/connect/data/Operation.java
+new file mode 100644
+index 000000000..7fd5c1779
+--- /dev/null
++++ b/kafka-connect/kafka-connect/src/main/java/org/apache/iceberg/connect/data/Operation.java
+@@ -0,0 +1,111 @@
++/*
++ * Licensed to the Apache Software Foundation (ASF) under one
++ * or more contributor license agreements.  See the NOTICE file
++ * distributed with this work for additional information
++ * regarding copyright ownership.  The ASF licenses this file
++ * to you under the Apache License, Version 2.0 (the
++ * "License"); you may not use this file except in compliance
++ * with the License.  You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing,
++ * software distributed under the License is distributed on an
++ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++ * KIND, either express or implied.  See the License for the
++ * specific language governing permissions and limitations
++ * under the License.
++ */
++package org.apache.iceberg.connect.data;
++
++import java.util.Locale;
++
++public enum Operation {
++
++  // Note: Enums have no stable hash code across different JVMs, use toByteValue() for
++  // this purpose.
++
++  /** Insertion operation. */
++  INSERT("I", (byte) 0),
++
++  /** Update operation with the previous content of the updated row. */
++  UPDATE("U", (byte) 1),
++
++  /** Deletion operation. */
++  DELETE("D", (byte) 2);
++
++  private final String shortString;
++
++  private final byte value;
++
++  /**
++   * Creates a {@link Operation} enum with the given short string and byte value representation of
++   * the {@link Operation}.
++   */
++  Operation(String shortString, byte value) {
++    this.shortString = shortString;
++    this.value = value;
++  }
++
++  /**
++   * Returns a short string representation of this {@link Operation}.
++   *
++   * <p>
++   *
++   * <ul>
++   *   <li>"R,C" represents {@link #INSERT}.
++   *   <li>"U" represents {@link #UPDATE}.
++   *   <li>"D" represents {@link #DELETE}.
++   * </ul>
++   */
++  public String shortString() {
++    return shortString;
++  }
++
++  /**
++   * Returns the byte value representation of this {@link Operation}. The byte value is used for
++   * serialization and deserialization.
++   *
++   * <p>
++   *
++   * <ul>
++   *   <li>"0" represents {@link #INSERT}.
++   *   <li>"1" represents {@link #UPDATE}.
++   *   <li>"2" represents {@link #DELETE}.
++   * </ul>
++   */
++  public byte toByteValue() {
++    return value;
++  }
++
++  /**
++   * Creates a {@link Operation} from the given byte value. Each {@link Operation} has a byte value
++   * representation.
++   *
++   * @see #toByteValue()
++   */
++  public static Operation fromByteValue(byte value) {
++    switch (value) {
++      case 0:
++        return INSERT;
++      case 1:
++        return UPDATE;
++      case 2:
++        return DELETE;
++      default:
++        throw new UnsupportedOperationException(
++            "Unsupported byte value '" + value + "' for row kind.");
++    }
++  }
++
++  public static Operation fromString(String shortString) {
++    switch (shortString.toUpperCase(Locale.ROOT)) {
++      case "U":
++        return UPDATE;
++      case "D":
++        return DELETE;
++      default:
++        return INSERT;
++    }
++  }
++}
+diff --git a/kafka-connect/kafka-connect/src/main/java/org/apache/iceberg/connect/data/PartitionedDeltaWriter.java b/kafka-connect/kafka-connect/src/main/java/org/apache/iceberg/connect/data/PartitionedDeltaWriter.java
+new file mode 100644
+index 000000000..3c056cdda
+--- /dev/null
++++ b/kafka-connect/kafka-connect/src/main/java/org/apache/iceberg/connect/data/PartitionedDeltaWriter.java
+@@ -0,0 +1,94 @@
++/*
++ * Licensed to the Apache Software Foundation (ASF) under one
++ * or more contributor license agreements.  See the NOTICE file
++ * distributed with this work for additional information
++ * regarding copyright ownership.  The ASF licenses this file
++ * to you under the Apache License, Version 2.0 (the
++ * "License"); you may not use this file except in compliance
++ * with the License.  You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing,
++ * software distributed under the License is distributed on an
++ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++ * KIND, either express or implied.  See the License for the
++ * specific language governing permissions and limitations
++ * under the License.
++ */
++package org.apache.iceberg.connect.data;
++
++import java.io.IOException;
++import java.io.UncheckedIOException;
++import java.util.Map;
++import java.util.Set;
++import org.apache.iceberg.FileFormat;
++import org.apache.iceberg.PartitionKey;
++import org.apache.iceberg.PartitionSpec;
++import org.apache.iceberg.Schema;
++import org.apache.iceberg.data.Record;
++import org.apache.iceberg.io.FileAppenderFactory;
++import org.apache.iceberg.io.FileIO;
++import org.apache.iceberg.io.OutputFileFactory;
++import org.apache.iceberg.relocated.com.google.common.collect.Maps;
++import org.apache.iceberg.util.Tasks;
++
++public class PartitionedDeltaWriter extends BaseDeltaWriter {
++
++  private final PartitionKey partitionKey;
++
++  private final Map<PartitionKey, RowDataDeltaWriter> writers = Maps.newHashMap();
++
++  PartitionedDeltaWriter(
++      PartitionSpec spec,
++      FileFormat format,
++      FileAppenderFactory<Record> appenderFactory,
++      OutputFileFactory fileFactory,
++      FileIO io,
++      long targetFileSize,
++      Schema schema,
++      Set<Integer> identifierFieldIds,
++      boolean upsert,
++      String cdcField) {
++    super(
++        spec,
++        format,
++        appenderFactory,
++        fileFactory,
++        io,
++        targetFileSize,
++        schema,
++        identifierFieldIds,
++        upsert,
++        cdcField);
++    this.partitionKey = new PartitionKey(spec, schema);
++  }
++
++  @Override
++  protected RowDataDeltaWriter route(Record row) {
++    PartitionKey copiedKey = this.partitionKey.copy();
++    copiedKey.partition(getWrapper().wrap(row));
++
++    RowDataDeltaWriter writer = writers.get(copiedKey);
++    if (writer == null) {
++      writer = new RowDataDeltaWriter(copiedKey);
++      writers.put(copiedKey, writer);
++    }
++
++    return writer;
++  }
++
++  @Override
++  public void close() {
++    try {
++      Tasks.foreach(writers.values())
++          .throwFailureWhenFinished()
++          .noRetry()
++          .run(RowDataDeltaWriter::close, IOException.class);
++
++      writers.clear();
++    } catch (IOException e) {
++      throw new UncheckedIOException("Failed to close equality delta writer", e);
++    }
++  }
++}
+diff --git a/kafka-connect/kafka-connect/src/main/java/org/apache/iceberg/connect/data/RecordProjection.java b/kafka-connect/kafka-connect/src/main/java/org/apache/iceberg/connect/data/RecordProjection.java
+new file mode 100644
+index 000000000..cbdd35c3c
+--- /dev/null
++++ b/kafka-connect/kafka-connect/src/main/java/org/apache/iceberg/connect/data/RecordProjection.java
+@@ -0,0 +1,261 @@
++/*
++ * Licensed to the Apache Software Foundation (ASF) under one
++ * or more contributor license agreements.  See the NOTICE file
++ * distributed with this work for additional information
++ * regarding copyright ownership.  The ASF licenses this file
++ * to you under the Apache License, Version 2.0 (the
++ * "License"); you may not use this file except in compliance
++ * with the License.  You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing,
++ * software distributed under the License is distributed on an
++ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++ * KIND, either express or implied.  See the License for the
++ * specific language governing permissions and limitations
++ * under the License.
++ */
++package org.apache.iceberg.connect.data;
++
++import java.util.List;
++import java.util.Map;
++import java.util.Set;
++import org.apache.iceberg.Schema;
++import org.apache.iceberg.StructLike;
++import org.apache.iceberg.data.Record;
++import org.apache.iceberg.relocated.com.google.common.base.Preconditions;
++import org.apache.iceberg.relocated.com.google.common.primitives.Ints;
++import org.apache.iceberg.types.TypeUtil;
++import org.apache.iceberg.types.Types.ListType;
++import org.apache.iceberg.types.Types.MapType;
++import org.apache.iceberg.types.Types.NestedField;
++import org.apache.iceberg.types.Types.StructType;
++
++/**
++ * This is modified from {@link org.apache.iceberg.util.StructProjection} to support record types.
++ */
++public class RecordProjection implements Record {
++  /**
++   * Creates a projecting wrapper for {@link StructLike} rows.
++   *
++   * <p>This projection does not work with repeated types like lists and maps.
++   *
++   * @param schema schema of rows wrapped by this projection
++   * @param ids field ids from the row schema to project
++   * @return a wrapper to project rows
++   */
++  public static RecordProjection create(Schema schema, Set<Integer> ids) {
++    StructType structType = schema.asStruct();
++    return new RecordProjection(structType, TypeUtil.project(structType, ids));
++  }
++
++  /**
++   * Creates a projecting wrapper for {@link Record} rows.
++   *
++   * <p>This projection does not work with repeated types like lists and maps.
++   *
++   * @param dataSchema schema of rows wrapped by this projection
++   * @param projectedSchema result schema of the projected rows
++   * @return a wrapper to project rows
++   */
++  public static RecordProjection create(Schema dataSchema, Schema projectedSchema) {
++    return new RecordProjection(dataSchema.asStruct(), projectedSchema.asStruct());
++  }
++
++  /**
++   * Creates a projecting wrapper for {@link Record} rows.
++   *
++   * <p>This projection does not work with repeated types like lists and maps.
++   *
++   * @param structType type of rows wrapped by this projection
++   * @param projectedStructType result type of the projected rows
++   * @return a wrapper to project rows
++   */
++  public static RecordProjection create(StructType structType, StructType projectedStructType) {
++    return new RecordProjection(structType, projectedStructType);
++  }
++
++  /**
++   * Creates a projecting wrapper for {@link Record} rows.
++   *
++   * <p>This projection allows missing fields and does not work with repeated types like lists and
++   * maps.
++   *
++   * @param structType type of rows wrapped by this projection
++   * @param projectedStructType result type of the projected rows
++   * @return a wrapper to project rows
++   */
++  public static RecordProjection createAllowMissing(
++      StructType structType, StructType projectedStructType) {
++    return new RecordProjection(structType, projectedStructType, true);
++  }
++
++  private final StructType type;
++  private final int[] positionMap;
++  private final RecordProjection[] nestedProjections;
++  private Record record;
++
++  private RecordProjection(
++      StructType type, int[] positionMap, RecordProjection[] nestedProjections) {
++    this.type = type;
++    this.positionMap = positionMap;
++    this.nestedProjections = nestedProjections;
++  }
++
++  private RecordProjection(StructType structType, StructType projection) {
++    this(structType, projection, false);
++  }
++
++  @SuppressWarnings("checkstyle:CyclomaticComplexity")
++  private RecordProjection(StructType structType, StructType projection, boolean allowMissing) {
++    this.type = projection;
++    this.positionMap = new int[projection.fields().size()];
++    this.nestedProjections = new RecordProjection[projection.fields().size()];
++
++    // set up the projection positions and any nested projections that are needed
++    List<NestedField> dataFields = structType.fields();
++    for (int pos = 0; pos < positionMap.length; pos += 1) {
++      NestedField projectedField = projection.fields().get(pos);
++
++      boolean found = false;
++      for (int i = 0; !found && i < dataFields.size(); i += 1) {
++        NestedField dataField = dataFields.get(i);
++        if (projectedField.fieldId() == dataField.fieldId()) {
++          found = true;
++          positionMap[pos] = i;
++          switch (projectedField.type().typeId()) {
++            case STRUCT:
++              nestedProjections[pos] =
++                  new RecordProjection(
++                      dataField.type().asStructType(), projectedField.type().asStructType());
++              break;
++            case MAP:
++              MapType projectedMap = projectedField.type().asMapType();
++              MapType originalMap = dataField.type().asMapType();
++
++              boolean keyProjectable =
++                  !projectedMap.keyType().isNestedType()
++                      || projectedMap.keyType().equals(originalMap.keyType());
++              boolean valueProjectable =
++                  !projectedMap.valueType().isNestedType()
++                      || projectedMap.valueType().equals(originalMap.valueType());
++              Preconditions.checkArgument(
++                  keyProjectable && valueProjectable,
++                  "Cannot project a partial map key or value struct. Trying to project %s out of %s",
++                  projectedField,
++                  dataField);
++
++              nestedProjections[pos] = null;
++              break;
++            case LIST:
++              ListType projectedList = projectedField.type().asListType();
++              ListType originalList = dataField.type().asListType();
++
++              boolean elementProjectable =
++                  !projectedList.elementType().isNestedType()
++                      || projectedList.elementType().equals(originalList.elementType());
++              Preconditions.checkArgument(
++                  elementProjectable,
++                  "Cannot project a partial list element struct. Trying to project %s out of %s",
++                  projectedField,
++                  dataField);
++
++              nestedProjections[pos] = null;
++              break;
++            default:
++              nestedProjections[pos] = null;
++          }
++        }
++      }
++
++      if (!found && projectedField.isOptional() && allowMissing) {
++        positionMap[pos] = -1;
++        nestedProjections[pos] = null;
++      } else if (!found) {
++        throw new IllegalArgumentException(
++            String.format("Cannot find field %s in %s", projectedField, structType));
++      }
++    }
++  }
++
++  public int projectedFields() {
++    return (int) Ints.asList(positionMap).stream().filter(val -> val != -1).count();
++  }
++
++  public RecordProjection wrap(Record newRecord) {
++    this.record = newRecord;
++    return this;
++  }
++
++  public static RecordProjection copyFor(Record newRecord) {
++    return new RecordProjection(
++            newRecord.struct(), new int[newRecord.size()], new RecordProjection[newRecord.size()])
++        .wrap(newRecord);
++  }
++
++  @Override
++  public int size() {
++    return type.fields().size();
++  }
++
++  @Override
++  public <T> T get(int pos, Class<T> javaClass) {
++    // struct can be null if wrap is not called first before the get call
++    // or if a null struct is wrapped.
++    if (record == null) {
++      return null;
++    }
++
++    int recordPos = positionMap[pos];
++    if (nestedProjections[pos] != null) {
++      Record nestedStruct = record.get(recordPos, Record.class);
++      if (nestedStruct == null) {
++        return null;
++      }
++
++      return javaClass.cast(nestedProjections[pos].wrap(nestedStruct));
++    }
++
++    if (recordPos != -1) {
++      return record.get(recordPos, javaClass);
++    } else {
++      return null;
++    }
++  }
++
++  @Override
++  public <T> void set(int pos, T value) {
++    throw new UnsupportedOperationException();
++  }
++
++  @Override
++  public StructType struct() {
++    return type;
++  }
++
++  @Override
++  public Object getField(String name) {
++    throw new UnsupportedOperationException();
++  }
++
++  @Override
++  public void setField(String name, Object value) {
++    throw new UnsupportedOperationException();
++  }
++
++  @Override
++  public Object get(int pos) {
++    return get(pos, Object.class);
++  }
++
++  @Override
++  public Record copy() {
++    throw new UnsupportedOperationException();
++  }
++
++  @Override
++  public Record copy(Map<String, Object> overwriteValues) {
++    throw new UnsupportedOperationException();
++  }
++}
+diff --git a/kafka-connect/kafka-connect/src/main/java/org/apache/iceberg/connect/data/RecordUtils.java b/kafka-connect/kafka-connect/src/main/java/org/apache/iceberg/connect/data/RecordUtils.java
+index 5ac930739..f291c69c7 100644
+--- a/kafka-connect/kafka-connect/src/main/java/org/apache/iceberg/connect/data/RecordUtils.java
++++ b/kafka-connect/kafka-connect/src/main/java/org/apache/iceberg/connect/data/RecordUtils.java
+@@ -153,21 +153,55 @@ class RecordUtils {
+             .build();
+ 
+     TaskWriter<Record> writer;
+-    if (table.spec().isUnpartitioned()) {
+-      writer =
+-          new UnpartitionedWriter<>(
+-              table.spec(), format, appenderFactory, fileFactory, table.io(), targetFileSize);
++    boolean isCdcEnabled =
++        (config.tablesCdcField() != null && !config.tablesCdcField().isEmpty())
++            || config.isUpsertMode();
++    if (!isCdcEnabled) {
++      if (table.spec().isUnpartitioned()) {
++        writer =
++            new UnpartitionedWriter<>(
++                table.spec(), format, appenderFactory, fileFactory, table.io(), targetFileSize);
++      } else {
++        writer =
++            new PartitionedAppendWriter(
++                table.spec(),
++                format,
++                appenderFactory,
++                fileFactory,
++                table.io(),
++                targetFileSize,
++                table.schema());
++      }
+     } else {
+-      writer =
+-          new PartitionedAppendWriter(
+-              table.spec(),
+-              format,
+-              appenderFactory,
+-              fileFactory,
+-              table.io(),
+-              targetFileSize,
+-              table.schema());
++      if (table.spec().isUnpartitioned()) {
++        writer =
++            new UnpartitionedDeltaWriter(
++                table.spec(),
++                format,
++                appenderFactory,
++                fileFactory,
++                table.io(),
++                targetFileSize,
++                table.schema(),
++                identifierFieldIds,
++                config.isUpsertMode(),
++                config.tablesCdcField());
++      } else {
++        writer =
++            new PartitionedDeltaWriter(
++                table.spec(),
++                format,
++                appenderFactory,
++                fileFactory,
++                table.io(),
++                targetFileSize,
++                table.schema(),
++                identifierFieldIds,
++                config.isUpsertMode(),
++                config.tablesCdcField());
++      }
+     }
++
+     return writer;
+   }
+ 
+diff --git a/kafka-connect/kafka-connect/src/main/java/org/apache/iceberg/connect/data/UnpartitionedDeltaWriter.java b/kafka-connect/kafka-connect/src/main/java/org/apache/iceberg/connect/data/UnpartitionedDeltaWriter.java
+new file mode 100644
+index 000000000..dc6ed482d
+--- /dev/null
++++ b/kafka-connect/kafka-connect/src/main/java/org/apache/iceberg/connect/data/UnpartitionedDeltaWriter.java
+@@ -0,0 +1,68 @@
++/*
++ * Licensed to the Apache Software Foundation (ASF) under one
++ * or more contributor license agreements.  See the NOTICE file
++ * distributed with this work for additional information
++ * regarding copyright ownership.  The ASF licenses this file
++ * to you under the Apache License, Version 2.0 (the
++ * "License"); you may not use this file except in compliance
++ * with the License.  You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing,
++ * software distributed under the License is distributed on an
++ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++ * KIND, either express or implied.  See the License for the
++ * specific language governing permissions and limitations
++ * under the License.
++ */
++package org.apache.iceberg.connect.data;
++
++import java.io.IOException;
++import java.util.Set;
++import org.apache.iceberg.FileFormat;
++import org.apache.iceberg.PartitionSpec;
++import org.apache.iceberg.Schema;
++import org.apache.iceberg.data.Record;
++import org.apache.iceberg.io.FileAppenderFactory;
++import org.apache.iceberg.io.FileIO;
++import org.apache.iceberg.io.OutputFileFactory;
++
++public class UnpartitionedDeltaWriter extends BaseDeltaWriter {
++  private final RowDataDeltaWriter writer;
++
++  UnpartitionedDeltaWriter(
++      PartitionSpec spec,
++      FileFormat format,
++      FileAppenderFactory<Record> appenderFactory,
++      OutputFileFactory fileFactory,
++      FileIO io,
++      long targetFileSize,
++      Schema schema,
++      Set<Integer> identifierFieldIds,
++      boolean upsert,
++      String cdcField) {
++    super(
++        spec,
++        format,
++        appenderFactory,
++        fileFactory,
++        io,
++        targetFileSize,
++        schema,
++        identifierFieldIds,
++        upsert,
++        cdcField);
++    this.writer = new RowDataDeltaWriter(null);
++  }
++
++  @Override
++  RowDataDeltaWriter route(Record row) {
++    return this.writer;
++  }
++
++  @Override
++  public void close() throws IOException {
++    writer.close();
++  }
++}
