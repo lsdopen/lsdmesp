@@ -86,7 +86,7 @@ resource "kubernetes_labels" "kafka_worker_labels" {
 
 module "eks-blueprint-mesp" {
   source  = "app.terraform.io/lsdopen/eks-blueprint-mesp/aws"
-  version = "1.5.38"
+  version = "1.6.1"
 
   # cluster_name             = "kind"
   base_url                 = "mesp.lsdopen.io"
