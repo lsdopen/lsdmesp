@@ -26,6 +26,9 @@ RUN tar -xzvf /tmp/debezium-connector-postgres-3.6.1.Final-plugin.tar.gz -C /opt
 RUN curl -o /tmp/debezium-connector-sqlserver-3.6.1.Final-plugin.tar.gz https://repo1.maven.org/maven2/io/debezium/debezium-connector-sqlserver/3.6.1.Final/debezium-connector-sqlserver-3.6.1.Final-plugin.tar.gz
 RUN tar -xzvf /tmp/debezium-connector-sqlserver-3.6.1.Final-plugin.tar.gz -C /opt/kafka/plugins/cdc-to-iceberg && rm -f /tmp/debezium-connector-sqlserver-3.6.1.Final-plugin.tar.gz
 
+# Install IBM MQ sink
+RUN curl -fL --create-dirs -o /opt/kafka/plugins/bank-msk-to-mq/kafka-connect-mq-sink/kafka-connect-mq-sink-3.1.0-jar-with-dependencies.jar https://github.com/ibm-messaging/kafka-connect-mq-sink/releases/download/v3.1.0/kafka-connect-mq-sink-3.1.0-jar-with-dependencies.jar
+
 # Install Kafka Connect plugins including Apache Iceberg
 COPY ./kafka-connect-plugins-blueprint-1.0.0.zip /tmp/kafka-connect-plugins-blueprint-1.0.0.zip
 RUN unzip /tmp/kafka-connect-plugins-blueprint-1.0.0.zip -d /opt/kafka/plugins/cdc-to-iceberg && rm -f /tmp/kafka-connect-plugins-blueprint-1.0.0.zip
