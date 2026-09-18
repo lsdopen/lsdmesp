@@ -27,6 +27,8 @@ RUN curl -o /tmp/debezium-connector-sqlserver-3.6.1.Final-plugin.tar.gz https://
 RUN tar -xzvf /tmp/debezium-connector-sqlserver-3.6.1.Final-plugin.tar.gz -C /opt/kafka/plugins/cdc-to-iceberg && rm -f /tmp/debezium-connector-sqlserver-3.6.1.Final-plugin.tar.gz
 RUN curl -o /tmp/debezium-connector-mongodb-3.6.1.Final-plugin.tar.gz https://repo1.maven.org/maven2/io/debezium/debezium-connector-mongodb/3.6.1.Final/debezium-connector-mongodb-3.6.1.Final-plugin.tar.gz
 RUN tar -xzvf /tmp/debezium-connector-mongodb-3.6.1.Final-plugin.tar.gz -C /opt/kafka/plugins/cdc-to-iceberg && rm -f /tmp/debezium-connector-mongodb-3.6.1.Final-plugin.tar.gz
+RUN curl -o /tmp/debezium-connector-mysql-3.6.1.Final-plugin.tar.gz https://repo1.maven.org/maven2/io/debezium/debezium-connector-mysql/3.6.1.Final/debezium-connector-mysql-3.6.1.Final-plugin.tar.gz
+RUN tar -xzvf /tmp/debezium-connector-mysql-3.6.1.Final-plugin.tar.gz -C /opt/kafka/plugins/cdc-to-iceberg && rm -f /tmp/debezium-connector-mysql-3.6.1.Final-plugin.tar.gz
 
 # Install IBM MQ sink
 RUN curl -fL --create-dirs -o /opt/kafka/plugins/bank-msk-to-mq/kafka-connect-mq-sink/kafka-connect-mq-sink-3.1.0-jar-with-dependencies.jar https://github.com/ibm-messaging/kafka-connect-mq-sink/releases/download/v3.1.0/kafka-connect-mq-sink-3.1.0-jar-with-dependencies.jar
@@ -41,13 +43,16 @@ COPY ./debezium/debezium-util-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/
 COPY ./debezium/debezium-util-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/debezium-connector-postgres/debezium-util-3.6.1.Final.jar
 COPY ./debezium/debezium-util-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/debezium-connector-sqlserver/debezium-util-3.6.1.Final.jar
 COPY ./debezium/debezium-util-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/debezium-connector-mongodb/debezium-util-3.6.1.Final.jar
+COPY ./debezium/debezium-util-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/debezium-connector-mysql/debezium-util-3.6.1.Final.jar
 COPY ./debezium/debezium-connector-common-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/debezium-connector-oracle/debezium-connector-common-3.6.1.Final.jar
 COPY ./debezium/debezium-connector-common-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/debezium-connector-postgres/debezium-connector-common-3.6.1.Final.jar
 COPY ./debezium/debezium-connector-common-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/debezium-connector-sqlserver/debezium-connector-common-3.6.1.Final.jar
 COPY ./debezium/debezium-connector-common-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/debezium-connector-mongodb/debezium-connector-common-3.6.1.Final.jar
+COPY ./debezium/debezium-connector-common-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/debezium-connector-mysql/debezium-connector-common-3.6.1.Final.jar
 COPY ./debezium/debezium-connector-oracle-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/debezium-connector-oracle/debezium-connector-oracle-3.6.1.Final.jar
 COPY ./debezium/debezium-connector-postgres-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/debezium-connector-postgres/debezium-connector-postgres-3.6.1.Final.jar
 COPY ./debezium/debezium-connector-sqlserver-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/debezium-connector-sqlserver/debezium-connector-sqlserver-3.6.1.Final.jar
 COPY ./debezium/debezium-connector-mongodb-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/debezium-connector-mongodb/debezium-connector-mongodb-3.6.1.Final.jar
+COPY ./debezium/debezium-connector-mysql-3.6.1.Final.jar /opt/kafka/plugins/cdc-to-iceberg/debezium-connector-mysql/debezium-connector-mysql-3.6.1.Final.jar
 
 USER 1001
