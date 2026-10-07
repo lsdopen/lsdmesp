@@ -1,7 +1,7 @@
 apiVersion: v2
 name: lsdmesp-strimzi
-version: "1.0.16"
-appVersion: "1.0.16"
+version: "1.0.17"
+appVersion: "1.0.17"
 description: 'LSDMESP Strimzi: LSD Event Streaming Platform based on Strimzi'
 keywords:
   - lsdmesp
@@ -22,7 +22,7 @@ deprecated: false
 
 dependencies:
   - name: strimzi-kafka-operator
-    version: "0.50.0"
+    version: "1.2.0"
     repository: https://strimzi.io/charts/
   - name: cp-helm
     version: "0.6.1"
