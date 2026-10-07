@@ -24,7 +24,7 @@ lsdmesp:
 
   strimzi:
     clusterName: lsdmesp
-    version: 4.1.1
+    version: 4.3.1
 
     kraftcontroller:
       # java memory sizes
@@ -309,7 +309,7 @@ strimzi-kafka-operator:
   watchAnyNamespace: false
   defaultImageRegistry: quay.io
   defaultImageRepository: strimzi
-  defaultImageTag: 0.50.0
+  defaultImageTag: 1.2.0
   image:
     imagePullPolicy: IfNotPresent
     registry: ""

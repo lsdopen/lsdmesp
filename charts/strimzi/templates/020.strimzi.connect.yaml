@@ -22,12 +22,12 @@ spec:
   offsetStorageTopic: connect-cluster-offsets
   statusStorageTopic: connect-cluster-status
   config:
-    heartbeat.interval.ms: 3000
+    heartbeat.interval.ms: 20000
     offset.flush.interval.ms: 60000
     offset.flush.timeout.ms: 5000
     rebalance.timeout.ms: 60000
     request.timeout.ms: 40000
-    session.timeout.ms: 10000
+    session.timeout.ms: 70000
     worker.sync.timeout.ms: 3000
     config.storage.replication.factor: -1
     offset.storage.replication.factor: -1
@@ -49,7 +49,7 @@ spec:
     -Xmx: {{ .Values.lsdmesp.strimzi.connect.jvm.Xmx }}
   logging:
     loggers:
-      connect.root.logger.level: WARN
+      rootLogger.level: INFO
     type: inline
   metricsConfig:
     type: jmxPrometheusExporter
