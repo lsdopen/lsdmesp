@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nessie
+  labels:
+    app: nessie
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: nessie
+  template:
+    metadata:
+      labels:
+        app: nessie
+    spec:
+      containers:
+        - image: ghcr.io/projectnessie/nessie:0.99.0
+          imagePullPolicy: Always
+          name: nessie
+          env:
+            - name: nessie.version.store.type
+              value: IN_MEMORY
+            - name: nessie.catalog.default-warehouse
+              value: warehouse
+            - name: nessie.catalog.warehouses.warehouse.location
+              value: s3://warehouse/
+            - name: nessie.catalog.service.s3.default-options.endpoint
+              value: http://lsdmesp-seaweedfs-s3:8333/
+            - name: nessie.catalog.service.s3.default-options.access-key
+              value: urn:nessie-secret:quarkus:nessie.catalog.secrets.access-key
+            - name: nessie.catalog.service.s3.default-options.path-style-access
+              value: "true"
+            - name: nessie.catalog.service.s3.default-options.auth-type
+              value: STATIC
+            - name: nessie.catalog.secrets.access-key.name
+              value: admin
+            - name: nessie.catalog.secrets.access-key.secret
+              value: password
+            - name: nessie.catalog.service.s3.default-options.region
+              value: us-east-1
+            - name: nessie.server.authentication.enabled
+              value: "false"
+          ports:
+            - name: webui
+              containerPort: 19120
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nessie
+  labels:
+    app: nessie
+spec:
+  ports:
+    - name: webui
+      port: 19120
+      targetPort: 19120
+  selector:
+    app: nessie

@@ -34,6 +34,12 @@ variable "enable-seaweedfs" {
   default     = false
 }
 
+variable "enable-nessi" {
+  description = "Should enable nessi"
+  type        = bool
+  default     = false
+}
+
 variable "enable-army-knife" {
   description = "Should enable army knife"
   type        = bool

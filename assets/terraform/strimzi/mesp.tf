@@ -76,7 +76,19 @@ module "seaweedfs" {
     helm       = helm
   }
 
-  depends_on = [module.ingress-nginx]
+  depends_on = [module.eks-blueprint-mesp]
+}
+
+module "nessi" {
+  source  = "../nessi"
+  enabled = var.enable-nessi
+
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+  }
+
+  depends_on = [module.seaweedfs]
 }
 
 data "kubernetes_nodes" "all_kube_nodes" {
