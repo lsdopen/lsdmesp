@@ -28,6 +28,12 @@ variable "enable-sealed-secrets" {
   default     = false
 }
 
+variable "enable-seaweedfs" {
+  description = "Should enable seaweedfs"
+  type        = bool
+  default     = false
+}
+
 variable "enable-army-knife" {
   description = "Should enable army knife"
   type        = bool

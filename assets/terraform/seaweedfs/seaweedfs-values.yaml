@@ -1,0 +1,17 @@
+# seaweedfs-values.yaml
+master:
+  volumeSizeLimitMB: 1000       # chart default; fine for a dev cluster
+volume:
+  dataDirs:
+    - name: data1
+      type: persistentVolumeClaim
+      storageClass: ""          # or your class, e.g. local-path / longhorn
+      size: 50Gi
+      maxVolumes: 40            # ~ size / volumeSizeLimitMB, leave headroom
+s3:
+  enabled: true
+  enableAuth: true
+  credentials:
+    admin:
+      accessKey: admin
+      secretKey: password

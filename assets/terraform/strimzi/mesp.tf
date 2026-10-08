@@ -67,6 +67,18 @@ module "sealed-secrets" {
   depends_on = [module.ingress-nginx]
 }
 
+module "seaweedfs" {
+  source  = "../seaweedfs"
+  enabled = var.enable-seaweedfs
+
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+  }
+
+  depends_on = [module.ingress-nginx]
+}
+
 data "kubernetes_nodes" "all_kube_nodes" {
   depends_on = [module.ingress-nginx]
 }
