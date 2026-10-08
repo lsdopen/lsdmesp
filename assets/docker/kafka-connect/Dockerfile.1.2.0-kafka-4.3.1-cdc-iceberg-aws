@@ -1,7 +1,7 @@
-FROM confluentinc/cp-server-connect:8.1.1 AS cp
+FROM confluentinc/cp-server-connect:8.3.1 AS cp
 
-RUN confluent-hub install --no-prompt confluentinc/kafka-connect-avro-converter:8.0.1
-RUN confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.6.7
+RUN confluent-hub install --no-prompt confluentinc/kafka-connect-avro-converter:8.3.1
+RUN confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.7.2
 
 FROM quay.io/strimzi/kafka:1.2.0-kafka-4.3.1
 USER root:root
