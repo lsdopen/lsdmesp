@@ -67,6 +67,30 @@ module "sealed-secrets" {
   depends_on = [module.ingress-nginx]
 }
 
+module "seaweedfs" {
+  source  = "../seaweedfs"
+  enabled = var.enable-seaweedfs
+
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+  }
+
+  depends_on = [module.eks-blueprint-mesp]
+}
+
+module "nessi" {
+  source  = "../nessi"
+  enabled = var.enable-nessi
+
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+  }
+
+  depends_on = [module.seaweedfs]
+}
+
 data "kubernetes_nodes" "all_kube_nodes" {
   depends_on = [module.ingress-nginx]
 }
@@ -86,7 +110,7 @@ resource "kubernetes_labels" "kafka_worker_labels" {
 
 module "eks-blueprint-mesp" {
   source  = "app.terraform.io/lsdopen/eks-blueprint-mesp/aws"
-  version = "1.6.1"
+  version = "1.6.2"
 
   # cluster_name             = "kind"
   base_url                 = "mesp.lsdopen.io"
